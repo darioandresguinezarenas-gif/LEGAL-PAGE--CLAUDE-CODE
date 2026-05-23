@@ -1,0 +1,340 @@
+---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Fase 5: fetch desde Supabase:
+//   SELECT * FROM articulos
+//   WHERE publicado = true AND deleted_at IS NULL
+//   ORDER BY published_at DESC LIMIT 3
+type Article = {
+  slug: string;
+  titulo: Record<string, string>;
+  extracto: Record<string, string>;
+  imagen_url: string | null;
+  categoria: string;
+  published_at: string;
+};
+
+const articles: Article[] = []; // Placeholder - vacio hasta Fase 5
+
+// Colores por categoria
+const categoryColors: Record<string, string> = {
+  Laboral:     '#C9A84C',
+  Civil:       '#5B8BA3',
+  Penal:       '#A35B5B',
+  Familia:     '#7A6EA3',
+  Corporativo: '#5B8B6A',
+  Blog:        '#C9A84C',
+};
+
+// Placeholders visuales cuando no hay articulos
+const placeholders = [
+  { gradient: 'linear-gradient(135deg, #1a2f3e 0%, #2d4a5c 100%)' },
+  { gradient: 'linear-gradient(135deg, #2a1f1f 0%, #3d2e2e 100%)' },
+  { gradient: 'linear-gradient(135deg, #1f2a1f 0%, #2e3d2e 100%)' },
+];
+
+const isEmpty = articles.length === 0;
+---
+
+<section class="blog-preview">
+  <div class="blog-container">
+
+    <!-- Header -->
+    <div class="blog-header">
+      <div class="blog-header-left">
+        <p class="blog-label">{t(lang, 'blog_preview.label')}</p>
+        <h2 class="blog-title">{t(lang, 'blog_preview.title')}</h2>
+        <p class="blog-subtitle">{t(lang, 'blog_preview.subtitle')}</p>
+      </div>
+      <a href={`/${lang}/blog`} class="blog-view-all-top" aria-label={t(lang, 'blog_preview.viewAll')}>
+        {t(lang, 'blog_preview.viewAll')}
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Grid de artículos -->
+    <div class="blog-grid">
+      {isEmpty
+        ? placeholders.map((ph, i) => (
+          /* Placeholder card */
+          <article class="blog-card blog-card--placeholder">
+            <div class="blog-card-image" style={`background:${ph.gradient}`}>
+              <div class="placeholder-icon" aria-hidden="true">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </div>
+            </div>
+            <div class="blog-card-body">
+              <span class="blog-category" style="color:#C9A84C">BLOG</span>
+              <h3 class="blog-card-title">
+                {i === 0
+                  ? t(lang, 'blog_preview.placeholderTitle')
+                  : lang === 'es' ? 'Artículo próximamente'
+                  : lang === 'en' ? 'Article coming soon'
+                  : '即将发布文章'}
+              </h3>
+              <p class="blog-card-excerpt">{t(lang, 'blog_preview.placeholderDesc').slice(0, 120)}</p>
+              <span class="blog-read-more blog-read-more--disabled" aria-disabled="true">
+                {t(lang, 'blog_preview.readMore')}
+              </span>
+            </div>
+          </article>
+        ))
+        : articles.map((article) => (
+          <article class="blog-card">
+            <a href={`/${lang}/blog/${article.slug}`} class="blog-card-link" tabindex="-1" aria-hidden="true">
+              <div class="blog-card-image"
+                style={article.imagen_url
+                  ? `background-image:url('${article.imagen_url}');background-size:cover;background-position:center`
+                  : 'background:linear-gradient(135deg,#1a2f3e,#2d4a5c)'}
+              ></div>
+            </a>
+            <div class="blog-card-body">
+              <span class="blog-category" style={`color:${categoryColors[article.categoria] ?? '#C9A84C'}`}>
+                {article.categoria.toUpperCase()}
+              </span>
+              <h3 class="blog-card-title">
+                <a href={`/${lang}/blog/${article.slug}`}>{article.titulo[lang] ?? article.titulo['es']}</a>
+              </h3>
+              <p class="blog-card-excerpt">
+                {(article.extracto[lang] ?? article.extracto['es'] ?? '').slice(0, 120)}
+                {(article.extracto[lang] ?? '').length > 120 ? '…' : ''}
+              </p>
+              <a href={`/${lang}/blog/${article.slug}`} class="blog-read-more">
+                {t(lang, 'blog_preview.readMore')}
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- CTA centrado -->
+    <div class="blog-cta-wrap">
+      <a href={`/${lang}/blog`} class="blog-cta-btn">
+        {t(lang, 'blog_preview.viewAll')}
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .blog-preview {
+    background: #F5F5F0;
+    padding: 6rem 0;
+    border-top: 1px solid #E8E8E0;
+  }
+
+  .blog-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* ── Header ── */
+  .blog-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .blog-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1.1;
+    margin-bottom: 0.625rem;
+  }
+
+  .blog-subtitle {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    color: rgba(26,26,26,.60);
+    max-width: 420px;
+    line-height: 1.6;
+  }
+
+  .blog-view-all-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0D1F2D;
+    letter-spacing: 0.03em;
+    border-bottom: 1px solid #C9A84C;
+    padding-bottom: 2px;
+    transition: color 0.2s ease;
+    flex-shrink: 0;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-view-all-top:hover { color: #C9A84C; }
+
+  /* ── Grid 3 cols ── */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* ── Card ── */
+  .blog-card {
+    background: #ffffff;
+    border: 1px solid #E8E8E0;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,.10);
+    transform: translateY(-2px);
+  }
+
+  .blog-card--placeholder { opacity: 0.80; }
+
+  /* ── Image ── */
+  .blog-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a2f3e;
+  }
+
+  .blog-card-link { display: block; }
+
+  .placeholder-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Body ── */
+  .blog-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    flex: 1;
+  }
+
+  .blog-category {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .blog-card-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.1875rem;
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1.25;
+    flex: 1;
+  }
+
+  .blog-card-title a {
+    color: inherit;
+    transition: color 0.2s ease;
+  }
+
+  .blog-card-title a:hover { color: #C9A84C; }
+
+  .blog-card-excerpt {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(26,26,26,.60);
+    line-height: 1.6;
+  }
+
+  .blog-read-more {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #C9A84C;
+    letter-spacing: 0.03em;
+    transition: letter-spacing 0.2s ease;
+    margin-top: auto;
+  }
+
+  .blog-read-more:hover { letter-spacing: 0.07em; }
+
+  .blog-read-more--disabled {
+    color: rgba(26,26,26,.30);
+    cursor: default;
+  }
+
+  /* ── CTA centrado ── */
+  .blog-cta-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .blog-cta-btn {
+    display: inline-block;
+    background: #0D1F2D;
+    color: #ffffff;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.9375rem 2.5rem;
+    border-radius: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .blog-cta-btn:hover {
+    background: #C9A84C;
+    color: #0D1F2D;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .blog-grid { grid-template-columns: repeat(2,1fr); }
+    .blog-view-all-top { display: none; }
+  }
+
+  @media (max-width: 580px) {
+    .blog-preview { padding: 4rem 0; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .blog-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  }
+</style>

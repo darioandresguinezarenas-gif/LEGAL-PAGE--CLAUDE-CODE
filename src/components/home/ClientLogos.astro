@@ -7,33 +7,46 @@ interface Props {
 }
 const { lang } = Astro.props;
 
-// Clientes placeholder — Fase 4: cargar desde tabla clientes_destacados en Supabase
-const clients = [
-  { nombre: 'Manpower',     texto: 'Manpower' },
-  { nombre: 'MAQBike',      texto: 'MAQBike'  },
-  { nombre: 'Cygnus Hotel', texto: 'Cygnus'   },
+// Fase 4: fetch desde Supabase (clientes_destacados WHERE activo=true AND deleted_at IS NULL ORDER BY orden)
+// Por ahora: 3 tarjetas placeholder
+const clients: Array<{ nombre: string; logo_url: string | null }> = [
+  { nombre: 'Manpower',     logo_url: null },
+  { nombre: 'MAQBike',      logo_url: null },
+  { nombre: 'Cygnus Hotel', logo_url: null },
 ];
 ---
 
 <section class="clients-section">
   <div class="clients-container">
-    <p class="clients-label">{t(lang, 'clients.sectionTitle')}</p>
 
-    <div class="clients-row">
+    <h2 class="clients-title">{t(lang, 'clients.sectionTitle')}</h2>
+
+    <div class="clients-grid">
       {clients.map((client) => (
-        <div class="client-logo-wrapper" title={client.nombre}>
-          <!-- Placeholder tipográfico — reemplazar con <img> cuando el cliente entregue logos PNG -->
-          <span class="client-logo-text">{client.texto}</span>
-        </div>
+        <article class="client-card">
+          <div class="client-logo-wrap">
+            {client.logo_url
+              ? <img src={client.logo_url} alt={client.nombre} class="client-img" loading="lazy" />
+              : (
+                /* Placeholder hasta que el cliente entregue los logos PNG */
+                <div class="client-placeholder" aria-label={client.nombre}>
+                  <span class="client-placeholder-text">{client.nombre.charAt(0)}</span>
+                </div>
+              )
+            }
+          </div>
+          <p class="client-name">{client.nombre}</p>
+        </article>
       ))}
     </div>
+
   </div>
 </section>
 
 <style>
   .clients-section {
     background: #F5F5F0;
-    padding: 4rem 0;
+    padding: 5rem 0;
   }
 
   .clients-container {
@@ -43,54 +56,97 @@ const clients = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2.5rem;
+    gap: 3rem;
   }
 
-  /* Label uppercase pequeño */
-  .clients-label {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(26, 26, 26, 0.45);
+  /* ── Título ── */
+  .clients-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 2.125rem);
+    font-weight: 700;
+    color: #0D1F2D;
+    text-align: center;
+    line-height: 1.15;
   }
 
-  /* Fila de logos */
-  .clients-row {
+  /* ── Grid: 4 cols → 2 → 1 ── */
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  /* ── Card ── */
+  .client-card {
+    border: 1px solid #E8E8E0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background: #ffffff;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .client-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+  }
+
+  /* ── Logo ── */
+  .client-logo-wrap {
+    width: 80px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4rem;
-    flex-wrap: wrap;
   }
 
-  .client-logo-wrapper {
-    filter: grayscale(100%) opacity(0.45);
-    transition: filter 0.35s ease, transform 0.25s ease;
-    cursor: default;
+  .client-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%) opacity(0.6);
+    transition: filter 0.3s ease;
   }
 
-  .client-logo-wrapper:hover {
+  .client-card:hover .client-img {
     filter: grayscale(0%) opacity(1);
-    transform: scale(1.04);
   }
 
-  /* Tipografía placeholder — simula un logotipo corporate */
-  .client-logo-text {
+  /* Placeholder logo hasta recibir archivos del cliente */
+  .client-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #E8E8E0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .client-placeholder-text {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.625rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #0D1F2D;
-    display: block;
-    padding: 0.25rem 0;
+    color: rgba(26,26,26,.35);
   }
 
-  /* ── Responsive ───────────────────────────────── */
-  @media (max-width: 640px) {
-    .clients-row { gap: 2.5rem; }
-    .clients-section { padding: 3rem 0; }
+  /* ── Nombre ── */
+  .client-name {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(26,26,26,.65);
+    text-align: center;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px)  { .clients-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 480px)  {
+    .clients-section { padding: 3.5rem 0; }
+    .clients-grid { grid-template-columns: 1fr; }
   }
 </style>

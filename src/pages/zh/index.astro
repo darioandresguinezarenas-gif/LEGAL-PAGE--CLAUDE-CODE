@@ -2,8 +2,10 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/home/Hero.astro';
 import PracticeAreasGrid from '../../components/home/PracticeAreasGrid.astro';
+import AboutPreview from '../../components/home/AboutPreview.astro';
 import ReviewsSection from '../../components/home/ReviewsSection.astro';
 import ClientLogos from '../../components/home/ClientLogos.astro';
+import BlogPreview from '../../components/home/BlogPreview.astro';
 
 const lang = 'zh';
 ---
@@ -14,6 +16,8 @@ const lang = 'zh';
 >
   <Hero lang={lang} />
   <PracticeAreasGrid lang={lang} />
+  <AboutPreview lang={lang} />
   <ReviewsSection lang={lang} />
   <ClientLogos lang={lang} />
+  <BlogPreview lang={lang} />
 </BaseLayout>

@@ -24,28 +24,49 @@
     "corporativo": { "title": "Derecho Corporativo",     "desc": "Constitución de empresas, cumplimiento regulatorio y asesoría estratégica para negocios en Chile." },
     "contratos":   { "title": "Contratos y Negociación", "desc": "Redacción, revisión y negociación de contratos complejos que protegen sus intereses empresariales." }
   },
+  "about_preview": {
+    "label": "NUESTRO ESTUDIO",
+    "title": "Defensa Legal con Compromiso y Experiencia",
+    "desc": "En Güinez Galaz Abogados combinamos décadas de experiencia jurídica con un enfoque profundamente personalizado. Atendemos a personas y empresas en Rancagua y toda la Región de O'Higgins, ofreciendo soluciones legales efectivas, transparentes y accesibles en español, inglés y chino.",
+    "cta": "Conocer al Equipo →"
+  },
   "reviews": {
     "sectionTitle": "Nuestra Reputación es Nuestra Garantía",
+    "pendingTitle": "Reseñas en Configuración",
+    "pendingDesc": "Cuando el Google Business Profile esté verificado, las reseñas reales de clientes aparecerán aquí automáticamente.",
     "items": [
       {
         "text": "Excelente atención y resultados sobresalientes. El equipo de Güinez Galaz resolvió nuestro conflicto laboral de forma rápida y profesional. Totalmente recomendados.",
         "name": "María González",
-        "role": "Gerente de Recursos Humanos"
+        "role": "Gerente de Recursos Humanos",
+        "date": "hace 2 meses"
       },
       {
         "text": "Profesionales comprometidos y altamente capacitados. Nos asesoraron en la constitución de nuestra empresa con claridad y eficiencia en cada paso del proceso.",
         "name": "Carlos Rodríguez",
-        "role": "Director Ejecutivo"
+        "role": "Director Ejecutivo",
+        "date": "hace 3 meses"
       },
       {
         "text": "Representación impecable en un proceso penal complejo. Su dedicación y conocimiento del sistema judicial chileno marcaron la diferencia. Eternamente agradecida.",
         "name": "Ana Martínez",
-        "role": "Empresaria"
+        "role": "Empresaria",
+        "date": "hace 1 mes"
       }
     ]
   },
   "clients": {
-    "sectionTitle": "HAN CONFIADO EN NOSOTROS"
+    "sectionTitle": "Han Confiado en Nosotros",
+    "placeholder": "Logo Cliente"
+  },
+  "blog_preview": {
+    "label": "PUBLICACIONES Y ANÁLISIS",
+    "title": "Perspectivas Legales",
+    "subtitle": "Análisis del panorama jurídico chileno escritos por los abogados del estudio.",
+    "readMore": "Leer más →",
+    "viewAll": "Ver todas las publicaciones",
+    "placeholderTitle": "Próximamente: análisis y perspectivas legales",
+    "placeholderDesc": "El equipo de Güinez Galaz publicará pronto artículos de análisis sobre el panorama jurídico laboral, civil y penal en Chile."
   },
   "footer": {
     "tagline": "Excelencia jurídica al servicio de sus intereses.",

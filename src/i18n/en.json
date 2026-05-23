@@ -17,35 +17,56 @@
     "sectionTitle": "Practice Areas",
     "sectionSubtitle": "Comprehensive legal advice for individuals and businesses in Rancagua and the O'Higgins Region.",
     "explore": "EXPLORE →",
-    "laboral":     { "title": "Labour Law",           "desc": "Defense of workers and employers in dismissals, labour injunctions, collective bargaining and regulatory compliance." },
-    "civil":       { "title": "Civil Law",             "desc": "Contracts, civil liability, property, possession and succession. Clear and effective legal solutions." },
-    "penal":       { "title": "Criminal Law",          "desc": "Solid criminal defense at every stage of the proceeding. We protect your rights with experience and determination." },
-    "familia":     { "title": "Family Law",            "desc": "Divorces, child support, custody and family mediation with sensitivity and professionalism." },
-    "corporativo": { "title": "Corporate Law",         "desc": "Company formation, regulatory compliance and strategic advice for businesses in Chile." },
+    "laboral":     { "title": "Labour Law",              "desc": "Defense of workers and employers in dismissals, labour injunctions, collective bargaining and regulatory compliance." },
+    "civil":       { "title": "Civil Law",               "desc": "Contracts, civil liability, property, possession and succession. Clear and effective legal solutions." },
+    "penal":       { "title": "Criminal Law",            "desc": "Solid criminal defense at every stage of the proceeding. We protect your rights with experience and determination." },
+    "familia":     { "title": "Family Law",              "desc": "Divorces, child support, custody and family mediation with sensitivity and professionalism." },
+    "corporativo": { "title": "Corporate Law",           "desc": "Company formation, regulatory compliance and strategic advice for businesses in Chile." },
     "contratos":   { "title": "Contracts & Negotiation", "desc": "Drafting, reviewing and negotiating complex contracts that protect your business interests." }
+  },
+  "about_preview": {
+    "label": "OUR FIRM",
+    "title": "Legal Defense with Commitment and Experience",
+    "desc": "At Güinez Galaz Abogados we combine decades of legal experience with a deeply personalised approach. We advise individuals and businesses in Rancagua and the entire O'Higgins Region, providing effective, transparent and accessible legal solutions in Spanish, English and Mandarin.",
+    "cta": "Meet the Team →"
   },
   "reviews": {
     "sectionTitle": "Our Reputation is Our Guarantee",
+    "pendingTitle": "Reviews Being Configured",
+    "pendingDesc": "Once the Google Business Profile is verified, real client reviews will appear here automatically.",
     "items": [
       {
         "text": "Excellent service and outstanding results. The Güinez Galaz team resolved our labour dispute quickly and professionally. Highly recommended.",
         "name": "María González",
-        "role": "Human Resources Manager"
+        "role": "Human Resources Manager",
+        "date": "2 months ago"
       },
       {
         "text": "Committed and highly qualified professionals. They advised us on the formation of our company with clarity and efficiency at every step of the process.",
         "name": "Carlos Rodríguez",
-        "role": "Chief Executive Officer"
+        "role": "Chief Executive Officer",
+        "date": "3 months ago"
       },
       {
         "text": "Impeccable representation in a complex criminal case. Their dedication and knowledge of the Chilean judicial system made all the difference. Forever grateful.",
         "name": "Ana Martínez",
-        "role": "Business Owner"
+        "role": "Business Owner",
+        "date": "1 month ago"
       }
     ]
   },
   "clients": {
-    "sectionTitle": "THEY TRUSTED US"
+    "sectionTitle": "They Trusted Us",
+    "placeholder": "Client Logo"
+  },
+  "blog_preview": {
+    "label": "PUBLICATIONS & ANALYSIS",
+    "title": "Legal Perspectives",
+    "subtitle": "Analysis of the Chilean legal landscape written by the firm's attorneys.",
+    "readMore": "Read more →",
+    "viewAll": "View all publications",
+    "placeholderTitle": "Coming soon: legal analysis and perspectives",
+    "placeholderDesc": "The Güinez Galaz team will soon publish analysis articles on the labour, civil and criminal legal landscape in Chile."
   },
   "footer": {
     "tagline": "Legal excellence at the service of your interests.",

@@ -17,35 +17,56 @@
     "sectionTitle": "业务领域",
     "sectionSubtitle": "为兰卡瓜及奥希金斯大区的个人和企业提供全面的法律咨询服务。",
     "explore": "探索 →",
-    "laboral":     { "title": "劳动法",       "desc": "代理工人和雇主处理解雇、劳动诉讼、集体谈判及合规问题。" },
-    "civil":       { "title": "民法",         "desc": "合同、民事责任、财产、占有与继承。提供清晰有效的法律解决方案。" },
-    "penal":       { "title": "刑法",         "desc": "在诉讼各阶段提供坚实的刑事辩护。以经验和决心保护您的权利。" },
-    "familia":     { "title": "家庭法",       "desc": "离婚、抚养费、监护权及家庭调解，专业且富有同理心。" },
-    "corporativo": { "title": "公司法",       "desc": "公司设立、监管合规及在智利经营业务的战略咨询。" },
-    "contratos":   { "title": "合同与谈判",   "desc": "起草、审查和谈判复杂合同，保护您的商业利益。" }
+    "laboral":     { "title": "劳动法",     "desc": "代理工人和雇主处理解雇、劳动诉讼、集体谈判及合规问题。" },
+    "civil":       { "title": "民法",       "desc": "合同、民事责任、财产、占有与继承。提供清晰有效的法律解决方案。" },
+    "penal":       { "title": "刑法",       "desc": "在诉讼各阶段提供坚实的刑事辩护。以经验和决心保护您的权利。" },
+    "familia":     { "title": "家庭法",     "desc": "离婚、抚养费、监护权及家庭调解，专业且富有同理心。" },
+    "corporativo": { "title": "公司法",     "desc": "公司设立、监管合规及在智利经营业务的战略咨询。" },
+    "contratos":   { "title": "合同与谈判", "desc": "起草、审查和谈判复杂合同，保护您的商业利益。" }
+  },
+  "about_preview": {
+    "label": "我们的事务所",
+    "title": "以承诺和经验提供法律辩护",
+    "desc": "在Güinez Galaz Abogados，我们将数十年的法律经验与深度个性化的服务相结合。我们为兰卡瓜及奥希金斯大区的个人和企业提供服务，以西班牙语、英语和中文提供有效、透明且可及的法律解决方案。",
+    "cta": "了解我们的团队 →"
   },
   "reviews": {
     "sectionTitle": "我们的声誉是我们的保证",
+    "pendingTitle": "评论配置中",
+    "pendingDesc": "一旦Google Business Profile通过验证，真实客户评论将自动显示在此处。",
     "items": [
       {
         "text": "服务出色，成果斐然。Güinez Galaz团队迅速、专业地解决了我们的劳动争议。强烈推荐。",
         "name": "María González",
-        "role": "人力资源经理"
+        "role": "人力资源经理",
+        "date": "2个月前"
       },
       {
         "text": "专业、敬业、高素质。他们在公司设立的每个步骤都给予了清晰高效的指导。",
         "name": "Carlos Rodríguez",
-        "role": "首席执行官"
+        "role": "首席执行官",
+        "date": "3个月前"
       },
       {
         "text": "在复杂刑事案件中提供了无懈可击的辩护。他们对智利司法体系的深入了解发挥了决定性作用。永远感激。",
         "name": "Ana Martínez",
-        "role": "企业家"
+        "role": "企业家",
+        "date": "1个月前"
       }
     ]
   },
   "clients": {
-    "sectionTitle": "他们信任我们"
+    "sectionTitle": "他们信任我们",
+    "placeholder": "客户标志"
+  },
+  "blog_preview": {
+    "label": "出版物与分析",
+    "title": "法律观点",
+    "subtitle": "由事务所律师撰写的智利法律领域分析文章。",
+    "readMore": "阅读更多 →",
+    "viewAll": "查看所有出版物",
+    "placeholderTitle": "即将推出：法律分析与观点",
+    "placeholderDesc": "Güinez Galaz团队即将发布有关智利劳动法、民法和刑法领域的分析文章。"
   },
   "footer": {
     "tagline": "法律卓越，服务您的利益。",

@@ -1,0 +1,225 @@
+---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<section class="about-preview">
+  <div class="about-container">
+
+    <!-- Columna izquierda: texto -->
+    <div class="about-text">
+      <p class="about-label">{t(lang, 'about_preview.label')}</p>
+      <h2 class="about-title">{t(lang, 'about_preview.title')}</h2>
+      <p class="about-desc">{t(lang, 'about_preview.desc')}</p>
+
+      <!-- Estadísticas rápidas -->
+      <div class="about-stats">
+        <div class="stat">
+          <span class="stat-number">15+</span>
+          <span class="stat-label">
+            {lang === 'es' ? 'Años de experiencia' : lang === 'en' ? 'Years of experience' : '年经验'}
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">
+            {lang === 'es' ? 'Casos resueltos' : lang === 'en' ? 'Cases resolved' : '案例解决'}
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat">
+          <span class="stat-number">3</span>
+          <span class="stat-label">
+            {lang === 'es' ? 'Idiomas de atención' : lang === 'en' ? 'Service languages' : '服务语言'}
+          </span>
+        </div>
+      </div>
+
+      <a href={`/${lang}/quienes-somos`} class="about-cta">
+        {t(lang, 'about_preview.cta')}
+      </a>
+    </div>
+
+    <!-- Columna derecha: imagen -->
+    <div class="about-image-wrap" aria-hidden="true">
+      <!-- Foto de oficina corporativa — reemplazar con foto real del estudio -->
+      <div class="about-image"
+        style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80')"
+        role="img"
+        aria-label="Oficina de Güinez Galaz Abogados"
+      ></div>
+      <!-- Tarjeta flotante con logo / tagline -->
+      <div class="about-badge">
+        <p class="badge-name">GÜINEZ GALAZ</p>
+        <p class="badge-tagline">
+          {lang === 'es' ? 'Est. Rancagua, Chile' : lang === 'en' ? 'Est. Rancagua, Chile' : '成立于智利兰卡瓜'}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .about-preview {
+    background: #ffffff;
+    padding: 6rem 0;
+    border-top: 1px solid #E8E8E0;
+  }
+
+  .about-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  /* ── Texto izquierda ── */
+  .about-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 1rem;
+  }
+
+  .about-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.875rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-desc {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(26,26,26,.70);
+    margin-bottom: 2.25rem;
+  }
+
+  /* Estadísticas */
+  .about-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .stat-number {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #C9A84C;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    color: rgba(26,26,26,.55);
+    white-space: nowrap;
+  }
+
+  .stat-divider {
+    width: 1px;
+    height: 36px;
+    background: #E8E8E0;
+    flex-shrink: 0;
+  }
+
+  /* CTA */
+  .about-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: #0D1F2D;
+    border-bottom: 2px solid #C9A84C;
+    padding-bottom: 3px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .about-cta:hover {
+    color: #C9A84C;
+  }
+
+  /* ── Imagen derecha ── */
+  .about-image-wrap {
+    position: relative;
+  }
+
+  .about-image {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background-size: cover;
+    background-position: center;
+    border-radius: 2px;
+    /* Overlay oscuro sutil */
+    box-shadow: inset 0 0 0 1000px rgba(13,31,45,.15);
+  }
+
+  /* Tarjeta flotante */
+  .about-badge {
+    position: absolute;
+    bottom: -1.5rem;
+    left: -1.5rem;
+    background: #0D1F2D;
+    padding: 1.25rem 1.75rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,.25);
+  }
+
+  .badge-name {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #C9A84C;
+    margin-bottom: 3px;
+  }
+
+  .badge-tagline {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,.55);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .about-container {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+    .about-image-wrap { order: -1; }
+    .about-image { aspect-ratio: 16/9; }
+    .about-badge { bottom: -1rem; left: 1rem; }
+  }
+
+  @media (max-width: 580px) {
+    .about-preview { padding: 4rem 0; }
+    .about-stats { flex-wrap: wrap; gap: 1.25rem; }
+    .stat-divider { display: none; }
+  }
+</style>

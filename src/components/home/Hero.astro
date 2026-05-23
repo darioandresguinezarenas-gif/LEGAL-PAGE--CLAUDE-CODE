@@ -52,14 +52,14 @@ const { lang } = Astro.props;
     background-repeat: no-repeat;
   }
 
-  /* Gradient overlay para legibilidad del texto */
+  /* Gradient overlay — cubre toda la imagen con oscuridad suficiente para legibilidad */
   .hero-overlay {
     position: absolute;
     inset: 0;
     background: linear-gradient(
-      160deg,
-      rgba(13, 31, 45, 0.72) 0%,
-      rgba(13, 31, 45, 0.85) 100%
+      to bottom,
+      rgba(13, 31, 45, 0.85) 0%,
+      rgba(13, 31, 45, 0.95) 100%
     );
   }
 
