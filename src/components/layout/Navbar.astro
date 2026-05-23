@@ -11,8 +11,8 @@ const { lang } = Astro.props;
 <header class="navbar" id="navbar" role="banner">
   <div class="navbar-inner">
     <!-- Logo -->
-    <a href={`/${lang}`} class="navbar-logo" aria-label="Güinez Galaz Abogados — Inicio">
-      GÜINEZ GALAZ
+    <a href={`/${lang}`} class="navbar-logo" aria-label="Guíñez Galaz Abogados — Inicio">
+      GUÍÑEZ GALAZ
     </a>
 
     <!-- Nav links (desktop) -->
@@ -51,25 +51,14 @@ const { lang } = Astro.props;
 </header>
 
 <style>
-  /* ── Base ─────────────────────────────────────── */
   .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 100;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  /* Transparente sobre hero */
-  .navbar.transparent {
-    background: transparent;
-  }
-
-  /* Sólido al hacer scroll */
-  .navbar.scrolled {
-    background: #ffffff;
-    box-shadow: 0 1px 16px rgba(0, 0, 0, 0.08);
+    background: #0D1F2D;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.06);
   }
 
   .navbar-inner {
@@ -82,24 +71,22 @@ const { lang } = Astro.props;
     gap: 2rem;
   }
 
-  /* ── Logo ─────────────────────────────────────── */
+  /* Logo */
   .navbar-logo {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-size: 1.1rem;
     font-weight: 700;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: #ffffff;
-    transition: color 0.3s ease;
+    color: #C9A84C;
     white-space: nowrap;
     flex-shrink: 0;
+    transition: opacity 0.2s ease;
   }
 
-  .navbar.scrolled .navbar-logo {
-    color: #0D1F2D;
-  }
+  .navbar-logo:hover { opacity: 0.85; }
 
-  /* ── Nav links ────────────────────────────────── */
+  /* Nav links */
   .navbar-links {
     display: flex;
     align-items: center;
@@ -113,7 +100,7 @@ const { lang } = Astro.props;
     font-size: 0.8125rem;
     font-weight: 500;
     letter-spacing: 0.03em;
-    color: rgba(255, 255, 255, 0.88);
+    color: rgba(255, 255, 255, 0.80);
     transition: color 0.2s ease;
     position: relative;
   }
@@ -130,17 +117,10 @@ const { lang } = Astro.props;
     transition: transform 0.2s ease;
   }
 
+  .nav-link:hover { color: #C9A84C; }
   .nav-link:hover::after { transform: scaleX(1); }
 
-  .navbar.scrolled .nav-link {
-    color: #1A1A1A;
-  }
-
-  .nav-link:hover { color: #C9A84C; }
-
-  .navbar.scrolled .nav-link:hover { color: #C9A84C; }
-
-  /* ── Right side ───────────────────────────────── */
+  /* Right side */
   .navbar-right {
     display: flex;
     align-items: center;
@@ -148,39 +128,24 @@ const { lang } = Astro.props;
     flex-shrink: 0;
   }
 
-  /* ── CTA button ───────────────────────────────── */
+  /* CTA button */
   .navbar-cta {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: #ffffff;
-    background: #0D1F2D;
+    color: #0D1F2D;
+    background: #C9A84C;
     padding: 0.625rem 1.25rem;
     border-radius: 0;
     white-space: nowrap;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease;
   }
 
-  .navbar-cta:hover {
-    background: #C9A84C;
-    color: #0D1F2D;
-  }
+  .navbar-cta:hover { background: #b8953e; }
 
-  /* Cuando el navbar está transparente, el botón CTA usa borde para destacar */
-  .navbar.transparent .navbar-cta {
-    background: #0D1F2D;
-    border: 1px solid rgba(255,255,255,0.25);
-  }
-
-  .navbar.transparent .navbar-cta:hover {
-    background: #C9A84C;
-    border-color: #C9A84C;
-    color: #0D1F2D;
-  }
-
-  /* ── Hamburger ────────────────────────────────── */
+  /* Hamburger */
   .hamburger {
     display: none;
     flex-direction: column;
@@ -198,19 +163,18 @@ const { lang } = Astro.props;
     height: 2px;
     background: #ffffff;
     border-radius: 2px;
-    transition: background 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
-
-  .navbar.scrolled .hamburger span { background: #0D1F2D; }
 
   .hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
   .hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
   .hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  /* ── Mobile menu ──────────────────────────────── */
+  /* Mobile menu */
   .mobile-menu {
     display: none;
     background: #0D1F2D;
+    border-top: 1px solid rgba(255,255,255,0.08);
     padding: 1.5rem;
   }
 
@@ -251,7 +215,7 @@ const { lang } = Astro.props;
 
   .mobile-cta:hover { background: #b8953e; }
 
-  /* ── Responsive ───────────────────────────────── */
+  /* Responsive */
   @media (max-width: 900px) {
     .navbar-links,
     .navbar-right { display: none; }
@@ -263,29 +227,13 @@ const { lang } = Astro.props;
 </style>
 
 <script>
-  const navbar   = document.getElementById('navbar')!;
   const hamburger = document.getElementById('hamburger')!;
   const mobileMenu = document.getElementById('mobile-menu')!;
 
-  // Scroll → transparente / sólido
-  function updateNavbar() {
-    if (window.scrollY > 40) {
-      navbar.classList.add('scrolled');
-      navbar.classList.remove('transparent');
-    } else {
-      navbar.classList.remove('scrolled');
-      navbar.classList.add('transparent');
-    }
-  }
-  updateNavbar();
-  window.addEventListener('scroll', updateNavbar, { passive: true });
-
-  // Hamburger toggle
   hamburger.addEventListener('click', () => {
     const open = hamburger.getAttribute('aria-expanded') === 'true';
     hamburger.setAttribute('aria-expanded', String(!open));
     mobileMenu.classList.toggle('open', !open);
     mobileMenu.setAttribute('aria-hidden', String(open));
-    if (!open) navbar.classList.add('scrolled');
   });
 </script>

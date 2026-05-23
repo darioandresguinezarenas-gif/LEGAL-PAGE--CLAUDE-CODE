@@ -7,7 +7,7 @@ export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
-    name: 'Güinez Galaz Abogados',
+    name: 'Guíñez Galaz Abogados',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.svg`,
     image: `${BASE_URL}/og-default.jpg`,
@@ -52,11 +52,11 @@ export function generateArticleSchema(article: {
     url: `${BASE_URL}/${lang}/blog/${article.slug}`,
     author: {
       '@type': 'Person',
-      name: article.autor ?? 'Güinez Galaz Abogados',
+      name: article.autor ?? 'Guíñez Galaz Abogados',
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Güinez Galaz Abogados',
+      name: 'Guíñez Galaz Abogados',
       logo: { '@type': 'ImageObject', url: `${BASE_URL}/logo.svg` },
     },
   };
