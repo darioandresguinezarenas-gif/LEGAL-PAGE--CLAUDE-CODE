@@ -7,8 +7,6 @@ interface Props {
 }
 const { lang } = Astro.props;
 
-// Placeholder - Fase posterior: fetch desde Supabase
-//   SELECT * FROM areas_practica WHERE activo = true AND deleted_at IS NULL ORDER BY orden
 const areas = [
   {
     slug: 'laboral',
@@ -43,157 +41,187 @@ const areas = [
 ];
 ---
 
-<!-- Hero interior -->
-<section class="areas-hero">
-  <div class="areas-hero-inner">
-    <p class="areas-hero-label">{t(lang, 'areas.heroLabel')}</p>
-    <h1 class="areas-hero-title">{t(lang, 'areas.heroTitle')}</h1>
-    <p class="areas-hero-subtitle">{t(lang, 'areas.heroSubtitle')}</p>
-  </div>
-</section>
-
-<!-- Grid de áreas -->
-<section class="areas-section">
-  <div class="areas-container">
-    <div class="areas-grid">
-      {areas.map((area) => (
-        <article class="area-card">
-          <div class="area-card-inner">
-            <div class="area-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
-                stroke-linejoin="round" aria-hidden="true" set:html={area.icon} />
-            </div>
-            <h2 class="area-card-title">{t(lang, `areas.${area.key}.title`)}</h2>
-            <p class="area-card-desc">{t(lang, `areas.${area.key}.desc`)}</p>
-            <a href={`/${lang}/areas-practica/${area.slug}`} class="area-explore-link">
-              {t(lang, 'areas.explore')}
-            </a>
-          </div>
-        </article>
-      ))}
+<div class="areas-page">
+  <!-- Page header -->
+  <section class="page-header">
+    <div class="header-inner">
+      <p class="header-label">{t(lang, 'areas.heroLabel')}</p>
+      <h1 class="header-title">{t(lang, 'areas.heroTitle')}</h1>
+      <p class="header-subtitle">{t(lang, 'areas.heroSubtitle')}</p>
     </div>
-  </div>
-</section>
+  </section>
+
+  <!-- Areas grid -->
+  <section class="grid-section">
+    <div class="grid-container">
+      <div class="areas-grid">
+        {areas.map((area) => (
+          <a href={`/${lang}/areas-practica/${area.slug}`} class="area-card">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="32"
+                height="32"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                set:html={area.icon}
+              />
+            </div>
+            <h2 class="card-title">{t(lang, `areas.${area.key}.title`)}</h2>
+            <p class="card-desc">{t(lang, `areas.${area.key}.desc`)}</p>
+            <span class="card-explore">{t(lang, 'areas.explore')}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</div>
 
 <style>
-  /* Hero interior */
-  .areas-hero {
-    background: #0D1F2D;
-    padding: 9rem 0 5rem;
+  .areas-page {
+    background: #F5F5F0;
+    min-height: 100vh;
+  }
+
+  /* --- Page header --- */
+  .page-header {
+    padding: 9rem 1.5rem 5rem;
     text-align: center;
   }
 
-  .areas-hero-inner {
-    max-width: 760px;
+  .header-inner {
+    max-width: 640px;
     margin-inline: auto;
-    padding-inline: 1.5rem;
   }
 
-  .areas-hero-label {
+  .header-label {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 0.6875rem;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #C9A84C;
     margin-bottom: 1rem;
   }
 
-  .areas-hero-title {
+  .header-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-size: clamp(2.5rem, 5vw, 3.25rem);
     font-weight: 700;
-    color: #ffffff;
+    color: #1A1A1A;
     line-height: 1.1;
     margin-bottom: 1.25rem;
   }
 
-  .areas-hero-subtitle {
+  .header-subtitle {
     font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    color: rgba(255, 255, 255, 0.72);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: #6B6B6B;
+    max-width: 560px;
+    margin-inline: auto;
   }
 
-  /* Grid */
-  .areas-section {
-    background: #ffffff;
-    padding: 5rem 0 6rem;
+  /* --- Grid section --- */
+  .grid-section {
+    padding: 0 1.5rem 5rem;
   }
 
-  .areas-container {
+  .grid-container {
     max-width: 1200px;
     margin-inline: auto;
-    padding-inline: 1.5rem;
   }
 
   .areas-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+    gap: 24px;
   }
 
+  /* --- Area card --- */
   .area-card {
-    border: 1px solid #E8E8E0;
+    display: flex;
+    flex-direction: column;
     background: #ffffff;
-    transition: box-shadow 0.25s ease, border-left-color 0.25s ease, transform 0.2s ease;
+    border: 1px solid #E8E8E0;
+    border-left: 1px solid #E8E8E0;
+    border-radius: 8px;
+    padding: 32px;
+    text-decoration: none;
+    transition: box-shadow 0.25s ease, border-left 0.25s ease, transform 0.2s ease;
   }
 
   .area-card:hover {
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
     border-left: 3px solid #C9A84C;
     transform: translateY(-2px);
   }
 
-  .area-card-inner {
-    padding: 2rem 1.75rem;
-  }
-
-  .area-icon {
-    width: 24px;
-    height: 24px;
+  .card-icon {
     color: #0D1F2D;
-    margin-bottom: 1.25rem;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
   }
 
-  .area-card-title {
+  .card-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.3125rem;
+    font-size: 1.375rem;
     font-weight: 700;
-    color: #0D1F2D;
-    margin-bottom: 0.625rem;
+    color: #1A1A1A;
     line-height: 1.2;
+    margin-top: 16px;
   }
 
-  .area-card-desc {
+  .card-desc {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 0.875rem;
-    color: rgba(26, 26, 26, 0.65);
-    line-height: 1.65;
-    margin-bottom: 1.5rem;
+    color: #6B6B6B;
+    line-height: 1.6;
+    margin-top: 8px;
+    flex: 1;
   }
 
-  .area-explore-link {
+  .card-explore {
+    display: block;
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     color: #C9A84C;
+    margin-top: 24px;
     transition: letter-spacing 0.2s ease;
   }
 
-  .area-explore-link:hover { letter-spacing: 0.12em; }
-
-  /* Responsive */
-  @media (max-width: 900px) {
-    .areas-grid { grid-template-columns: repeat(2, 1fr); }
+  .area-card:hover .card-explore {
+    letter-spacing: 0.14em;
   }
 
-  @media (max-width: 580px) {
-    .areas-hero { padding: 7rem 0 4rem; }
-    .areas-section { padding: 4rem 0; }
-    .areas-grid { grid-template-columns: 1fr; }
-    .area-card:hover { border-left: 3px solid #C9A84C; transform: none; }
+  /* --- Responsive --- */
+  @media (max-width: 960px) {
+    .areas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .page-header {
+      padding: 7rem 1.25rem 3.5rem;
+    }
+    .grid-section {
+      padding: 0 1.25rem 4rem;
+    }
+    .areas-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .area-card:hover {
+      transform: none;
+    }
   }
 </style>

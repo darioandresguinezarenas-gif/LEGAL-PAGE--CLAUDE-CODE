@@ -1,11 +1,68 @@
 ---
-export async function getStaticPaths() {
-  return [];
-}
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AreaDetail from '../../../components/areas/AreaDetail.astro';
+import { t } from '../../../i18n/utils';
+
+const lang = 'zh' as const;
+
+export async function getStaticPaths() {
+  return ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos']
+    .map((slug) => ({ params: { slug } }));
+}
+
 const { slug } = Astro.params;
-const lang = 'zh';
+
+const icons: Record<string, string> = {
+  laboral: `<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>`,
+  civil: `<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>`,
+  penal: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`,
+  familia: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  corporativo: `<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>`,
+  contratos: `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>`,
+};
+
+const faqsBySlug: Record<string, Array<{ pregunta: string; respuesta: string }>> = {
+  laboral: [
+    { pregunta: '我什么时候应该咨询劳动律师？', respuesta: '如果您面临解雇、职场骚扰、罚款或与雇主的纠纷，请尽快寻求建议。及时行动对案件结果可能至关重要。' },
+    { pregunta: '初次咨询费用是多少？', respuesta: '首次咨询免费且无任何义务。我们将评估您的情况并解释可用的选项。' },
+    { pregunta: '您们是否处理兰卡瓜以外的案件？', respuesta: '我们为奥伊金斯大区的客户提供服务，根据案件复杂程度，也可在智利其他地区提供服务。' },
+  ],
+  civil: [
+    { pregunta: '您们审查哪类合同？', respuesta: '我们审查各类合同：房产买卖、租赁、贷款、服务协议及复杂商业合同。' },
+    { pregunta: '我可以提起损害赔偿诉讼吗？', respuesta: '可以。我们评估财产或精神损害民事索赔的可行性，并全程陪同您完成司法程序。' },
+    { pregunta: '您们处理遗产和继承事宜吗？', respuesta: '是的。我们处理继承、财产分割及智利遗产相关的所有手续。' },
+  ],
+  penal: [
+    { pregunta: '如果我被指控犯罪，我该怎么做？', respuesta: '立即联系刑事律师。您从最初时刻起就有辩护权，无需在没有法律援助的情况下陈述。' },
+    { pregunta: '您们全程参与刑事程序吗？', respuesta: '是的，从起诉和调查阶段到口头审判和上诉。' },
+    { pregunta: '您们处理复杂案件吗？', respuesta: '我们在智利刑事司法系统拥有丰富经验，包括高度复杂案件和经济犯罪。' },
+  ],
+  familia: [
+    { pregunta: '智利的离婚程序如何运作？', respuesta: '有协议离婚（较快）和基于同居终止的离婚。我们根据您的情况指导您选择最合适的方式。' },
+    { pregunta: '您们能帮助我处理抚养费问题吗？', respuesta: '可以。我们根据双方的社会经济状况和儿童最大利益，就抚养费的设定、增加或减少提供建议。' },
+    { pregunta: '什么是共同抚养权？', respuesta: '即双方父母轮流照料子女。我们评估法律可行性及对子女福祉最有利的安排。' },
+  ],
+  corporativo: [
+    { pregunta: '在智利注册一家公司需要多长时间？', respuesta: 'SpA（简化股份公司）可在一个工作日内通过简化契约成立。其他公司类型可能需要3至7个工作日。' },
+    { pregunta: '您们为哪些类型的公司提供咨询？', respuesta: '我们为SpA、SRL、SA及任何其他公司形式提供咨询，以及重组、并购业务。' },
+    { pregunta: '您们协助合规事宜吗？', respuesta: '是的。我们根据您所在行业，就劳动法、税法、环境及行业特定法规提供持续建议。' },
+  ],
+  contratos: [
+    { pregunta: '为什么签署合同前审查很重要？', respuesta: '起草不当的合同可能造成不成比例的义务、高昂的诉讼费用和重大财务损失。事先审查始终是一种投资。' },
+    { pregunta: '您们能代表我进行谈判吗？', respuesta: '可以。我们代表客户与对方直接谈判，为其争取最有利的条件。' },
+    { pregunta: '合同审查需要多长时间？', respuesta: '根据长度和复杂程度，通常需要2至5个工作日。对于紧急合同，我们提供优先审查服务。' },
+  ],
+};
+
+const areaTitle = t(lang, `areas.${slug}.title`);
+const faqs = faqsBySlug[slug] ?? [];
+const icon = icons[slug] ?? '';
 ---
-<BaseLayout title={`${slug} | Guíñez Galaz Abogados`} lang={lang}>
-  <main><h1>{slug}</h1></main>
+
+<BaseLayout
+  title={`${areaTitle} | Guíñez Galaz Abogados`}
+  description={t(lang, `areas.${slug}.desc`)}
+  lang={lang}
+>
+  <AreaDetail lang={lang} areaKey={slug} areaSlug={slug} faqs={faqs} icon={icon} />
 </BaseLayout>

@@ -1,11 +1,68 @@
 ---
-export async function getStaticPaths() {
-  return [];
-}
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AreaDetail from '../../../components/areas/AreaDetail.astro';
+import { t } from '../../../i18n/utils';
+
+const lang = 'en' as const;
+
+export async function getStaticPaths() {
+  return ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos']
+    .map((slug) => ({ params: { slug } }));
+}
+
 const { slug } = Astro.params;
-const lang = 'en';
+
+const icons: Record<string, string> = {
+  laboral: `<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>`,
+  civil: `<rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>`,
+  penal: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`,
+  familia: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
+  corporativo: `<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>`,
+  contratos: `<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>`,
+};
+
+const faqsBySlug: Record<string, Array<{ pregunta: string; respuesta: string }>> = {
+  laboral: [
+    { pregunta: 'When should I consult a labour lawyer?', respuesta: 'If you are facing dismissal, workplace harassment, fines or disputes with your employer, seek advice promptly. Acting in time can be decisive for the outcome of your case.' },
+    { pregunta: 'How much does an initial consultation cost?', respuesta: 'The first consultation is free and without obligation. We assess your situation and explain the options available to you.' },
+    { pregunta: 'Do you handle cases outside Rancagua?', respuesta: 'We serve clients throughout the O\'Higgins Region and, depending on case complexity, in other regions of Chile.' },
+  ],
+  civil: [
+    { pregunta: 'What types of contracts do you review?', respuesta: 'We review all types of contracts: property purchases, leases, loans, service agreements and complex commercial contracts.' },
+    { pregunta: 'Can I sue for damages?', respuesta: 'Yes. We assess the viability of a civil claim for patrimonial or moral damages and accompany you throughout the judicial process.' },
+    { pregunta: 'Do you handle estates and succession?', respuesta: 'Yes. We manage successions, asset partitions and all formalities associated with estates in Chile.' },
+  ],
+  penal: [
+    { pregunta: 'What should I do if I am charged with an offence?', respuesta: 'Contact a criminal lawyer immediately. You have the right to a defense from the very first moment and are not required to make a statement without legal assistance.' },
+    { pregunta: 'Do you cover the entire criminal process?', respuesta: 'Yes, from the indictment and investigation stage through to the oral trial and appeals.' },
+    { pregunta: 'Do you handle complex cases?', respuesta: 'We have extensive experience in the Chilean criminal justice system, including high-complexity cases and economic offences.' },
+  ],
+  familia: [
+    { pregunta: 'How does divorce work in Chile?', respuesta: 'There is divorce by mutual consent, which is faster, and divorce based on cessation of cohabitation. We guide you on the most appropriate route for your situation.' },
+    { pregunta: 'Can you help me with child support?', respuesta: 'Yes. We advise on establishing, increasing or reducing child support payments based on the parties\' socioeconomic circumstances and the best interests of the child.' },
+    { pregunta: 'What is shared custody?', respuesta: 'It is the alternating care of a child between both parents. We assess the legal viability and the arrangements most beneficial to the child\'s wellbeing.' },
+  ],
+  corporativo: [
+    { pregunta: 'How long does it take to incorporate a company in Chile?', respuesta: 'An SpA can be incorporated in one business day using a simplified deed. Other company types may take between 3 and 7 business days.' },
+    { pregunta: 'What types of companies do you advise?', respuesta: 'We advise on SpA, SRL, SA and any other corporate form, as well as reorganisations, mergers and acquisitions.' },
+    { pregunta: 'Do you assist with regulatory compliance?', respuesta: 'Yes. We provide ongoing advice on labour, tax, environmental and sector-specific regulations according to your industry.' },
+  ],
+  contratos: [
+    { pregunta: 'Why is it important to review a contract before signing?', respuesta: 'A poorly drafted contract can create disproportionate obligations, costly litigation and significant financial losses. Prior review is always an investment.' },
+    { pregunta: 'Can you negotiate on my behalf?', respuesta: 'Yes. We represent our clients in direct negotiations with counterparties, seeking the most favourable conditions for their interests.' },
+    { pregunta: 'How long does a contract review take?', respuesta: 'Depending on length and complexity, between 2 and 5 business days. For urgent contracts, we offer priority review.' },
+  ],
+};
+
+const areaTitle = t(lang, `areas.${slug}.title`);
+const faqs = faqsBySlug[slug] ?? [];
+const icon = icons[slug] ?? '';
 ---
-<BaseLayout title={`${slug} | Guíñez Galaz Abogados`} lang={lang}>
-  <main><h1>{slug}</h1></main>
+
+<BaseLayout
+  title={`${areaTitle} | Guíñez Galaz Abogados`}
+  description={t(lang, `areas.${slug}.desc`)}
+  lang={lang}
+>
+  <AreaDetail lang={lang} areaKey={slug} areaSlug={slug} faqs={faqs} icon={icon} />
 </BaseLayout>

@@ -1,0 +1,433 @@
+---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+import FaqAccordion from './FaqAccordion.astro';
+
+interface FaqItem {
+  pregunta: string;
+  respuesta: string;
+}
+
+interface Props {
+  lang: Lang;
+  areaKey: string;
+  areaSlug: string;
+  faqs: FaqItem[];
+  icon: string;
+}
+
+const { lang, areaKey, areaSlug, faqs, icon } = Astro.props;
+
+const title = t(lang, `areas.${areaKey}.title`);
+const desc = t(lang, `areas.${areaKey}.desc`);
+
+const contactLabel: Record<Lang, string> = {
+  es: 'Consultar sobre esta área',
+  en: 'Enquire about this area',
+  zh: '咨询该领域',
+};
+
+const faqTitle: Record<Lang, string> = {
+  es: 'Preguntas Frecuentes',
+  en: 'Frequently Asked Questions',
+  zh: '常见问题',
+};
+
+const backLabel: Record<Lang, string> = {
+  es: '← Volver a Áreas',
+  en: '← Back to Areas',
+  zh: '← 返回领域',
+};
+
+const includesTitle: Record<Lang, string> = {
+  es: '¿Qué incluye este servicio?',
+  en: 'What does this service include?',
+  zh: '该服务包含哪些内容？',
+};
+
+const noticeLabel: Record<Lang, string> = {
+  es: 'Contenido detallado en actualización. Contáctenos para información completa sobre este servicio.',
+  en: 'Detailed content being updated. Contact us for full information about this service.',
+  zh: '详细内容正在更新中。请联系我们获取该服务的完整信息。',
+};
+---
+
+<div class="area-detail">
+  <!-- Dark hero -->
+  <section class="detail-hero">
+    <div class="hero-inner">
+      <a href={`/${lang}/areas-practica`} class="hero-back">{backLabel[lang]}</a>
+      <div class="hero-icon" aria-hidden="true">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          set:html={icon}
+        />
+      </div>
+      <h1 class="hero-title">{title}</h1>
+      <p class="hero-desc">{desc}</p>
+    </div>
+  </section>
+
+  <!-- Main layout -->
+  <div class="detail-body">
+    <div class="body-container">
+      <main class="detail-main">
+        <!-- Service includes section -->
+        <section class="includes-section">
+          <h2 class="section-heading">{includesTitle[lang]}</h2>
+          <p class="content-notice">{noticeLabel[lang]}</p>
+        </section>
+
+        <!-- FAQ section -->
+        {faqs.length > 0 && (
+          <section class="faq-wrapper">
+            <h2 class="section-heading">{faqTitle[lang]}</h2>
+            <FaqAccordion lang={lang} items={faqs} />
+          </section>
+        )}
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="detail-sidebar">
+        <div class="cta-card">
+          <p class="cta-card-label">{lang === 'es' ? 'CONSULTA LEGAL' : lang === 'en' ? 'LEGAL INQUIRY' : '法律咨询'}</p>
+          <h3 class="cta-card-title">{contactLabel[lang]}</h3>
+          <p class="cta-card-desc">
+            {lang === 'es'
+              ? 'Cuéntenos su caso. Responderemos con la orientación que necesita, de forma confidencial y sin compromiso.'
+              : lang === 'en'
+              ? 'Tell us about your case. We will respond with the guidance you need, confidentially and without obligation.'
+              : '告诉我们您的情况。我们将以保密方式为您提供所需指导，无任何义务。'}
+          </p>
+          <a href={`/${lang}/contacto`} class="cta-btn">
+            {contactLabel[lang]}
+          </a>
+          <div class="cta-divider"></div>
+          <ul class="cta-meta">
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.69 4.82 2 2 0 0 1 3.66 2.5h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.99-.99a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.42z"/></svg>
+              +56 9 XXXX XXXX
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              {lang === 'es' ? 'Lun–Vie, 9:00–18:00' : lang === 'en' ? 'Mon–Fri, 9:00–18:00' : '周一至周五 9:00–18:00'}
+            </li>
+            <li>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Rancagua, Chile
+            </li>
+          </ul>
+        </div>
+
+        <!-- Back to all areas -->
+        <a href={`/${lang}/areas-practica`} class="back-link">
+          {backLabel[lang]}
+        </a>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* --- Hero --- */
+  .detail-hero {
+    background: #0D1F2D;
+    padding: 8rem 1.5rem 4rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .hero-inner {
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .hero-back {
+    display: inline-block;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(201, 168, 76, 0.85);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    margin-bottom: 2.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .hero-back:hover { color: #C9A84C; }
+
+  .hero-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background: rgba(201, 168, 76, 0.12);
+    border: 1px solid rgba(201, 168, 76, 0.25);
+    border-radius: 50%;
+    margin: 0 auto 1.75rem;
+    color: #C9A84C;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.25rem, 4.5vw, 3rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-desc {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.72);
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  /* --- Body layout --- */
+  .detail-body {
+    background: #F5F5F0;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .body-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* --- Main content --- */
+  .detail-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .section-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1A1A1A;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .content-notice {
+    background: #ffffff;
+    border: 1px solid #E8E8E0;
+    border-left: 3px solid #C9A84C;
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    color: #6B6B6B;
+    line-height: 1.6;
+  }
+
+  .faq-wrapper :global(.faq-section) {
+    background: transparent;
+    padding: 0;
+  }
+
+  .faq-wrapper :global(.faq-list) {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid #E8E8E0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .faq-wrapper :global(.faq-item) {
+    border-bottom: 1px solid #E8E8E0;
+  }
+
+  .faq-wrapper :global(.faq-item:last-child) {
+    border-bottom: none;
+  }
+
+  .faq-wrapper :global(.faq-trigger) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 1.25rem 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1A1A1A;
+    text-align: left;
+    transition: background 0.15s ease;
+  }
+
+  .faq-wrapper :global(.faq-trigger:hover) {
+    background: #F5F5F0;
+  }
+
+  .faq-wrapper :global(.faq-trigger::after) {
+    content: '+';
+    font-size: 1.25rem;
+    color: #C9A84C;
+    flex-shrink: 0;
+    margin-left: 1rem;
+    transition: transform 0.2s ease;
+  }
+
+  .faq-wrapper :global(.faq-trigger[aria-expanded="true"]::after) {
+    content: '−';
+  }
+
+  .faq-wrapper :global(.faq-answer) {
+    padding: 0 1.5rem 1.25rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9rem;
+    color: #6B6B6B;
+    line-height: 1.65;
+  }
+
+  /* --- Sidebar --- */
+  .detail-sidebar {
+    position: sticky;
+    top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .cta-card {
+    background: #0D1F2D;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .cta-card-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 0.75rem;
+  }
+
+  .cta-card-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 0.875rem;
+  }
+
+  .cta-card-desc {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-btn {
+    display: block;
+    background: #C9A84C;
+    color: #0D1F2D;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    text-align: center;
+    padding: 0.875rem 1.5rem;
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .cta-btn:hover {
+    background: #b8943f;
+    transform: translateY(-1px);
+  }
+
+  .cta-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    margin: 1.5rem 0;
+  }
+
+  .cta-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .cta-meta li {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .cta-meta li svg {
+    color: #C9A84C;
+    flex-shrink: 0;
+  }
+
+  .back-link {
+    display: inline-block;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #6B6B6B;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    padding: 0.5rem 0;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover { color: #C9A84C; }
+
+  /* --- Responsive --- */
+  @media (max-width: 900px) {
+    .body-container {
+      grid-template-columns: 1fr;
+    }
+
+    .detail-sidebar {
+      position: static;
+      order: -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .detail-hero {
+      padding: 7rem 1.25rem 3.5rem;
+    }
+
+    .detail-body {
+      padding: 3rem 1.25rem 5rem;
+    }
+  }
+</style>
