@@ -1,15 +1,360 @@
 ---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
 interface Props {
-  lang: 'es' | 'en' | 'zh';
+  lang: Lang;
 }
 const { lang } = Astro.props;
+
+// Áreas de práctica para la columna del footer
+const areasSlugs = ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos'];
+
+const year = new Date().getFullYear();
 ---
-<!-- TODO: Fase 2 — implementar footer completo con diseño Google Stitch (#0D1F2D) -->
-<footer class="footer">
+
+<footer class="footer" role="contentinfo">
   <div class="footer-inner">
-    <p>&copy; {new Date().getFullYear()} Güinez Galaz Abogados. Todos los derechos reservados.</p>
-    <nav>
-      <a href={`/${lang}/contacto`}>Contacto</a>
-    </nav>
+
+    <!-- Columna 1: Logo + tagline + redes sociales -->
+    <div class="footer-col footer-brand">
+      <a href={`/${lang}`} class="footer-logo" aria-label="Güinez Galaz Abogados — Inicio">
+        GÜINEZ GALAZ
+      </a>
+      <p class="footer-tagline">{t(lang, 'footer.tagline')}</p>
+
+      <!-- Redes sociales -->
+      <div class="footer-social" aria-label="Redes sociales">
+        <!-- LinkedIn -->
+        <a href="#" class="social-link" aria-label="LinkedIn" rel="noopener noreferrer" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
+          </svg>
+        </a>
+        <!-- Instagram -->
+        <a href="#" class="social-link" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/56900000000" class="social-link" aria-label="WhatsApp" rel="noopener noreferrer" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Columna 2: Áreas -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">{t(lang, 'footer.areasTitle')}</h3>
+      <nav aria-label="Áreas de práctica">
+        {areasSlugs.map((slug) => (
+          <a href={`/${lang}/areas-practica/${slug}`} class="footer-link">
+            {t(lang, `areas.${slug}.title`)}
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <!-- Columna 3: Oficina -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">{t(lang, 'footer.officeTitle')}</h3>
+      <address class="footer-address">
+        <p>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:middle;margin-right:6px;opacity:.6">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          {t(lang, 'footer.address')}
+        </p>
+        <p>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:middle;margin-right:6px;opacity:.6">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.42A2 2 0 0 1 3.58 1.25h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/>
+          </svg>
+          {t(lang, 'footer.phone')}
+        </p>
+        <p>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:middle;margin-right:6px;opacity:.6">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          {t(lang, 'footer.hours')}
+        </p>
+        <a href={`/${lang}/pagos`} class="footer-pagos-link">
+          💳 {lang === 'es' ? 'Pagar honorarios' : lang === 'en' ? 'Pay fees' : '支付费用'}
+        </a>
+      </address>
+    </div>
+
+    <!-- Columna 4: Newsletter -->
+    <div class="footer-col">
+      <h3 class="footer-col-title">{t(lang, 'footer.newsletterTitle')}</h3>
+      <p class="footer-newsletter-desc">
+        {lang === 'es' ? 'Análisis legales y actualizaciones del estudio en su correo.'
+          : lang === 'en' ? 'Legal insights and firm updates delivered to your inbox.'
+          : '法律洞见和事务所动态直送您的邮箱。'}
+      </p>
+      <form class="newsletter-form" novalidate>
+        <input
+          type="email"
+          name="email"
+          placeholder={t(lang, 'footer.newsletterPlaceholder')}
+          required
+          autocomplete="email"
+          class="newsletter-input"
+        />
+        <button type="submit" class="newsletter-btn">
+          {t(lang, 'footer.newsletterBtn')}
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p class="footer-copyright">
+        &copy; {year} Güinez Galaz Abogados. {t(lang, 'footer.copyright')}.
+      </p>
+      <nav class="footer-legal" aria-label="Legal">
+        <a href={`/${lang}/privacidad`} class="footer-legal-link">{t(lang, 'footer.privacy')}</a>
+        <span aria-hidden="true">·</span>
+        <a href={`/${lang}/terminos`}   class="footer-legal-link">{t(lang, 'footer.terms')}</a>
+      </nav>
+    </div>
   </div>
 </footer>
+
+<style>
+  /* ── Base ─────────────────────────────────────── */
+  .footer {
+    background: #0D1F2D;
+    color: rgba(255, 255, 255, 0.70);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 5rem 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.4fr;
+    gap: 3rem;
+  }
+
+  /* ── Column base ──────────────────────────────── */
+  .footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .footer-col-title {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.40);
+    margin-bottom: 0.25rem;
+  }
+
+  /* ── Col 1: Brand ─────────────────────────────── */
+  .footer-logo {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    transition: color 0.2s ease;
+  }
+
+  .footer-logo:hover { color: #e0bc6b; }
+
+  .footer-tagline {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.55);
+    max-width: 220px;
+  }
+
+  /* Redes sociales */
+  .footer-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .social-link {
+    color: rgba(255, 255, 255, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .social-link:hover {
+    color: #C9A84C;
+    border-color: #C9A84C;
+    background: rgba(201,168,76,0.08);
+  }
+
+  /* ── Col 2: Links ─────────────────────────────── */
+  .footer-link {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.60);
+    transition: color 0.2s ease;
+    padding: 0.125rem 0;
+  }
+
+  .footer-link:hover { color: #C9A84C; }
+
+  /* ── Col 3: Address ───────────────────────────── */
+  .footer-address {
+    font-style: normal;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .footer-address p {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.60);
+    line-height: 1.5;
+  }
+
+  .footer-pagos-link {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #C9A84C;
+    margin-top: 0.25rem;
+    transition: color 0.2s ease;
+  }
+
+  .footer-pagos-link:hover { color: #e0bc6b; }
+
+  /* ── Col 4: Newsletter ────────────────────────── */
+  .footer-newsletter-desc {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.50);
+    line-height: 1.6;
+  }
+
+  .newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-top: 0.25rem;
+  }
+
+  .newsletter-input {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+    border-radius: 0;
+    width: 100%;
+  }
+
+  .newsletter-input::placeholder { color: rgba(255,255,255,0.35); }
+
+  .newsletter-input:focus {
+    border-color: #C9A84C;
+    background: rgba(255,255,255,0.10);
+  }
+
+  .newsletter-btn {
+    background: #C9A84C;
+    color: #0D1F2D;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.75rem 1rem;
+    border-radius: 0;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s ease;
+  }
+
+  .newsletter-btn:hover { background: #b8953e; }
+
+  /* ── Bottom bar ───────────────────────────────── */
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .footer-bottom-inner {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: 1.375rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-copyright {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .footer-legal {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .footer-legal span {
+    color: rgba(255,255,255,0.2);
+    font-size: 0.75rem;
+  }
+
+  .footer-legal-link {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.35);
+    transition: color 0.2s ease;
+  }
+
+  .footer-legal-link:hover { color: #C9A84C; }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 1024px) {
+    .footer-inner {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 580px) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+      padding: 3rem 1.5rem 2.5rem;
+      gap: 2rem;
+    }
+
+    .footer-bottom-inner {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

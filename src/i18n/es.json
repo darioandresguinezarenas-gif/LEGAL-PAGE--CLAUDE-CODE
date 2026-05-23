@@ -9,11 +9,54 @@
   "hero": {
     "label": "ESTUDIO JURÍDICO · RANCAGUA, CHILE",
     "title": "Defensa Legal de Excelencia en Chile",
-    "subtitle": "Asesoría jurídica de alto nivel en Derecho Laboral, Civil, Penal y Familia.",
+    "subtitle": "Asesoría jurídica de alto nivel en Derecho Laboral, Civil, Penal y Familia. Atendemos en tres idiomas.",
     "ctaPrimary": "Consulta Gratuita",
     "ctaSecondary": "Nuestras Áreas"
   },
+  "areas": {
+    "sectionTitle": "Áreas de Práctica",
+    "sectionSubtitle": "Asesoría jurídica integral para personas y empresas en Rancagua y la Región de O'Higgins.",
+    "explore": "EXPLORAR →",
+    "laboral":     { "title": "Derecho Laboral",        "desc": "Defensa de trabajadores y empleadores en despidos, tutela laboral, negociación colectiva y cumplimiento normativo." },
+    "civil":       { "title": "Derecho Civil",           "desc": "Contratos, responsabilidad civil, propiedad, posesión y sucesiones. Soluciones legales claras y efectivas." },
+    "penal":       { "title": "Derecho Penal",           "desc": "Defensa penal sólida en todas las etapas del proceso. Protegemos sus derechos con experiencia y determinación." },
+    "familia":     { "title": "Derecho de Familia",      "desc": "Divorcios, pensiones alimenticias, tuición y mediación familiar con sensibilidad y profesionalismo." },
+    "corporativo": { "title": "Derecho Corporativo",     "desc": "Constitución de empresas, cumplimiento regulatorio y asesoría estratégica para negocios en Chile." },
+    "contratos":   { "title": "Contratos y Negociación", "desc": "Redacción, revisión y negociación de contratos complejos que protegen sus intereses empresariales." }
+  },
+  "reviews": {
+    "sectionTitle": "Nuestra Reputación es Nuestra Garantía",
+    "items": [
+      {
+        "text": "Excelente atención y resultados sobresalientes. El equipo de Güinez Galaz resolvió nuestro conflicto laboral de forma rápida y profesional. Totalmente recomendados.",
+        "name": "María González",
+        "role": "Gerente de Recursos Humanos"
+      },
+      {
+        "text": "Profesionales comprometidos y altamente capacitados. Nos asesoraron en la constitución de nuestra empresa con claridad y eficiencia en cada paso del proceso.",
+        "name": "Carlos Rodríguez",
+        "role": "Director Ejecutivo"
+      },
+      {
+        "text": "Representación impecable en un proceso penal complejo. Su dedicación y conocimiento del sistema judicial chileno marcaron la diferencia. Eternamente agradecida.",
+        "name": "Ana Martínez",
+        "role": "Empresaria"
+      }
+    ]
+  },
+  "clients": {
+    "sectionTitle": "HAN CONFIADO EN NOSOTROS"
+  },
   "footer": {
+    "tagline": "Excelencia jurídica al servicio de sus intereses.",
+    "areasTitle": "ÁREAS",
+    "officeTitle": "OFICINA",
+    "newsletterTitle": "NEWSLETTER",
+    "newsletterPlaceholder": "Su correo electrónico",
+    "newsletterBtn": "SUSCRIBIRSE",
+    "address": "Rancagua, Región de O'Higgins, Chile",
+    "phone": "+56 9 XXXX XXXX",
+    "hours": "Lunes a Viernes, 9:00–18:00",
     "copyright": "Todos los derechos reservados",
     "privacy": "Política de Privacidad",
     "terms": "Términos de Servicio"

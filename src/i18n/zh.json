@@ -9,11 +9,54 @@
   "hero": {
     "label": "律师事务所 · 智利兰卡瓜",
     "title": "卓越法律辩护服务",
-    "subtitle": "提供劳动法、民法、刑法和家庭法的高水准法律咨询。",
+    "subtitle": "提供劳动法、民法、刑法和家庭法的高水准法律咨询，提供三种语言服务。",
     "ctaPrimary": "免费咨询",
     "ctaSecondary": "我们的业务"
   },
+  "areas": {
+    "sectionTitle": "业务领域",
+    "sectionSubtitle": "为兰卡瓜及奥希金斯大区的个人和企业提供全面的法律咨询服务。",
+    "explore": "探索 →",
+    "laboral":     { "title": "劳动法",       "desc": "代理工人和雇主处理解雇、劳动诉讼、集体谈判及合规问题。" },
+    "civil":       { "title": "民法",         "desc": "合同、民事责任、财产、占有与继承。提供清晰有效的法律解决方案。" },
+    "penal":       { "title": "刑法",         "desc": "在诉讼各阶段提供坚实的刑事辩护。以经验和决心保护您的权利。" },
+    "familia":     { "title": "家庭法",       "desc": "离婚、抚养费、监护权及家庭调解，专业且富有同理心。" },
+    "corporativo": { "title": "公司法",       "desc": "公司设立、监管合规及在智利经营业务的战略咨询。" },
+    "contratos":   { "title": "合同与谈判",   "desc": "起草、审查和谈判复杂合同，保护您的商业利益。" }
+  },
+  "reviews": {
+    "sectionTitle": "我们的声誉是我们的保证",
+    "items": [
+      {
+        "text": "服务出色，成果斐然。Güinez Galaz团队迅速、专业地解决了我们的劳动争议。强烈推荐。",
+        "name": "María González",
+        "role": "人力资源经理"
+      },
+      {
+        "text": "专业、敬业、高素质。他们在公司设立的每个步骤都给予了清晰高效的指导。",
+        "name": "Carlos Rodríguez",
+        "role": "首席执行官"
+      },
+      {
+        "text": "在复杂刑事案件中提供了无懈可击的辩护。他们对智利司法体系的深入了解发挥了决定性作用。永远感激。",
+        "name": "Ana Martínez",
+        "role": "企业家"
+      }
+    ]
+  },
+  "clients": {
+    "sectionTitle": "他们信任我们"
+  },
   "footer": {
+    "tagline": "法律卓越，服务您的利益。",
+    "areasTitle": "业务领域",
+    "officeTitle": "办公室",
+    "newsletterTitle": "通讯订阅",
+    "newsletterPlaceholder": "您的电子邮件",
+    "newsletterBtn": "订阅",
+    "address": "智利奥希金斯大区兰卡瓜",
+    "phone": "+56 9 XXXX XXXX",
+    "hours": "周一至周五，9:00–18:00",
     "copyright": "版权所有",
     "privacy": "隐私政策",
     "terms": "服务条款"

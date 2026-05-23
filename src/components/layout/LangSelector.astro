@@ -10,20 +10,72 @@ const langs = [
   { code: 'zh', label: '中文' },
 ];
 
-// Construir URL equivalente en el otro idioma
 const currentPath = Astro.url.pathname;
-const getLangUrl = (targetLang: string) => {
-  return currentPath.replace(/^\/(es|en|zh)/, `/${targetLang}`);
-};
+const getLangUrl = (targetLang: string) =>
+  currentPath.replace(/^\/(es|en|zh)/, `/${targetLang}`);
 ---
-<div class="lang-selector">
+
+<div class="lang-selector" role="navigation" aria-label="Selector de idioma">
   {langs.map(({ code, label }) => (
     <a
       href={getLangUrl(code)}
-      class:list={['lang-option', { active: code === currentLang }]}
-      aria-current={code === currentLang ? 'true' : undefined}
+      class:list={['lang-opt', { active: code === currentLang }]}
+      aria-current={code === currentLang ? 'page' : undefined}
+      lang={code}
     >
       {label}
     </a>
   ))}
 </div>
+
+<style>
+  .lang-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lang-opt {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.55);
+    padding: 2px 4px;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  /* Separador | entre opciones */
+  .lang-opt:not(:last-child)::after {
+    content: '|';
+    position: absolute;
+    right: -0.375rem;
+    color: rgba(255,255,255,0.2);
+    font-weight: 300;
+  }
+
+  .lang-opt:hover { color: rgba(255,255,255,0.9); }
+
+  .lang-opt.active {
+    color: #C9A84C;
+    font-weight: 600;
+  }
+
+  /* Cuando navbar está scrolled (clase en el ancestro) */
+  :global(.navbar.scrolled) .lang-opt {
+    color: rgba(26, 26, 26, 0.50);
+  }
+
+  :global(.navbar.scrolled) .lang-opt::after {
+    color: rgba(26,26,26,0.2);
+  }
+
+  :global(.navbar.scrolled) .lang-opt:hover {
+    color: #C9A84C;
+  }
+
+  :global(.navbar.scrolled) .lang-opt.active {
+    color: #C9A84C;
+  }
+</style>

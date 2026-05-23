@@ -1,18 +1,96 @@
 ---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
 interface Props {
-  lang: 'es' | 'en' | 'zh';
+  lang: Lang;
 }
 const { lang } = Astro.props;
-// TODO: Fase 4 — fetch clientes_destacados desde Supabase (activo=true, deleted_at IS NULL)
-const clients: any[] = [];
+
+// Clientes placeholder — Fase 4: cargar desde tabla clientes_destacados en Supabase
+const clients = [
+  { nombre: 'Manpower',     texto: 'Manpower' },
+  { nombre: 'MAQBike',      texto: 'MAQBike'  },
+  { nombre: 'Cygnus Hotel', texto: 'Cygnus'   },
+];
 ---
+
 <section class="clients-section">
-  <p class="clients-label">
-    {lang === 'es' ? 'HAN CONFIADO EN NOSOTROS' : lang === 'en' ? 'THEY TRUSTED US' : '他们信任我们'}
-  </p>
-  <div class="clients-logos">
-    {clients.map((c) => (
-      <img src={c.logo_url} alt={c.nombre} class="client-logo" loading="lazy" />
-    ))}
+  <div class="clients-container">
+    <p class="clients-label">{t(lang, 'clients.sectionTitle')}</p>
+
+    <div class="clients-row">
+      {clients.map((client) => (
+        <div class="client-logo-wrapper" title={client.nombre}>
+          <!-- Placeholder tipográfico — reemplazar con <img> cuando el cliente entregue logos PNG -->
+          <span class="client-logo-text">{client.texto}</span>
+        </div>
+      ))}
+    </div>
   </div>
 </section>
+
+<style>
+  .clients-section {
+    background: #F5F5F0;
+    padding: 4rem 0;
+  }
+
+  .clients-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  /* Label uppercase pequeño */
+  .clients-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(26, 26, 26, 0.45);
+  }
+
+  /* Fila de logos */
+  .clients-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .client-logo-wrapper {
+    filter: grayscale(100%) opacity(0.45);
+    transition: filter 0.35s ease, transform 0.25s ease;
+    cursor: default;
+  }
+
+  .client-logo-wrapper:hover {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.04);
+  }
+
+  /* Tipografía placeholder — simula un logotipo corporate */
+  .client-logo-text {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #0D1F2D;
+    display: block;
+    padding: 0.25rem 0;
+  }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 640px) {
+    .clients-row { gap: 2.5rem; }
+    .clients-section { padding: 3rem 0; }
+  }
+</style>

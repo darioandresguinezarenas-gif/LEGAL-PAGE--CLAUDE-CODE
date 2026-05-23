@@ -1,43 +1,191 @@
 ---
+import { t } from '../../i18n/utils';
+
 interface Props {
   lang: 'es' | 'en' | 'zh';
 }
 const { lang } = Astro.props;
-
-const content = {
-  es: {
-    label: 'ESTUDIO JURÍDICO · RANCAGUA, CHILE',
-    title: 'Defensa Legal de Excelencia en Chile',
-    subtitle: 'Asesoría jurídica de alto nivel en Derecho Laboral, Civil, Penal y Familia.',
-    ctaPrimary: 'Consulta Gratuita',
-    ctaSecondary: 'Nuestras Áreas',
-  },
-  en: {
-    label: 'LAW FIRM · RANCAGUA, CHILE',
-    title: 'Excellence in Legal Defense in Chile',
-    subtitle: 'High-level legal advice in Labour, Civil, Criminal and Family Law.',
-    ctaPrimary: 'Free Consultation',
-    ctaSecondary: 'Our Areas',
-  },
-  zh: {
-    label: '律师事务所 · 智利兰卡瓜',
-    title: '卓越法律辩护服务',
-    subtitle: '提供劳动法、民法、刑法和家庭法的高水准法律咨询。',
-    ctaPrimary: '免费咨询',
-    ctaSecondary: '我们的业务',
-  },
-};
-const t = content[lang];
 ---
-<!-- TODO: Fase 2 — implementar Hero completo con imagen Unsplash + overlay + diseño Google Stitch -->
-<section class="hero" aria-label={t.label}>
-  <div class="hero-inner">
-    <p class="hero-label">{t.label}</p>
-    <h1 class="hero-title">{t.title}</h1>
-    <p class="hero-subtitle">{t.subtitle}</p>
+
+<section class="hero" aria-label={t(lang, 'hero.label')}>
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-label">{t(lang, 'hero.label')}</p>
+    <h1 class="hero-title">{t(lang, 'hero.title')}</h1>
+    <p class="hero-subtitle">{t(lang, 'hero.subtitle')}</p>
+
     <div class="hero-actions">
-      <a href={`/${lang}/contacto`} class="btn-primary">{t.ctaPrimary}</a>
-      <a href={`/${lang}/areas-practica`} class="btn-outline">{t.ctaSecondary}</a>
+      <a href={`/${lang}/contacto`} class="btn-hero-primary">
+        {t(lang, 'hero.ctaPrimary')}
+      </a>
+      <a href={`/${lang}/areas-practica`} class="btn-hero-outline">
+        {t(lang, 'hero.ctaSecondary')}
+      </a>
     </div>
   </div>
+
+  <!-- Scroll indicator -->
+  <div class="hero-scroll" aria-hidden="true">
+    <svg width="20" height="30" viewBox="0 0 20 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="18" height="28" rx="9" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+      <circle cx="10" cy="9" r="2.5" fill="rgba(255,255,255,0.6)" class="scroll-dot"/>
+    </svg>
+  </div>
 </section>
+
+<style>
+  .hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    /* Foto corporativa Unsplash — reemplazar con foto del cliente cuando esté disponible */
+    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+  }
+
+  /* Gradient overlay para legibilidad del texto */
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(13, 31, 45, 0.72) 0%,
+      rgba(13, 31, 45, 0.85) 100%
+    );
+  }
+
+  /* Contenido */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    padding: 0 1.5rem;
+    text-align: center;
+  }
+
+  /* Label superior dorado */
+  .hero-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Título serif bold ~60px blanco */
+  .hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.75rem, 6vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffffff;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* Subtítulo 16px rgba blanco */
+  .hero-subtitle {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.70);
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+  }
+
+  /* Botones */
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-hero-primary {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0D1F2D;
+    background: #C9A84C;
+    padding: 0.9375rem 2rem;
+    border-radius: 0;
+    transition: background 0.2s ease, transform 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .btn-hero-primary:hover {
+    background: #b8953e;
+    transform: translateY(-1px);
+  }
+
+  .btn-hero-outline {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #ffffff;
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    padding: 0.9375rem 2rem;
+    border-radius: 0;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-hero-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ffffff;
+  }
+
+  /* Scroll indicator */
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    animation: scrollBounce 2.4s ease-in-out infinite;
+  }
+
+  .scroll-dot {
+    animation: scrollDotMove 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(6px); }
+  }
+
+  @keyframes scrollDotMove {
+    0%, 100% { cy: 9; opacity: 0.6; }
+    50%       { cy: 19; opacity: 0.2; }
+  }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 640px) {
+    .hero {
+      height: 80vh;
+      min-height: 520px;
+    }
+
+    .hero-label { font-size: 0.625rem; }
+
+    .btn-hero-primary,
+    .btn-hero-outline { width: 100%; text-align: center; padding: 0.875rem 1.5rem; }
+
+    .hero-actions { flex-direction: column; align-items: center; }
+  }
+</style>

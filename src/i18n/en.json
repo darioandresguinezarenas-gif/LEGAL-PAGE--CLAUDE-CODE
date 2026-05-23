@@ -9,11 +9,54 @@
   "hero": {
     "label": "LAW FIRM · RANCAGUA, CHILE",
     "title": "Excellence in Legal Defense in Chile",
-    "subtitle": "High-level legal advice in Labour, Civil, Criminal and Family Law.",
+    "subtitle": "High-level legal advice in Labour, Civil, Criminal and Family Law. Services in three languages.",
     "ctaPrimary": "Free Consultation",
     "ctaSecondary": "Our Areas"
   },
+  "areas": {
+    "sectionTitle": "Practice Areas",
+    "sectionSubtitle": "Comprehensive legal advice for individuals and businesses in Rancagua and the O'Higgins Region.",
+    "explore": "EXPLORE →",
+    "laboral":     { "title": "Labour Law",           "desc": "Defense of workers and employers in dismissals, labour injunctions, collective bargaining and regulatory compliance." },
+    "civil":       { "title": "Civil Law",             "desc": "Contracts, civil liability, property, possession and succession. Clear and effective legal solutions." },
+    "penal":       { "title": "Criminal Law",          "desc": "Solid criminal defense at every stage of the proceeding. We protect your rights with experience and determination." },
+    "familia":     { "title": "Family Law",            "desc": "Divorces, child support, custody and family mediation with sensitivity and professionalism." },
+    "corporativo": { "title": "Corporate Law",         "desc": "Company formation, regulatory compliance and strategic advice for businesses in Chile." },
+    "contratos":   { "title": "Contracts & Negotiation", "desc": "Drafting, reviewing and negotiating complex contracts that protect your business interests." }
+  },
+  "reviews": {
+    "sectionTitle": "Our Reputation is Our Guarantee",
+    "items": [
+      {
+        "text": "Excellent service and outstanding results. The Güinez Galaz team resolved our labour dispute quickly and professionally. Highly recommended.",
+        "name": "María González",
+        "role": "Human Resources Manager"
+      },
+      {
+        "text": "Committed and highly qualified professionals. They advised us on the formation of our company with clarity and efficiency at every step of the process.",
+        "name": "Carlos Rodríguez",
+        "role": "Chief Executive Officer"
+      },
+      {
+        "text": "Impeccable representation in a complex criminal case. Their dedication and knowledge of the Chilean judicial system made all the difference. Forever grateful.",
+        "name": "Ana Martínez",
+        "role": "Business Owner"
+      }
+    ]
+  },
+  "clients": {
+    "sectionTitle": "THEY TRUSTED US"
+  },
   "footer": {
+    "tagline": "Legal excellence at the service of your interests.",
+    "areasTitle": "AREAS",
+    "officeTitle": "OFFICE",
+    "newsletterTitle": "NEWSLETTER",
+    "newsletterPlaceholder": "Your email address",
+    "newsletterBtn": "SUBSCRIBE",
+    "address": "Rancagua, O'Higgins Region, Chile",
+    "phone": "+56 9 XXXX XXXX",
+    "hours": "Monday to Friday, 9:00–18:00",
     "copyright": "All rights reserved",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
