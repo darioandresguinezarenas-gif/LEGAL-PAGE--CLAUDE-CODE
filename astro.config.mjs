@@ -5,6 +5,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://www.guinezgalaz.cl',
   output: 'static',
+  build: {
+    inlineStylesheets: 'never',
+  },
   integrations: [
     sitemap({
       i18n: {
