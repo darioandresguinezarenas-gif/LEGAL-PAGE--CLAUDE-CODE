@@ -1,0 +1,73 @@
+/* =========================================
+   Güinez Galaz Abogados — Estilos Panel Admin
+   ========================================= */
+
+.admin-body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #F0F2F5;
+  color: #1A1A1A;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 240px;
+  background: #0D1F2D;
+  color: white;
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.admin-content {
+  margin-left: 240px;
+  padding: 2rem;
+}
+
+.admin-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  margin-bottom: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  background: #F0F2F5;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.admin-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #E8E8E0;
+}
+
+.badge-active {
+  background: #D4EDDA;
+  color: #155724;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-inactive {
+  background: #F8D7DA;
+  color: #721C24;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}

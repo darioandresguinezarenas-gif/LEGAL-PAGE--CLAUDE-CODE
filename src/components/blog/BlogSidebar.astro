@@ -1,0 +1,31 @@
+---
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+---
+<aside class="blog-sidebar">
+  <!-- Widget Newsletter -->
+  <div class="sidebar-newsletter">
+    <h3>The Brief</h3>
+    <p>
+      {lang === 'es' ? 'Análisis legales directamente en tu correo.' : lang === 'en' ? 'Legal insights straight to your inbox.' : '法律洞见直送您的邮箱。'}
+    </p>
+    <form>
+      <input type="email" placeholder="Email" required />
+      <button type="submit">
+        {lang === 'es' ? 'Suscribirse' : lang === 'en' ? 'Subscribe' : '订阅'}
+      </button>
+    </form>
+  </div>
+
+  <!-- CTA Asesoría -->
+  <div class="sidebar-cta">
+    <p>
+      {lang === 'es' ? '¿Requiere asesoría?' : lang === 'en' ? 'Need legal advice?' : '需要法律咨询？'}
+    </p>
+    <a href={`/${lang}/contacto`} class="btn-primary">
+      {lang === 'es' ? 'Contactar' : lang === 'en' ? 'Contact Us' : '联系我们'}
+    </a>
+  </div>
+</aside>

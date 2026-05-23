@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import FaqAccordion from '../../../components/areas/FaqAccordion.astro';
+
+export async function getStaticPaths() {
+  // TODO: Fase 4 — fetch areas from Supabase
+  return [];
+}
+
+const { slug } = Astro.params;
+const lang = 'es';
+---
+<BaseLayout title={`${slug} | Güinez Galaz Abogados`} lang={lang}>
+  <main>
+    <h1>{slug}</h1>
+    <FaqAccordion lang={lang} items={[]} />
+  </main>
+</BaseLayout>

@@ -1,0 +1,14 @@
+---
+interface Props {
+  name: string;
+  value?: string;
+  lang: 'es' | 'en' | 'zh';
+}
+const { name, value = '', lang } = Astro.props;
+---
+<!-- TODO: Fase 8 — TipTap wrapper con soporte multiidioma -->
+<div class="rich-editor" data-name={name} data-lang={lang}>
+  <textarea name={name} hidden>{value}</textarea>
+  <div class="rich-editor-toolbar"></div>
+  <div class="rich-editor-content" contenteditable="true" set:html={value}></div>
+</div>

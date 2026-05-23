@@ -1,0 +1,43 @@
+---
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+
+const content = {
+  es: {
+    label: 'ESTUDIO JURÍDICO · RANCAGUA, CHILE',
+    title: 'Defensa Legal de Excelencia en Chile',
+    subtitle: 'Asesoría jurídica de alto nivel en Derecho Laboral, Civil, Penal y Familia.',
+    ctaPrimary: 'Consulta Gratuita',
+    ctaSecondary: 'Nuestras Áreas',
+  },
+  en: {
+    label: 'LAW FIRM · RANCAGUA, CHILE',
+    title: 'Excellence in Legal Defense in Chile',
+    subtitle: 'High-level legal advice in Labour, Civil, Criminal and Family Law.',
+    ctaPrimary: 'Free Consultation',
+    ctaSecondary: 'Our Areas',
+  },
+  zh: {
+    label: '律师事务所 · 智利兰卡瓜',
+    title: '卓越法律辩护服务',
+    subtitle: '提供劳动法、民法、刑法和家庭法的高水准法律咨询。',
+    ctaPrimary: '免费咨询',
+    ctaSecondary: '我们的业务',
+  },
+};
+const t = content[lang];
+---
+<!-- TODO: Fase 2 — implementar Hero completo con imagen Unsplash + overlay + diseño Google Stitch -->
+<section class="hero" aria-label={t.label}>
+  <div class="hero-inner">
+    <p class="hero-label">{t.label}</p>
+    <h1 class="hero-title">{t.title}</h1>
+    <p class="hero-subtitle">{t.subtitle}</p>
+    <div class="hero-actions">
+      <a href={`/${lang}/contacto`} class="btn-primary">{t.ctaPrimary}</a>
+      <a href={`/${lang}/areas-practica`} class="btn-outline">{t.ctaSecondary}</a>
+    </div>
+  </div>
+</section>

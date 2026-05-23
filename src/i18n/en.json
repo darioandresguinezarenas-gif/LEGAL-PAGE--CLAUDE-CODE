@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "areas": "Practice Areas",
+    "about": "About Us",
+    "blog": "Blog",
+    "contact": "Contact",
+    "cta": "Book Consultation"
+  },
+  "hero": {
+    "label": "LAW FIRM · RANCAGUA, CHILE",
+    "title": "Excellence in Legal Defense in Chile",
+    "subtitle": "High-level legal advice in Labour, Civil, Criminal and Family Law.",
+    "ctaPrimary": "Free Consultation",
+    "ctaSecondary": "Our Areas"
+  },
+  "footer": {
+    "copyright": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "contact": {
+    "title": "Direct Consultation",
+    "name": "Full Name",
+    "email": "Corporate Email",
+    "nature": "Nature of Consultation",
+    "message": "Message",
+    "send": "SEND INQUIRY",
+    "natures": {
+      "laboral": "Labour",
+      "civil": "Civil",
+      "penal": "Criminal",
+      "familia": "Family",
+      "otro": "Other"
+    }
+  },
+  "thanks": {
+    "title": "Message sent successfully!",
+    "body": "We will contact you shortly.",
+    "backHome": "Back to Home",
+    "viewAreas": "Our Practice Areas"
+  },
+  "errors": {
+    "404title": "Page not found",
+    "404body": "The page you are looking for does not exist.",
+    "500title": "Server error",
+    "500body": "An error occurred. Please try again later.",
+    "backHome": "Back to Home",
+    "contact": "Contact Us"
+  }
+}

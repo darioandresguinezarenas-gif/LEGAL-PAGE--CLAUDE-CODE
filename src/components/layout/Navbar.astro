@@ -1,0 +1,27 @@
+---
+import LangSelector from './LangSelector.astro';
+
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+
+const labels = {
+  es: { areas: 'Áreas de Práctica', about: 'Quiénes Somos', blog: 'Blog', contact: 'Contacto', cta: 'Reservar Consulta' },
+  en: { areas: 'Practice Areas', about: 'About Us', blog: 'Blog', contact: 'Contact', cta: 'Book Consultation' },
+  zh: { areas: '业务领域', about: '关于我们', blog: '博客', contact: '联系', cta: '预约咨询' },
+};
+const t = labels[lang];
+---
+<!-- TODO: Fase 2 — implementar navbar completo con Google Stitch design -->
+<nav class="navbar" id="navbar">
+  <a href={`/${lang}`} class="navbar-logo">GÜINEZ GALAZ</a>
+  <div class="navbar-links">
+    <a href={`/${lang}/areas-practica`}>{t.areas}</a>
+    <a href={`/${lang}/quienes-somos`}>{t.about}</a>
+    <a href={`/${lang}/blog`}>{t.blog}</a>
+    <a href={`/${lang}/contacto`}>{t.contact}</a>
+    <LangSelector currentLang={lang} />
+    <a href={`/${lang}/contacto`} class="navbar-cta">{t.cta}</a>
+  </div>
+</nav>

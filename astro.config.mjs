@@ -1,0 +1,27 @@
+// @ts-check
+import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
+
+export default defineConfig({
+  site: 'https://www.guinezgalaz.cl',
+  output: 'static',
+  integrations: [
+    sitemap({
+      i18n: {
+        defaultLocale: 'es',
+        locales: {
+          es: 'es-CL',
+          en: 'en-US',
+          zh: 'zh-CN',
+        },
+      },
+    }),
+  ],
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en', 'zh'],
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+});

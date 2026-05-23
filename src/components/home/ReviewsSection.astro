@@ -1,0 +1,12 @@
+---
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+// TODO: Fase 2 — cargar reseñas reales desde configuracion_estudio o tabla reviews
+---
+<section class="reviews-section">
+  <h2>
+    {lang === 'es' ? 'Nuestra Reputación es Nuestra Garantía' : lang === 'en' ? 'Our Reputation is Our Guarantee' : '我们的声誉是我们的保证'}
+  </h2>
+</section>

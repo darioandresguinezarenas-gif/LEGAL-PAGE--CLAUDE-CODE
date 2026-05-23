@@ -1,0 +1,39 @@
+# Güinez Galaz Abogados — robots.txt
+# IA-optimizado: permite rastreo a motores de búsqueda clásicos y bots de IA
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Bots de SEO comercial — bloquear para no regalar datos a competidores
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Todos los demás — bloquear solo /admin
+User-agent: *
+Disallow: /admin
+
+Sitemap: https://www.guinezgalaz.cl/sitemap.xml

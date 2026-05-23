@@ -1,0 +1,24 @@
+---
+interface Props {
+  article: {
+    slug: string;
+    titulo: Record<string, string>;
+    extracto: Record<string, string>;
+    imagen_url: string;
+    categoria: string;
+  };
+  lang: 'es' | 'en' | 'zh';
+}
+const { article, lang } = Astro.props;
+---
+<div class="featured-article">
+  <img src={article.imagen_url} alt={article.titulo[lang]} loading="eager" />
+  <div class="featured-content">
+    <span class="article-category">{article.categoria}</span>
+    <h2>{article.titulo[lang]}</h2>
+    <p>{article.extracto[lang]}</p>
+    <a href={`/${lang}/blog/${article.slug}`} class="featured-link">
+      {lang === 'es' ? 'LEER ANÁLISIS COMPLETO →' : lang === 'en' ? 'READ FULL ANALYSIS →' : '阅读完整分析 →'}
+    </a>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "areas": "业务领域",
+    "about": "关于我们",
+    "blog": "博客",
+    "contact": "联系",
+    "cta": "预约咨询"
+  },
+  "hero": {
+    "label": "律师事务所 · 智利兰卡瓜",
+    "title": "卓越法律辩护服务",
+    "subtitle": "提供劳动法、民法、刑法和家庭法的高水准法律咨询。",
+    "ctaPrimary": "免费咨询",
+    "ctaSecondary": "我们的业务"
+  },
+  "footer": {
+    "copyright": "版权所有",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  },
+  "contact": {
+    "title": "直接咨询",
+    "name": "全名",
+    "email": "公司邮箱",
+    "nature": "咨询性质",
+    "message": "留言",
+    "send": "发送咨询",
+    "natures": {
+      "laboral": "劳动法",
+      "civil": "民法",
+      "penal": "刑法",
+      "familia": "家庭法",
+      "otro": "其他"
+    }
+  },
+  "thanks": {
+    "title": "消息发送成功！",
+    "body": "我们将尽快与您联系。",
+    "backHome": "返回首页",
+    "viewAreas": "我们的业务领域"
+  },
+  "errors": {
+    "404title": "页面未找到",
+    "404body": "您查找的页面不存在。",
+    "500title": "服务器错误",
+    "500body": "发生了错误，请稍后再试。",
+    "backHome": "返回首页",
+    "contact": "联系我们"
+  }
+}

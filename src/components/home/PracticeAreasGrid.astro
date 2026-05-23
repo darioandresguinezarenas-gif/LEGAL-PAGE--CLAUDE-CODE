@@ -1,0 +1,20 @@
+---
+import AreaCard from '../areas/AreaCard.astro';
+
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+// TODO: Fase 4 — fetch áreas activas desde Supabase (activo=true, deleted_at IS NULL)
+const areas: any[] = [];
+---
+<section class="areas-section">
+  <div class="areas-header">
+    <h2>
+      {lang === 'es' ? 'Áreas de Práctica' : lang === 'en' ? 'Practice Areas' : '业务领域'}
+    </h2>
+  </div>
+  <div class="areas-grid">
+    {areas.map((area) => <AreaCard area={area} lang={lang} />)}
+  </div>
+</section>

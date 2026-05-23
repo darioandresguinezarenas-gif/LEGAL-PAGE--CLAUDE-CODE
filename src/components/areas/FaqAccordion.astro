@@ -1,0 +1,44 @@
+---
+interface FaqItem {
+  pregunta: string;
+  respuesta: string;
+}
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+  items: FaqItem[];
+}
+const { items } = Astro.props;
+---
+{items.length > 0 && (
+  <section class="faq-section">
+    <dl class="faq-list">
+      {items.map((item, i) => (
+        <div class="faq-item">
+          <dt>
+            <button
+              class="faq-trigger"
+              aria-expanded="false"
+              aria-controls={`faq-answer-${i}`}
+            >
+              {item.pregunta}
+            </button>
+          </dt>
+          <dd id={`faq-answer-${i}`} class="faq-answer" hidden>
+            {item.respuesta}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.faq-trigger').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      const answer = document.getElementById(btn.getAttribute('aria-controls')!);
+      if (answer) answer.hidden = expanded;
+    });
+  });
+</script>

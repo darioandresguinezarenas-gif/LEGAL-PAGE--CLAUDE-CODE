@@ -1,0 +1,14 @@
+---
+interface Props {
+  name: string;
+  currentUrl?: string;
+  bucket: string;
+}
+const { name, currentUrl, bucket } = Astro.props;
+---
+<!-- TODO: Fase 8 — upload a Supabase Storage via signed URL -->
+<div class="image-uploader" data-bucket={bucket}>
+  {currentUrl && <img src={currentUrl} alt="Imagen actual" class="uploader-preview" />}
+  <input type="file" name={name} accept="image/png,image/jpeg,image/webp,image/svg+xml" />
+  <input type="hidden" name={`${name}_url`} value={currentUrl ?? ''} />
+</div>

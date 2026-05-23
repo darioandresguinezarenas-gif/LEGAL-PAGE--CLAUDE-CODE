@@ -1,0 +1,15 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+// No indexado — ver robots.txt Disallow: /admin
+---
+<AdminLayout title="Login | Admin Güinez Galaz">
+  <!-- TODO: Fase 8 — Supabase Auth + MFA TOTP -->
+  <main>
+    <h1>Acceso Restringido</h1>
+    <form id="login-form">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Contraseña" required />
+      <button type="submit">Ingresar</button>
+    </form>
+  </main>
+</AdminLayout>

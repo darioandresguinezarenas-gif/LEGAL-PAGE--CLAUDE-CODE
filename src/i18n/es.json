@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "areas": "Áreas de Práctica",
+    "about": "Quiénes Somos",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "cta": "Reservar Consulta"
+  },
+  "hero": {
+    "label": "ESTUDIO JURÍDICO · RANCAGUA, CHILE",
+    "title": "Defensa Legal de Excelencia en Chile",
+    "subtitle": "Asesoría jurídica de alto nivel en Derecho Laboral, Civil, Penal y Familia.",
+    "ctaPrimary": "Consulta Gratuita",
+    "ctaSecondary": "Nuestras Áreas"
+  },
+  "footer": {
+    "copyright": "Todos los derechos reservados",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio"
+  },
+  "contact": {
+    "title": "Consulta Directa",
+    "name": "Nombre Completo",
+    "email": "Email Corporativo",
+    "nature": "Naturaleza de la Consulta",
+    "message": "Mensaje",
+    "send": "ENVIAR CONSULTA",
+    "natures": {
+      "laboral": "Laboral",
+      "civil": "Civil",
+      "penal": "Penal",
+      "familia": "Familia",
+      "otro": "Otro"
+    }
+  },
+  "thanks": {
+    "title": "¡Mensaje enviado con éxito!",
+    "body": "Nos pondremos en contacto contigo a la brevedad.",
+    "backHome": "Volver al Inicio",
+    "viewAreas": "Ver nuestras áreas"
+  },
+  "errors": {
+    "404title": "Página no encontrada",
+    "404body": "La página que buscas no existe.",
+    "500title": "Error del servidor",
+    "500body": "Ha ocurrido un error. Por favor intenta más tarde.",
+    "backHome": "Volver al Inicio",
+    "contact": "Contáctanos"
+  }
+}

@@ -1,0 +1,29 @@
+---
+interface Props {
+  currentLang: 'es' | 'en' | 'zh';
+}
+const { currentLang } = Astro.props;
+
+const langs = [
+  { code: 'es', label: 'ES' },
+  { code: 'en', label: 'EN' },
+  { code: 'zh', label: '中文' },
+];
+
+// Construir URL equivalente en el otro idioma
+const currentPath = Astro.url.pathname;
+const getLangUrl = (targetLang: string) => {
+  return currentPath.replace(/^\/(es|en|zh)/, `/${targetLang}`);
+};
+---
+<div class="lang-selector">
+  {langs.map(({ code, label }) => (
+    <a
+      href={getLangUrl(code)}
+      class:list={['lang-option', { active: code === currentLang }]}
+      aria-current={code === currentLang ? 'true' : undefined}
+    >
+      {label}
+    </a>
+  ))}
+</div>

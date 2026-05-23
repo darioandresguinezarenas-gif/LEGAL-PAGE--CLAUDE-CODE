@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import PracticeAreasGrid from '../../components/home/PracticeAreasGrid.astro';
+import ReviewsSection from '../../components/home/ReviewsSection.astro';
+import ClientLogos from '../../components/home/ClientLogos.astro';
+
+const lang = 'en';
+---
+<BaseLayout
+  title="Güinez Galaz Abogados — Excellence in Legal Defense in Chile"
+  description="Law firm in Rancagua, Chile. Labour, Civil, Criminal and Family Law. Services in Spanish, English and Mandarin."
+  lang={lang}
+>
+  <Hero lang={lang} />
+  <PracticeAreasGrid lang={lang} />
+  <ReviewsSection lang={lang} />
+  <ClientLogos lang={lang} />
+</BaseLayout>

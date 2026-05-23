@@ -1,0 +1,11 @@
+---
+interface Props {
+  name: string;
+  value?: string;
+}
+const { name, value = '' } = Astro.props;
+---
+<!-- TODO: Fase 8 — selector Lucide icons -->
+<div class="icon-picker">
+  <input type="text" name={name} value={value} placeholder="Nombre del ícono Lucide (ej: scale)" />
+</div>

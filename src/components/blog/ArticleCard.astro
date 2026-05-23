@@ -1,0 +1,24 @@
+---
+interface Props {
+  article: {
+    slug: string;
+    titulo: Record<string, string>;
+    extracto: Record<string, string>;
+    imagen_url: string;
+    categoria: string;
+    published_at: string;
+  };
+  lang: 'es' | 'en' | 'zh';
+}
+const { article, lang } = Astro.props;
+---
+<article class="article-card">
+  <a href={`/${lang}/blog/${article.slug}`}>
+    <img src={article.imagen_url} alt={article.titulo[lang]} loading="lazy" />
+    <div class="article-card-body">
+      <span class="article-category">{article.categoria}</span>
+      <h3>{article.titulo[lang]}</h3>
+      <p>{article.extracto[lang]}</p>
+    </div>
+  </a>
+</article>

@@ -1,0 +1,20 @@
+---
+interface Props {
+  area: {
+    slug: string;
+    icono: string;
+    titulo: Record<string, string>;
+    descripcion: Record<string, string>;
+  };
+  lang: 'es' | 'en' | 'zh';
+}
+const { area, lang } = Astro.props;
+---
+<article class="area-card">
+  <span class="area-icon" aria-hidden="true">{area.icono}</span>
+  <h3 class="area-title">{area.titulo[lang]}</h3>
+  <p class="area-desc">{area.descripcion[lang]}</p>
+  <a href={`/${lang}/areas-practica/${area.slug}`} class="area-link">
+    {lang === 'es' ? 'EXPLORAR →' : lang === 'en' ? 'EXPLORE →' : '探索 →'}
+  </a>
+</article>

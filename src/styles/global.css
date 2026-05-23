@@ -1,0 +1,135 @@
+/* =========================================
+   Güinez Galaz Abogados — Variables CSS + Reset
+   Paleta: Google Stitch (Alto Colegio / Sovereign Juris)
+   ========================================= */
+
+:root {
+  /* Colores primarios */
+  --color-dark:    #0D1F2D;   /* Fondo oscuro, navbar, footer */
+  --color-gold:    #C9A84C;   /* Dorado — acentos, CTA, links */
+  --color-white:   #FFFFFF;
+  --color-off-white: #F5F5F0; /* Franja clientes, fondos suaves */
+  --color-border:  #E8E8E0;   /* Bordes de cards */
+  --color-text:    #1A1A1A;   /* Texto principal */
+  --color-text-muted: rgba(26,26,26,0.6);
+
+  /* Tipografía — TODO: Fase 2 integrar Google Fonts */
+  --font-serif:    'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:     'DM Sans', system-ui, -apple-system, sans-serif;
+
+  /* Espaciado */
+  --container-max: 1200px;
+  --section-py:    5rem;
+  --section-px:    1.5rem;
+
+  /* Transiciones */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+
+  /* Sombras */
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-card-hover: 0 8px 24px rgba(0,0,0,0.14);
+
+  /* Border radius mínimo — diseño formal */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+}
+
+/* Reset moderno */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+}
+
+/* Contenedor base */
+.container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--section-px);
+}
+
+/* Botones */
+.btn-primary {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-dark);
+  padding: 0.875rem 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.btn-primary:hover {
+  background: #b8953e;
+  transform: translateY(-1px);
+}
+
+.btn-dark {
+  display: inline-block;
+  background: var(--color-dark);
+  color: var(--color-white);
+  padding: 0.875rem 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+.btn-dark:hover {
+  background: var(--color-gold);
+}
+
+.btn-outline {
+  display: inline-block;
+  border: 2px solid var(--color-white);
+  color: var(--color-white);
+  padding: 0.875rem 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.btn-outline:hover {
+  background: var(--color-white);
+  color: var(--color-dark);
+}

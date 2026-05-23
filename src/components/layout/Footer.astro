@@ -1,0 +1,15 @@
+---
+interface Props {
+  lang: 'es' | 'en' | 'zh';
+}
+const { lang } = Astro.props;
+---
+<!-- TODO: Fase 2 — implementar footer completo con diseño Google Stitch (#0D1F2D) -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p>&copy; {new Date().getFullYear()} Güinez Galaz Abogados. Todos los derechos reservados.</p>
+    <nav>
+      <a href={`/${lang}/contacto`}>Contacto</a>
+    </nav>
+  </div>
+</footer>
