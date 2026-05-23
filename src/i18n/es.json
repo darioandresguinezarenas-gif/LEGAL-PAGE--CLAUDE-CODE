@@ -17,6 +17,9 @@
     "sectionTitle": "Áreas de Práctica",
     "sectionSubtitle": "Asesoría jurídica integral para personas y empresas en Rancagua y la Región de O'Higgins.",
     "explore": "EXPLORAR →",
+    "heroLabel": "ÁREAS DE PRÁCTICA",
+    "heroTitle": "Asesoría Jurídica Integral",
+    "heroSubtitle": "Cobertura experta en las principales ramas del derecho, con un equipo dedicado a cada especialidad en Rancagua y la Región de O'Higgins.",
     "laboral":     { "title": "Derecho Laboral",        "desc": "Defensa de trabajadores y empleadores en despidos, tutela laboral, negociación colectiva y cumplimiento normativo." },
     "civil":       { "title": "Derecho Civil",           "desc": "Contratos, responsabilidad civil, propiedad, posesión y sucesiones. Soluciones legales claras y efectivas." },
     "penal":       { "title": "Derecho Penal",           "desc": "Defensa penal sólida en todas las etapas del proceso. Protegemos sus derechos con experiencia y determinación." },
@@ -38,6 +41,8 @@
     "introBody": "Guíñez Galaz Abogados nace de la convicción de que toda persona y empresa merece una defensa legal de primer nivel. Combinamos rigor técnico, experiencia en tribunales y un trato humano y transparente. Atendemos en español, inglés y chino, acercando el derecho a una comunidad diversa.",
     "teamTitle": "Nuestro Equipo",
     "teamSubtitle": "Profesionales con vocación, experiencia y dedicación a cada caso.",
+    "experienceLabel": "años de experiencia",
+    "scheduleButton": "Agendar Reunión",
     "teamNotice": "Perfiles de ejemplo. Los datos reales del equipo se cargarán desde el panel de administración.",
     "specialtiesLabel": "Especialidades",
     "valuesTitle": "Nuestros Valores",
@@ -90,6 +95,17 @@
     "placeholderTitle": "Próximamente: análisis y perspectivas legales",
     "placeholderDesc": "El equipo de Guíñez Galaz publicará pronto artículos de análisis sobre el panorama jurídico laboral, civil y penal en Chile."
   },
+  "blog": {
+    "heroLabel": "PUBLICACIONES Y ANÁLISIS",
+    "heroTitle": "Perspectivas Legales",
+    "heroSubtitle": "Análisis del panorama jurídico chileno escritos por los abogados del estudio.",
+    "filtersLabel": "Filtrar por categoría",
+    "filterAll": "Todas",
+    "featuredLabel": "Destacado",
+    "readMore": "Leer más →",
+    "empty": "Pronto publicaremos nuestros primeros artículos. Vuelva a visitarnos.",
+    "notice": "Artículos de ejemplo. Las publicaciones reales se cargarán desde el panel de administración."
+  },
   "footer": {
     "tagline": "Excelencia jurídica al servicio de sus intereses.",
     "areasTitle": "ÁREAS",
@@ -106,6 +122,9 @@
   },
   "contact": {
     "title": "Consulta Directa",
+    "heroLabel": "CONTACTO",
+    "heroSubtitle": "Cuéntenos sobre su caso y le responderemos a la brevedad. Toda consulta es confidencial.",
+    "naturePlaceholder": "Seleccione una opción",
     "name": "Nombre Completo",
     "email": "Email Corporativo",
     "nature": "Naturaleza de la Consulta",

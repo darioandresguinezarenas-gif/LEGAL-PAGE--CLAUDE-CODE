@@ -1,0 +1,454 @@
+---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+// Placeholder - Fase posterior: fetch desde Supabase
+//   SELECT * FROM articulos WHERE publicado = true AND deleted_at IS NULL ORDER BY published_at DESC
+type Article = {
+  slug: string;
+  titulo: Record<Lang, string>;
+  extracto: Record<Lang, string>;
+  categoria: string;
+  fecha: string;
+  gradient: string;
+};
+
+const articles: Article[] = [
+  {
+    slug: 'reforma-laboral-2025',
+    categoria: 'Laboral',
+    fecha: '2025-03-12',
+    gradient: 'linear-gradient(135deg, #0D1F2D 0%, #2d4a5c 100%)',
+    titulo: {
+      es: 'Reforma laboral 2025: lo que todo trabajador debe saber',
+      en: '2025 Labour Reform: what every worker should know',
+      zh: '2025年劳动改革：每位劳动者都应了解的内容',
+    },
+    extracto: {
+      es: 'Analizamos los cambios más relevantes de la nueva legislación laboral y cómo impactan los derechos de trabajadores y empleadores en Chile.',
+      en: 'We analyse the most relevant changes in the new labour legislation and how they affect the rights of workers and employers in Chile.',
+      zh: '我们分析新劳动立法中最相关的变化，以及它们如何影响智利劳动者和雇主的权利。',
+    },
+  },
+  {
+    slug: 'contratos-civiles-claves',
+    categoria: 'Civil',
+    fecha: '2025-02-28',
+    gradient: 'linear-gradient(135deg, #2a1f1f 0%, #3d2e2e 100%)',
+    titulo: {
+      es: 'Cláusulas clave en todo contrato civil',
+      en: 'Key clauses in every civil contract',
+      zh: '每份民事合同中的关键条款',
+    },
+    extracto: {
+      es: 'Una guía práctica sobre las disposiciones que no pueden faltar al momento de firmar un contrato civil y proteger sus intereses.',
+      en: 'A practical guide to the provisions that cannot be missing when signing a civil contract and protecting your interests.',
+      zh: '关于签署民事合同、保护您的利益时不可或缺的条款的实用指南。',
+    },
+  },
+  {
+    slug: 'defensa-penal-etapas',
+    categoria: 'Penal',
+    fecha: '2025-02-10',
+    gradient: 'linear-gradient(135deg, #1f2a1f 0%, #2e3d2e 100%)',
+    titulo: {
+      es: 'Las etapas del proceso penal explicadas',
+      en: 'The stages of the criminal process explained',
+      zh: '刑事诉讼程序各阶段详解',
+    },
+    extracto: {
+      es: 'Desde la formalización hasta el juicio oral: comprenda cada etapa del proceso penal chileno y la importancia de una defensa temprana.',
+      en: 'From arraignment to oral trial: understand each stage of the Chilean criminal process and the importance of an early defense.',
+      zh: '从立案到口头审判：了解智利刑事诉讼的每个阶段以及尽早辩护的重要性。',
+    },
+  },
+  {
+    slug: 'mediacion-familiar-beneficios',
+    categoria: 'Familia',
+    fecha: '2025-01-22',
+    gradient: 'linear-gradient(135deg, #241f2e 0%, #3a2e4d 100%)',
+    titulo: {
+      es: 'Mediación familiar: una alternativa al litigio',
+      en: 'Family mediation: an alternative to litigation',
+      zh: '家庭调解：诉讼之外的选择',
+    },
+    extracto: {
+      es: 'Cómo la mediación familiar permite resolver conflictos de forma colaborativa, reduciendo costos emocionales y económicos para todas las partes.',
+      en: 'How family mediation allows conflicts to be resolved collaboratively, reducing emotional and financial costs for all parties.',
+      zh: '家庭调解如何以协作方式解决冲突，减少各方的情感和经济成本。',
+    },
+  },
+];
+
+const categoryColors: Record<string, string> = {
+  Laboral: '#C9A84C',
+  Civil: '#5B8BA3',
+  Penal: '#A35B5B',
+  Familia: '#7A6EA3',
+  Corporativo: '#5B8B6A',
+};
+
+const categories = ['Laboral', 'Civil', 'Penal', 'Familia', 'Corporativo'];
+
+const formatDate = (iso: string) => {
+  const locales: Record<Lang, string> = { es: 'es-CL', en: 'en-US', zh: 'zh-CN' };
+  return new Date(iso).toLocaleDateString(locales[lang], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+const [featured, ...rest] = articles;
+const isEmpty = articles.length === 0;
+---
+
+<!-- Hero interior -->
+<section class="blog-hero">
+  <div class="blog-hero-inner">
+    <p class="blog-hero-label">{t(lang, 'blog.heroLabel')}</p>
+    <h1 class="blog-hero-title">{t(lang, 'blog.heroTitle')}</h1>
+    <p class="blog-hero-subtitle">{t(lang, 'blog.heroSubtitle')}</p>
+  </div>
+</section>
+
+<section class="blog-body">
+  <div class="blog-container">
+
+    <!-- Filtros por categoría -->
+    <div class="blog-filters" role="tablist" aria-label={t(lang, 'blog.filtersLabel')}>
+      <button class="filter-pill active" data-filter="all" type="button">
+        {t(lang, 'blog.filterAll')}
+      </button>
+      {categories.map((cat) => (
+        <button class="filter-pill" data-filter={cat} type="button">
+          {t(lang, `areas.${cat.toLowerCase()}.title`).replace(/^Derecho (de )?/i, '')}
+        </button>
+      ))}
+    </div>
+
+    {isEmpty ? (
+      <p class="blog-empty">{t(lang, 'blog.empty')}</p>
+    ) : (
+      <>
+        <!-- Artículo destacado -->
+        <a href={`/${lang}/blog/${featured.slug}`} class="featured-card" data-categoria={featured.categoria}>
+          <div class="featured-image" style={`background:${featured.gradient}`}>
+            <span class="featured-tag">{t(lang, 'blog.featuredLabel')}</span>
+          </div>
+          <div class="featured-body">
+            <span class="article-category" style={`color:${categoryColors[featured.categoria] ?? '#C9A84C'}`}>
+              {featured.categoria.toUpperCase()}
+            </span>
+            <h2 class="featured-title">{featured.titulo[lang]}</h2>
+            <p class="featured-excerpt">{featured.extracto[lang]}</p>
+            <div class="article-meta">
+              <span class="article-date">{formatDate(featured.fecha)}</span>
+              <span class="read-more">{t(lang, 'blog.readMore')}</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Grilla de artículos -->
+        <div class="blog-grid">
+          {rest.map((article) => (
+            <a href={`/${lang}/blog/${article.slug}`} class="blog-card" data-categoria={article.categoria}>
+              <div class="blog-card-image" style={`background:${article.gradient}`}></div>
+              <div class="blog-card-body">
+                <span class="article-category" style={`color:${categoryColors[article.categoria] ?? '#C9A84C'}`}>
+                  {article.categoria.toUpperCase()}
+                </span>
+                <h3 class="blog-card-title">{article.titulo[lang]}</h3>
+                <p class="blog-card-excerpt">{article.extracto[lang]}</p>
+                <div class="article-meta">
+                  <span class="article-date">{formatDate(article.fecha)}</span>
+                  <span class="read-more">{t(lang, 'blog.readMore')}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+
+        <p class="blog-notice">{t(lang, 'blog.notice')}</p>
+      </>
+    )}
+
+  </div>
+</section>
+
+<style>
+  /* Hero interior */
+  .blog-hero {
+    background: #0D1F2D;
+    padding: 9rem 0 5rem;
+    text-align: center;
+  }
+
+  .blog-hero-inner {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .blog-hero-label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin-bottom: 1rem;
+  }
+
+  .blog-hero-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.1;
+    margin-bottom: 1.25rem;
+  }
+
+  .blog-hero-subtitle {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* Body */
+  .blog-body {
+    background: #ffffff;
+    padding: 4rem 0 6rem;
+  }
+
+  .blog-container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* Filtros */
+  .blog-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin-bottom: 3rem;
+  }
+
+  .filter-pill {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: rgba(26, 26, 26, 0.6);
+    background: #ffffff;
+    border: 1px solid #E8E8E0;
+    padding: 0.5rem 1.125rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-pill:hover {
+    border-color: #C9A84C;
+    color: #0D1F2D;
+  }
+
+  .filter-pill.active {
+    background: #0D1F2D;
+    border-color: #0D1F2D;
+    color: #ffffff;
+  }
+
+  /* Artículo destacado */
+  .featured-card {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 0;
+    border: 1px solid #E8E8E0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .featured-card:hover {
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.10);
+    transform: translateY(-2px);
+  }
+
+  .featured-image {
+    position: relative;
+    min-height: 320px;
+  }
+
+  .featured-tag {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #0D1F2D;
+    background: #C9A84C;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .featured-body {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .featured-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1.2;
+    margin: 0.75rem 0;
+  }
+
+  .featured-excerpt {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    color: rgba(26, 26, 26, 0.65);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Grilla */
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .blog-card {
+    background: #ffffff;
+    border: 1px solid #E8E8E0;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.25s ease, transform 0.2s ease;
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+    transform: translateY(-2px);
+  }
+
+  .blog-card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+
+  .blog-card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    flex: 1;
+  }
+
+  .article-category {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .blog-card-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1.25;
+  }
+
+  .blog-card-excerpt {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: rgba(26, 26, 26, 0.6);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  .article-date {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    color: rgba(26, 26, 26, 0.45);
+  }
+
+  .read-more {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #C9A84C;
+    letter-spacing: 0.03em;
+  }
+
+  .blog-empty,
+  .blog-notice {
+    text-align: center;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    color: rgba(26, 26, 26, 0.4);
+  }
+
+  .blog-empty { padding: 4rem 0; font-size: 1rem; }
+  .blog-notice { margin-top: 2.5rem; font-size: 0.75rem; }
+
+  /* Estado oculto por filtro */
+  .blog-card.hidden,
+  .featured-card.hidden { display: none; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .blog-grid { grid-template-columns: repeat(2, 1fr); }
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-image { min-height: 220px; }
+  }
+
+  @media (max-width: 580px) {
+    .blog-hero { padding: 7rem 0 4rem; }
+    .blog-body { padding: 3rem 0 4rem; }
+    .blog-grid { grid-template-columns: 1fr; }
+    .featured-body { padding: 1.75rem; }
+  }
+</style>
+
+<script>
+  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+  const cards = document.querySelectorAll<HTMLElement>('[data-categoria]');
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const filter = pill.dataset.filter;
+      pills.forEach((p) => p.classList.remove('active'));
+      pill.classList.add('active');
+
+      cards.forEach((card) => {
+        const match = filter === 'all' || card.dataset.categoria === filter;
+        card.classList.toggle('hidden', !match);
+      });
+    });
+  });
+</script>

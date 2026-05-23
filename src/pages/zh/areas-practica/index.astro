@@ -1,7 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AreasContent from '../../../components/areas/AreasContent.astro';
 const lang = 'zh';
 ---
-<BaseLayout title="业务领域 | Guíñez Galaz Abogados" lang={lang}>
-  <main><h1>业务领域</h1></main>
+<BaseLayout
+  title="业务领域 | Guíñez Galaz Abogados"
+  description="在智利兰卡瓜提供劳动法、民法、刑法、家庭法、公司法和合同法的法律咨询。"
+  lang={lang}
+>
+  <AreasContent lang={lang} />
 </BaseLayout>

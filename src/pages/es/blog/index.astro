@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogContent from '../../../components/blog/BlogContent.astro';
 const lang = 'es';
 ---
-<BaseLayout title="Blog | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 5 — listado artículos desde Supabase -->
-  <main><h1>Perspectivas Legales</h1></main>
+<BaseLayout
+  title="Perspectivas Legales | Guíñez Galaz Abogados"
+  description="Análisis y perspectivas sobre el panorama jurídico chileno: derecho laboral, civil, penal y familia."
+  lang={lang}
+>
+  <BlogContent lang={lang} />
 </BaseLayout>

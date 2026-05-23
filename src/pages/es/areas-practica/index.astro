@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AreasContent from '../../../components/areas/AreasContent.astro';
 const lang = 'es';
 ---
-<BaseLayout title="Áreas de Práctica | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 4 — listar áreas desde Supabase -->
-  <main>
-    <h1>Áreas de Práctica</h1>
-  </main>
+<BaseLayout
+  title="Áreas de Práctica | Guíñez Galaz Abogados"
+  description="Asesoría jurídica en Derecho Laboral, Civil, Penal, Familia, Corporativo y Contratos en Rancagua, Chile."
+  lang={lang}
+>
+  <AreasContent lang={lang} />
 </BaseLayout>

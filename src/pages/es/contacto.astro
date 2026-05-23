@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactContent from '../../components/contact/ContactContent.astro';
 const lang = 'es';
 ---
-<BaseLayout title="Contacto | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 6 — formulario con honeypot + CSRF + rate limiting -->
-  <main><h1>Consulta Directa</h1></main>
+<BaseLayout
+  title="Contacto | Guíñez Galaz Abogados"
+  description="Contáctenos para una consulta legal en Rancagua. Derecho laboral, civil, penal y familia."
+  lang={lang}
+>
+  <ContactContent lang={lang} />
 </BaseLayout>

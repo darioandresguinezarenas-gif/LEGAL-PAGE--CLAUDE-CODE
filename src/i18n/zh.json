@@ -17,6 +17,9 @@
     "sectionTitle": "业务领域",
     "sectionSubtitle": "为兰卡瓜及奥希金斯大区的个人和企业提供全面的法律咨询服务。",
     "explore": "探索 →",
+    "heroLabel": "业务领域",
+    "heroTitle": "全面的法律咨询",
+    "heroSubtitle": "在法律的主要分支领域提供专业服务，团队在兰卡瓜及奥希金斯大区为每个专业领域提供专注的支持。",
     "laboral":     { "title": "劳动法",     "desc": "代理工人和雇主处理解雇、劳动诉讼、集体谈判及合规问题。" },
     "civil":       { "title": "民法",       "desc": "合同、民事责任、财产、占有与继承。提供清晰有效的法律解决方案。" },
     "penal":       { "title": "刑法",       "desc": "在诉讼各阶段提供坚实的刑事辩护。以经验和决心保护您的权利。" },
@@ -38,6 +41,8 @@
     "introBody": "Guíñez Galaz Abogados 秉持这样的信念：每一个人和企业都应获得一流的法律辩护。我们将专业的技术、丰富的庭审经验与透明、人性化的服务相结合。我们以西班牙语、英语和中文提供服务，让法律贴近多元化的社区。",
     "teamTitle": "我们的团队",
     "teamSubtitle": "充满使命感、经验丰富并对每个案件尽心尽力的专业人士。",
+    "experienceLabel": "年经验",
+    "scheduleButton": "预约会面",
     "teamNotice": "示例资料。真实的团队信息将从管理面板加载。",
     "specialtiesLabel": "专业领域",
     "valuesTitle": "我们的价值观",
@@ -90,6 +95,17 @@
     "placeholderTitle": "即将推出：法律分析与观点",
     "placeholderDesc": "Guíñez Galaz团队即将发布有关智利劳动法、民法和刑法领域的分析文章。"
   },
+  "blog": {
+    "heroLabel": "出版物与分析",
+    "heroTitle": "法律观点",
+    "heroSubtitle": "由事务所律师撰写的智利法律领域分析文章。",
+    "filtersLabel": "按类别筛选",
+    "filterAll": "全部",
+    "featuredLabel": "精选",
+    "readMore": "阅读更多 →",
+    "empty": "我们即将发布首批文章，敬请关注。",
+    "notice": "示例文章。真实的出版物将从管理面板加载。"
+  },
   "footer": {
     "tagline": "法律卓越，服务您的利益。",
     "areasTitle": "业务领域",
@@ -106,6 +122,9 @@
   },
   "contact": {
     "title": "直接咨询",
+    "heroLabel": "联系",
+    "heroSubtitle": "告诉我们您的案件，我们将尽快回复。所有咨询均为保密。",
+    "naturePlaceholder": "请选择",
     "name": "全名",
     "email": "公司邮箱",
     "nature": "咨询性质",

@@ -1,7 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactContent from '../../components/contact/ContactContent.astro';
 const lang = 'zh';
 ---
-<BaseLayout title="联系我们 | Guíñez Galaz Abogados" lang={lang}>
-  <main><h1>直接咨询</h1></main>
+<BaseLayout
+  title="联系我们 | Guíñez Galaz Abogados"
+  description="联系我们，在智利兰卡瓜进行法律咨询。劳动法、民法、刑法和家庭法。"
+  lang={lang}
+>
+  <ContactContent lang={lang} />
 </BaseLayout>

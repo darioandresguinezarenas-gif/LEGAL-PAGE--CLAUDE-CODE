@@ -17,6 +17,9 @@
     "sectionTitle": "Practice Areas",
     "sectionSubtitle": "Comprehensive legal advice for individuals and businesses in Rancagua and the O'Higgins Region.",
     "explore": "EXPLORE →",
+    "heroLabel": "PRACTICE AREAS",
+    "heroTitle": "Comprehensive Legal Advice",
+    "heroSubtitle": "Expert coverage across the main branches of law, with a team dedicated to each specialty in Rancagua and the O'Higgins Region.",
     "laboral":     { "title": "Labour Law",              "desc": "Defense of workers and employers in dismissals, labour injunctions, collective bargaining and regulatory compliance." },
     "civil":       { "title": "Civil Law",               "desc": "Contracts, civil liability, property, possession and succession. Clear and effective legal solutions." },
     "penal":       { "title": "Criminal Law",            "desc": "Solid criminal defense at every stage of the proceeding. We protect your rights with experience and determination." },
@@ -38,6 +41,8 @@
     "introBody": "Guíñez Galaz Abogados was born from the conviction that every individual and business deserves first-class legal defense. We combine technical rigor, courtroom experience and a transparent, human approach. We serve clients in Spanish, English and Mandarin, bringing the law closer to a diverse community.",
     "teamTitle": "Our Team",
     "teamSubtitle": "Professionals with vocation, experience and dedication to every case.",
+    "experienceLabel": "years of experience",
+    "scheduleButton": "Schedule a Meeting",
     "teamNotice": "Example profiles. The real team data will be loaded from the admin panel.",
     "specialtiesLabel": "Specialties",
     "valuesTitle": "Our Values",
@@ -90,6 +95,17 @@
     "placeholderTitle": "Coming soon: legal analysis and perspectives",
     "placeholderDesc": "The Guíñez Galaz team will soon publish analysis articles on the labour, civil and criminal legal landscape in Chile."
   },
+  "blog": {
+    "heroLabel": "PUBLICATIONS & ANALYSIS",
+    "heroTitle": "Legal Perspectives",
+    "heroSubtitle": "Analysis of the Chilean legal landscape written by the firm's attorneys.",
+    "filtersLabel": "Filter by category",
+    "filterAll": "All",
+    "featuredLabel": "Featured",
+    "readMore": "Read more →",
+    "empty": "We'll publish our first articles soon. Please check back.",
+    "notice": "Example articles. The real publications will be loaded from the admin panel."
+  },
   "footer": {
     "tagline": "Legal excellence at the service of your interests.",
     "areasTitle": "AREAS",
@@ -106,6 +122,9 @@
   },
   "contact": {
     "title": "Direct Consultation",
+    "heroLabel": "CONTACT",
+    "heroSubtitle": "Tell us about your case and we'll respond promptly. All inquiries are confidential.",
+    "naturePlaceholder": "Select an option",
     "name": "Full Name",
     "email": "Corporate Email",
     "nature": "Nature of Consultation",

@@ -1,7 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogContent from '../../../components/blog/BlogContent.astro';
 const lang = 'en';
 ---
-<BaseLayout title="Blog | Guíñez Galaz Abogados" lang={lang}>
-  <main><h1>Legal Perspectives</h1></main>
+<BaseLayout
+  title="Legal Perspectives | Guíñez Galaz Abogados"
+  description="Analysis and perspectives on the Chilean legal landscape: labour, civil, criminal and family law."
+  lang={lang}
+>
+  <BlogContent lang={lang} />
 </BaseLayout>

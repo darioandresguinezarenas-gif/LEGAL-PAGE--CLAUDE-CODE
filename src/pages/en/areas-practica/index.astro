@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AreasContent from '../../../components/areas/AreasContent.astro';
 const lang = 'en';
 ---
-<BaseLayout title="Practice Areas | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 4 -->
-  <main><h1>Practice Areas</h1></main>
+<BaseLayout
+  title="Practice Areas | Guíñez Galaz Abogados"
+  description="Legal advice in Labour, Civil, Criminal, Family, Corporate and Contract Law in Rancagua, Chile."
+  lang={lang}
+>
+  <AreasContent lang={lang} />
 </BaseLayout>
