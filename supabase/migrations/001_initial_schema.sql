@@ -1,5 +1,5 @@
 -- ============================================================
--- Güinez Galaz Abogados — Migración inicial v1
+-- Guíñez Galaz Abogados — Migración inicial v1
 -- Todas las tablas con soft delete y RLS
 -- ============================================================
 
@@ -123,7 +123,7 @@ CREATE TABLE configuracion_estudio (
 -- VALORES INICIALES
 -- ============================================================
 INSERT INTO configuracion_estudio (clave, valor) VALUES
-  ('nombre_estudio', 'Güinez Galaz Abogados'),
+  ('nombre_estudio', 'Guíñez Galaz Abogados'),
   ('telefono',       '+56 9 XXXX XXXX'),
   ('email',          'contacto@guinezgalaz.cl'),
   ('direccion',      'Rancagua, Región de O''Higgins, Chile'),

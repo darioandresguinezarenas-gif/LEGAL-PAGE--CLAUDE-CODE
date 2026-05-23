@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AboutContent from '../../components/about/AboutContent.astro';
 const lang = 'es';
 ---
-<BaseLayout title="Quiénes Somos | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 3 — componente AboutTeam -->
-  <main>
-    <h1>Quiénes Somos</h1>
-  </main>
+<BaseLayout
+  title="Quiénes Somos | Guíñez Galaz Abogados"
+  description="Conozca al equipo de Guíñez Galaz Abogados en Rancagua. Abogados especialistas en derecho laboral, civil, penal y familia."
+  lang={lang}
+>
+  <AboutContent lang={lang} />
 </BaseLayout>

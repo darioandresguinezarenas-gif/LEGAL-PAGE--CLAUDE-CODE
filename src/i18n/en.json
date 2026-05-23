@@ -30,6 +30,28 @@
     "desc": "At Guíñez Galaz Abogados we combine decades of legal experience with a deeply personalised approach. We advise individuals and businesses in Rancagua and the entire O'Higgins Region, providing effective, transparent and accessible legal solutions in Spanish, English and Mandarin.",
     "cta": "Meet the Team →"
   },
+  "about": {
+    "heroLabel": "OUR FIRM",
+    "heroTitle": "About Us",
+    "heroSubtitle": "A team of attorneys committed to excellence, closeness and the rigorous defense of every client in Rancagua and the O'Higgins Region.",
+    "introTitle": "A track record at the service of justice",
+    "introBody": "Guíñez Galaz Abogados was born from the conviction that every individual and business deserves first-class legal defense. We combine technical rigor, courtroom experience and a transparent, human approach. We serve clients in Spanish, English and Mandarin, bringing the law closer to a diverse community.",
+    "teamTitle": "Our Team",
+    "teamSubtitle": "Professionals with vocation, experience and dedication to every case.",
+    "teamNotice": "Example profiles. The real team data will be loaded from the admin panel.",
+    "specialtiesLabel": "Specialties",
+    "valuesTitle": "Our Values",
+    "valuesSubtitle": "The principles that guide every decision and every defense.",
+    "values": {
+      "integridad": { "title": "Integrity", "desc": "We act with honesty and transparency at every stage of the legal process." },
+      "excelencia": { "title": "Excellence", "desc": "Rigorous preparation and attention to detail to achieve the best results." },
+      "compromiso": { "title": "Commitment", "desc": "We defend each client's interests as if they were our own." },
+      "cercania": { "title": "Closeness", "desc": "Clear communication and human support at every step of the way." }
+    },
+    "ctaTitle": "Need legal advice?",
+    "ctaText": "Schedule a consultation and let's talk about your case with no obligation.",
+    "ctaButton": "Book Consultation"
+  },
   "reviews": {
     "sectionTitle": "Our Reputation is Our Guarantee",
     "pendingTitle": "Reviews Being Configured",

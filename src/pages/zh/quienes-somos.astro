@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AboutContent from '../../components/about/AboutContent.astro';
 const lang = 'zh';
 ---
-<BaseLayout title="关于我们 | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 3 — AboutTeam 组件 -->
-  <main>
-    <h1>关于我们</h1>
-  </main>
+<BaseLayout
+  title="关于我们 | Guíñez Galaz Abogados"
+  description="认识智利兰卡瓜 Guíñez Galaz Abogados 律师事务所的团队。专精于劳动法、民法、刑法和家庭法的律师。"
+  lang={lang}
+>
+  <AboutContent lang={lang} />
 </BaseLayout>

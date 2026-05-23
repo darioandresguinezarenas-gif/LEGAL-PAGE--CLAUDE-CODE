@@ -30,6 +30,28 @@
     "desc": "En Guíñez Galaz Abogados combinamos décadas de experiencia jurídica con un enfoque profundamente personalizado. Atendemos a personas y empresas en Rancagua y toda la Región de O'Higgins, ofreciendo soluciones legales efectivas, transparentes y accesibles en español, inglés y chino.",
     "cta": "Conocer al Equipo →"
   },
+  "about": {
+    "heroLabel": "NUESTRO ESTUDIO",
+    "heroTitle": "Quiénes Somos",
+    "heroSubtitle": "Un equipo de abogados comprometidos con la excelencia, la cercanía y la defensa rigurosa de cada cliente en Rancagua y la Región de O'Higgins.",
+    "introTitle": "Trayectoria al servicio de la justicia",
+    "introBody": "Guíñez Galaz Abogados nace de la convicción de que toda persona y empresa merece una defensa legal de primer nivel. Combinamos rigor técnico, experiencia en tribunales y un trato humano y transparente. Atendemos en español, inglés y chino, acercando el derecho a una comunidad diversa.",
+    "teamTitle": "Nuestro Equipo",
+    "teamSubtitle": "Profesionales con vocación, experiencia y dedicación a cada caso.",
+    "teamNotice": "Perfiles de ejemplo. Los datos reales del equipo se cargarán desde el panel de administración.",
+    "specialtiesLabel": "Especialidades",
+    "valuesTitle": "Nuestros Valores",
+    "valuesSubtitle": "Los principios que guían cada decisión y cada defensa.",
+    "values": {
+      "integridad": { "title": "Integridad", "desc": "Actuamos con honestidad y transparencia en cada etapa del proceso legal." },
+      "excelencia": { "title": "Excelencia", "desc": "Preparación rigurosa y atención al detalle para obtener los mejores resultados." },
+      "compromiso": { "title": "Compromiso", "desc": "Defendemos los intereses de cada cliente como si fueran propios." },
+      "cercania": { "title": "Cercanía", "desc": "Comunicación clara y acompañamiento humano en cada paso del camino." }
+    },
+    "ctaTitle": "¿Necesita asesoría legal?",
+    "ctaText": "Agende una consulta y conversemos sobre su caso sin compromiso.",
+    "ctaButton": "Reservar Consulta"
+  },
   "reviews": {
     "sectionTitle": "Nuestra Reputación es Nuestra Garantía",
     "pendingTitle": "Reseñas en Configuración",

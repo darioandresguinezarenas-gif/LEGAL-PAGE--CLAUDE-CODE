@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AboutContent from '../../components/about/AboutContent.astro';
 const lang = 'en';
 ---
-<BaseLayout title="About Us | Guíñez Galaz Abogados" lang={lang}>
-  <!-- TODO: Fase 3 — AboutTeam component -->
-  <main>
-    <h1>About Us</h1>
-  </main>
+<BaseLayout
+  title="About Us | Guíñez Galaz Abogados"
+  description="Meet the team at Guíñez Galaz Abogados in Rancagua, Chile. Attorneys specialised in labour, civil, criminal and family law."
+  lang={lang}
+>
+  <AboutContent lang={lang} />
 </BaseLayout>

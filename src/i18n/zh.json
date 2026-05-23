@@ -30,6 +30,28 @@
     "desc": "在Guíñez Galaz Abogados，我们将数十年的法律经验与深度个性化的服务相结合。我们为兰卡瓜及奥希金斯大区的个人和企业提供服务，以西班牙语、英语和中文提供有效、透明且可及的法律解决方案。",
     "cta": "了解我们的团队 →"
   },
+  "about": {
+    "heroLabel": "我们的事务所",
+    "heroTitle": "关于我们",
+    "heroSubtitle": "一支致力于卓越、亲和并为兰卡瓜及奥希金斯大区每一位客户提供严谨辩护的律师团队。",
+    "introTitle": "服务于正义的历程",
+    "introBody": "Guíñez Galaz Abogados 秉持这样的信念：每一个人和企业都应获得一流的法律辩护。我们将专业的技术、丰富的庭审经验与透明、人性化的服务相结合。我们以西班牙语、英语和中文提供服务，让法律贴近多元化的社区。",
+    "teamTitle": "我们的团队",
+    "teamSubtitle": "充满使命感、经验丰富并对每个案件尽心尽力的专业人士。",
+    "teamNotice": "示例资料。真实的团队信息将从管理面板加载。",
+    "specialtiesLabel": "专业领域",
+    "valuesTitle": "我们的价值观",
+    "valuesSubtitle": "指导每一个决策和每一次辩护的原则。",
+    "values": {
+      "integridad": { "title": "诚信", "desc": "我们在法律程序的每个阶段都以诚实和透明的态度行事。" },
+      "excelencia": { "title": "卓越", "desc": "严谨的准备和对细节的关注，以取得最佳成果。" },
+      "compromiso": { "title": "承诺", "desc": "我们像维护自己的利益一样维护每位客户的利益。" },
+      "cercania": { "title": "亲和", "desc": "在每一步都提供清晰的沟通和人性化的陪伴。" }
+    },
+    "ctaTitle": "需要法律咨询吗？",
+    "ctaText": "预约咨询，让我们一起探讨您的案件，无需任何承诺。",
+    "ctaButton": "预约咨询"
+  },
   "reviews": {
     "sectionTitle": "我们的声誉是我们的保证",
     "pendingTitle": "评论配置中",
