@@ -207,7 +207,14 @@ const year = new Date().getFullYear();
   }
 
   /* ── Col 2: Links ─────────────────────────────── */
+  .footer-col nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
   .footer-link {
+    display: block;
     font-family: 'DM Sans', system-ui, sans-serif;
     font-size: 0.875rem;
     color: rgba(255, 255, 255, 0.60);

@@ -39,17 +39,6 @@ const backLabel: Record<Lang, string> = {
   zh: '← 返回领域',
 };
 
-const includesTitle: Record<Lang, string> = {
-  es: '¿Qué incluye este servicio?',
-  en: 'What does this service include?',
-  zh: '该服务包含哪些内容？',
-};
-
-const noticeLabel: Record<Lang, string> = {
-  es: 'Contenido detallado en actualización. Contáctenos para información completa sobre este servicio.',
-  en: 'Detailed content being updated. Contact us for full information about this service.',
-  zh: '详细内容正在更新中。请联系我们获取该服务的完整信息。',
-};
 ---
 
 <div class="area-detail">
@@ -80,12 +69,6 @@ const noticeLabel: Record<Lang, string> = {
   <div class="detail-body">
     <div class="body-container">
       <main class="detail-main">
-        <!-- Service includes section -->
-        <section class="includes-section">
-          <h2 class="section-heading">{includesTitle[lang]}</h2>
-          <p class="content-notice">{noticeLabel[lang]}</p>
-        </section>
-
         <!-- FAQ section -->
         {faqs.length > 0 && (
           <section class="faq-wrapper">
@@ -224,18 +207,6 @@ const noticeLabel: Record<Lang, string> = {
     color: #1A1A1A;
     margin-bottom: 1.25rem;
     line-height: 1.2;
-  }
-
-  .content-notice {
-    background: #ffffff;
-    border: 1px solid #E8E8E0;
-    border-left: 3px solid #C9A84C;
-    border-radius: 6px;
-    padding: 1.25rem 1.5rem;
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.9375rem;
-    color: #6B6B6B;
-    line-height: 1.6;
   }
 
   .faq-wrapper :global(.faq-section) {

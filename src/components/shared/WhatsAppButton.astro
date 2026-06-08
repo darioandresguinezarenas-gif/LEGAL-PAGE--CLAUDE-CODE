@@ -38,4 +38,13 @@ const href = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}
     transform: scale(1.08);
     box-shadow: 0 6px 18px rgba(0,0,0,0.3);
   }
+
+  @media (max-width: 600px) {
+    .whatsapp-fab {
+      width: 48px;
+      height: 48px;
+      bottom: 1.25rem;
+      right: 1rem;
+    }
+  }
 </style>
