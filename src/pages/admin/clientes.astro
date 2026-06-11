@@ -1,6 +1,167 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Clientes Destacados | Admin">
-  <main><h1>Gestionar Logos de Clientes</h1></main>
+<AdminLayout title="Clientes Destacados | Admin" pageTitle="Clientes Destacados">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Logos / clientes</span>
+      <button class="btn btn-gold" id="btn-new">+ Nuevo cliente</button>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Logo</th><th>Nombre</th><th>URL</th><th>Orden</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="6" class="loading-box"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-cliente">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Nuevo cliente</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-cliente">
+          <input type="hidden" name="id" />
+          <div class="form-group">
+            <label class="form-label req">Nombre</label>
+            <input name="nombre" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label req">URL del logo</label>
+            <input name="logo_url" type="url" class="form-input" required placeholder="https://…" />
+            <p class="form-hint">PNG/SVG horizontal, fondo transparente recomendado.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label">URL del sitio web</label>
+            <input name="url_sitio" type="url" class="form-input" placeholder="https://…" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Orden</label>
+              <input name="orden" type="number" class="form-input" value="0" min="0" />
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:0.2rem">
+              <label class="form-check">
+                <input type="checkbox" name="activo" checked />
+                Visible en el sitio
+              </label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast, showModal, hideModal } from '../../scripts/admin/ui.js';
+
+  let records = [];
+  let editingId = null;
+  const form = document.getElementById('form-cliente');
+  const tbody = document.getElementById('table-body');
+
+  (async () => {
+    const session = await requireAuth(); if (!session) return;
+    await loadRecords();
+  })();
+
+  async function loadRecords() {
+    const { data, error } = await supabase
+      .from('clientes_destacados').select('*').is('deleted_at', null).order('orden');
+    if (error) { showToast(error.message, 'error'); return; }
+    records = data ?? [];
+    renderTable();
+  }
+
+  function renderTable() {
+    if (!records.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-box">Sin clientes.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = records.map(r => `
+      <tr>
+        <td><img src="${r.logo_url}" class="img-thumb" onerror="this.style.display='none'" alt="${r.nombre}" /></td>
+        <td>${r.nombre}</td>
+        <td class="text-muted text-xs truncate">${r.url ?? '—'}</td>
+        <td class="text-muted">${r.orden}</td>
+        <td>${r.activo ? '<span class="badge badge-active">Activo</span>' : '<span class="badge badge-inactive">Inactivo</span>'}</td>
+        <td class="td-actions">
+          <button class="btn btn-outline btn-xs" data-action="edit"   data-id="${r.id}">Editar</button>
+          <button class="btn btn-danger  btn-xs" data-action="delete" data-id="${r.id}">Eliminar</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  tbody.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]'); if (!btn) return;
+    if (btn.dataset.action === 'edit')   openEdit(btn.dataset.id);
+    if (btn.dataset.action === 'delete') doDelete(btn.dataset.id);
+  });
+
+  document.getElementById('btn-new').addEventListener('click', () => {
+    editingId = null; form.reset(); form.id.value = ''; form.activo.checked = true;
+    document.getElementById('modal-title').textContent = 'Nuevo cliente';
+    showModal('modal-cliente');
+  });
+
+  function openEdit(id) {
+    const r = records.find(x => x.id === id); if (!r) return;
+    editingId = id; form.id.value = id;
+    form.nombre.value   = r.nombre;
+    form.logo_url.value = r.logo_url;
+    form.url_sitio.value = r.url ?? '';
+    form.orden.value    = r.orden;
+    form.activo.checked = r.activo;
+    document.getElementById('modal-title').textContent = 'Editar cliente';
+    showModal('modal-cliente');
+  }
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+    const payload = {
+      nombre:   form.nombre.value.trim(),
+      logo_url: form.logo_url.value.trim(),
+      url:      form.url_sitio.value.trim() || null,
+      orden:    Number(form.orden.value),
+      activo:   form.activo.checked,
+    };
+    let error;
+    if (editingId) {
+      ({ error } = await supabase.from('clientes_destacados').update(payload).eq('id', editingId));
+    } else {
+      ({ error } = await supabase.from('clientes_destacados').insert(payload));
+    }
+    btn.disabled = false; btn.textContent = 'Guardar';
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast(editingId ? 'Cliente actualizado' : 'Cliente creado');
+    hideModal('modal-cliente');
+    await loadRecords();
+  });
+
+  async function doDelete(id) {
+    if (!confirm('¿Eliminar este cliente?')) return;
+    const { error } = await supabase.from('clientes_destacados')
+      .update({ deleted_at: new Date().toISOString() }).eq('id', id);
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast('Cliente eliminado');
+    await loadRecords();
+  }
+
+  document.getElementById('modal-close').addEventListener('click', () => hideModal('modal-cliente'));
+  document.getElementById('btn-cancel').addEventListener('click', () => hideModal('modal-cliente'));
+</script>

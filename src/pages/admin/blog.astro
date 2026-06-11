@@ -1,6 +1,274 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Blog | Admin">
-  <main><h1>Gestionar Artículos del Blog</h1></main>
+<AdminLayout title="Blog | Admin" pageTitle="Artículos del Blog">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Todos los artículos</span>
+      <div class="topbar-actions">
+        <input type="text" class="search-bar" id="search" placeholder="Buscar…" />
+        <button class="btn btn-gold" id="btn-new">+ Nuevo artículo</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Título (ES)</th><th>Categoría</th><th>Autor</th><th>Publicado</th><th>Fecha</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="6" class="loading-box"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-articulo">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Nuevo artículo</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-articulo">
+          <input type="hidden" name="id" />
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label req">Slug</label>
+              <input name="slug" class="form-input font-mono" required placeholder="ej: reforma-laboral-2025" />
+            </div>
+            <div class="form-group">
+              <label class="form-label req">Categoría</label>
+              <select name="categoria" class="form-select">
+                <option>Laboral</option><option>Civil</option><option>Penal</option>
+                <option>Familia</option><option>Corporativo</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Autor</label>
+              <select name="autor_id" class="form-select" id="sel-autor">
+                <option value="">— Sin autor —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">URL imagen destacada</label>
+              <input name="imagen_url" type="url" class="form-input" placeholder="https://…" />
+            </div>
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">Tiempo lectura (min)</label>
+              <input name="tiempo_lectura" type="number" min="1" class="form-input" placeholder="5" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Idioma principal</label>
+              <select name="idioma" class="form-select">
+                <option value="es">Español</option>
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+            <div class="form-group" style="display:flex;flex-direction:column;gap:0.4rem;justify-content:flex-end">
+              <label class="form-check"><input type="checkbox" name="publicado" /> Publicado</label>
+              <label class="form-check"><input type="checkbox" name="destacado" /> Destacado</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Título</label>
+            <div class="lang-tabs" data-group="tit">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="tit" data-lang="es"><input name="tit_es" class="form-input" /></div>
+            <div class="lang-panel"        data-group="tit" data-lang="en"><input name="tit_en" class="form-input" /></div>
+            <div class="lang-panel"        data-group="tit" data-lang="zh"><input name="tit_zh" class="form-input" /></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Extracto</label>
+            <div class="lang-tabs" data-group="ext">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="ext" data-lang="es"><textarea name="ext_es" class="form-textarea" placeholder="Resumen breve…"></textarea></div>
+            <div class="lang-panel"        data-group="ext" data-lang="en"><textarea name="ext_en" class="form-textarea" placeholder="Short summary…"></textarea></div>
+            <div class="lang-panel"        data-group="ext" data-lang="zh"><textarea name="ext_zh" class="form-textarea" placeholder="简短摘要…"></textarea></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Contenido (HTML)</label>
+            <div class="lang-tabs" data-group="cont">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="cont" data-lang="es"><textarea name="cont_es" class="form-textarea tall" placeholder="<p>Contenido HTML…</p>"></textarea></div>
+            <div class="lang-panel"        data-group="cont" data-lang="en"><textarea name="cont_en" class="form-textarea tall"></textarea></div>
+            <div class="lang-panel"        data-group="cont" data-lang="zh"><textarea name="cont_zh" class="form-textarea tall"></textarea></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Meta descripción (SEO)</label>
+            <textarea name="meta_descripcion" class="form-textarea" placeholder="Descripción para motores de búsqueda (150-160 chars)…" maxlength="160"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast, showModal, hideModal, initLangTabs, getLang, setLang, fmtDate } from '../../scripts/admin/ui.js';
+
+  let records = [];
+  let editingId = null;
+
+  const form  = document.getElementById('form-articulo');
+  const tbody = document.getElementById('table-body');
+
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+
+    // Load abogados for author dropdown
+    const { data: abogs } = await supabase.from('abogados').select('id,nombre').is('deleted_at', null).eq('activo', true);
+    const sel = document.getElementById('sel-autor');
+    (abogs ?? []).forEach(a => {
+      const opt = document.createElement('option');
+      opt.value = a.id; opt.textContent = a.nombre;
+      sel.appendChild(opt);
+    });
+
+    await loadRecords();
+  })();
+
+  async function loadRecords() {
+    const { data, error } = await supabase
+      .from('articulos')
+      .select('id,slug,titulo,categoria,publicado,destacado,published_at,created_at,autor_id,abogados(nombre)')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+    if (error) { showToast(error.message, 'error'); return; }
+    records = data ?? [];
+    renderTable(records);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-box">Sin artículos.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td class="truncate">${r.titulo?.es ?? '—'}</td>
+        <td><span class="badge badge-blue">${r.categoria}</span></td>
+        <td class="text-muted text-sm">${r.abogados?.nombre ?? '—'}</td>
+        <td>${r.publicado ? '<span class="badge badge-green">Publicado</span>' : '<span class="badge badge-gray">Borrador</span>'}</td>
+        <td class="text-muted text-xs">${fmtDate(r.published_at ?? r.created_at)}</td>
+        <td class="td-actions">
+          <button class="btn btn-outline btn-xs" data-action="edit"   data-id="${r.id}">Editar</button>
+          <button class="btn btn-danger  btn-xs" data-action="delete" data-id="${r.id}">Eliminar</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('search').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    renderTable(records.filter(r => (r.titulo?.es ?? '').toLowerCase().includes(q) || r.slug.includes(q)));
+  });
+
+  tbody.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    if (btn.dataset.action === 'edit')   openEdit(btn.dataset.id);
+    if (btn.dataset.action === 'delete') doDelete(btn.dataset.id);
+  });
+
+  document.getElementById('btn-new').addEventListener('click', () => {
+    editingId = null; form.reset(); form.id.value = '';
+    document.getElementById('modal-title').textContent = 'Nuevo artículo';
+    initLangTabs(form);
+    showModal('modal-articulo');
+  });
+
+  function openEdit(id) {
+    // Need full record for content fields
+    (async () => {
+      const { data: r } = await supabase.from('articulos').select('*').eq('id', id).single();
+      if (!r) return;
+      editingId = id; form.id.value = id;
+      form.slug.value = r.slug; form.categoria.value = r.categoria;
+      form.imagen_url.value = r.imagen_url ?? '';
+      form.tiempo_lectura.value = r.tiempo_lectura ?? '';
+      form.idioma.value = r.idioma ?? 'es';
+      form.publicado.checked = r.publicado;
+      form.destacado.checked = r.destacado ?? false;
+      form.autor_id.value = r.autor_id ?? '';
+      form.meta_descripcion.value = r.meta_descripcion ?? '';
+      setLang(form, 'tit',  r.titulo);
+      setLang(form, 'ext',  r.extracto);
+      setLang(form, 'cont', r.contenido);
+      document.getElementById('modal-title').textContent = 'Editar artículo';
+      initLangTabs(form);
+      showModal('modal-articulo');
+    })();
+  }
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+
+    const payload = {
+      slug:             form.slug.value.trim(),
+      categoria:        form.categoria.value,
+      imagen_url:       form.imagen_url.value.trim() || null,
+      tiempo_lectura:   form.tiempo_lectura.value ? Number(form.tiempo_lectura.value) : null,
+      idioma:           form.idioma.value,
+      publicado:        form.publicado.checked,
+      destacado:        form.destacado.checked,
+      autor_id:         form.autor_id.value || null,
+      meta_descripcion: form.meta_descripcion.value.trim() || null,
+      titulo:   getLang(form, 'tit'),
+      extracto: getLang(form, 'ext'),
+      contenido: getLang(form, 'cont'),
+      published_at: form.publicado.checked ? new Date().toISOString() : null,
+    };
+
+    let error;
+    if (editingId) {
+      ({ error } = await supabase.from('articulos').update(payload).eq('id', editingId));
+    } else {
+      ({ error } = await supabase.from('articulos').insert(payload));
+    }
+    btn.disabled = false; btn.textContent = 'Guardar';
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast(editingId ? 'Artículo actualizado' : 'Artículo creado');
+    hideModal('modal-articulo');
+    await loadRecords();
+  });
+
+  async function doDelete(id) {
+    if (!confirm('¿Eliminar este artículo?')) return;
+    const { error } = await supabase.from('articulos').update({ deleted_at: new Date().toISOString() }).eq('id', id);
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast('Artículo eliminado');
+    await loadRecords();
+  }
+
+  document.getElementById('modal-close').addEventListener('click', () => hideModal('modal-articulo'));
+  document.getElementById('btn-cancel').addEventListener('click', () => hideModal('modal-articulo'));
+</script>

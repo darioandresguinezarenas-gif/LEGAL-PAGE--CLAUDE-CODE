@@ -1,6 +1,87 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Transacciones | Admin">
-  <main><h1>Historial de Pagos</h1></main>
+<AdminLayout title="Pagos | Admin" pageTitle="Registro de Pagos">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Transacciones Webpay</span>
+      <div class="topbar-actions">
+        <select id="filtro-estado" class="form-select" style="width:auto">
+          <option value="todos">Todos los estados</option>
+          <option value="aprobado">Aprobado</option>
+          <option value="rechazado">Rechazado</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="anulado">Anulado</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Buy Order</th><th>Monto</th><th>Estado</th><th>Cód. autorización</th><th>Tarjeta</th><th>Fecha</th></tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="6" class="loading-box"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:1rem 1.5rem;border-top:1px solid #F3F4F6;font-size:0.8125rem;color:#9CA3AF" id="pago-summary"></div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast, fmtDate, fmtCLP } from '../../scripts/admin/ui.js';
+
+  let records = [];
+  const tbody = document.getElementById('table-body');
+
+  const estadoBadge = {
+    aprobado:  'badge-green',
+    rechazado: 'badge-red',
+    pendiente: 'badge-yellow',
+    anulado:   'badge-gray',
+  };
+
+  (async () => {
+    const session = await requireAuth(); if (!session) return;
+    await loadRecords();
+  })();
+
+  async function loadRecords() {
+    const { data, error } = await supabase
+      .from('pagos').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+    if (error) { showToast(error.message, 'error'); return; }
+    records = data ?? [];
+    applyFilter();
+  }
+
+  function applyFilter() {
+    const estado = document.getElementById('filtro-estado').value;
+    const data = estado === 'todos' ? records : records.filter(r => r.estado === estado);
+    renderTable(data);
+    const total = records.filter(r => r.estado === 'aprobado').reduce((sum, r) => sum + r.monto, 0);
+    document.getElementById('pago-summary').textContent =
+      `${records.length} transacciones · Total aprobado: ${fmtCLP(total)}`;
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-box">Sin transacciones.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td class="font-mono text-xs">${r.buy_order}</td>
+        <td style="font-weight:600">${fmtCLP(r.monto)}</td>
+        <td><span class="badge ${estadoBadge[r.estado] ?? 'badge-gray'}">${r.estado}</span></td>
+        <td class="font-mono text-xs">${r.authorization_code ?? '—'}</td>
+        <td class="text-muted text-xs">${r.card_detail?.last_four_digits ? `····${r.card_detail.last_four_digits}` : '—'}</td>
+        <td class="text-muted text-xs">${fmtDate(r.transaction_date ?? r.created_at)}</td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('filtro-estado').addEventListener('change', applyFilter);
+</script>

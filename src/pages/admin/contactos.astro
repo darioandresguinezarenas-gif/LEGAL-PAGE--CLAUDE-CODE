@@ -1,6 +1,170 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Mensajes de Contacto | Admin">
-  <main><h1>Mensajes Recibidos</h1></main>
+<AdminLayout title="Mensajes | Admin" pageTitle="Mensajes de Contacto">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Mensajes recibidos</span>
+      <div class="topbar-actions">
+        <select id="filtro" class="form-select" style="width:auto">
+          <option value="todos">Todos</option>
+          <option value="no-leidos">Sin leer</option>
+          <option value="leidos">Leídos</option>
+        </select>
+        <input type="text" class="search-bar" id="search" placeholder="Buscar…" />
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Estado</th><th>Nombre</th><th>Email</th><th>Tipo</th><th>Fecha</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="6" class="loading-box"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detalle modal -->
+  <div class="modal-overlay" id="modal-mensaje">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="msg-nombre">Mensaje</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem">
+          <div>
+            <p class="text-xs text-muted" style="margin-bottom:2px">Email</p>
+            <p id="msg-email" style="font-size:0.875rem"></p>
+          </div>
+          <div>
+            <p class="text-xs text-muted" style="margin-bottom:2px">Tipo de consulta</p>
+            <p id="msg-tipo"></p>
+          </div>
+          <div>
+            <p class="text-xs text-muted" style="margin-bottom:2px">Fecha</p>
+            <p id="msg-fecha" style="font-size:0.875rem;color:#6B7280"></p>
+          </div>
+          <div>
+            <p class="text-xs text-muted" style="margin-bottom:2px">IP</p>
+            <p id="msg-ip" style="font-size:0.75rem;color:#9CA3AF;font-family:monospace"></p>
+          </div>
+        </div>
+        <hr class="divider" />
+        <p class="text-xs text-muted" style="margin-bottom:0.5rem">Mensaje</p>
+        <p id="msg-texto" style="font-size:0.9rem;line-height:1.7;white-space:pre-wrap"></p>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between">
+        <button class="btn btn-danger btn-sm" id="btn-delete-msg">Eliminar</button>
+        <div style="display:flex;gap:0.75rem">
+          <button class="btn btn-outline" id="modal-close-2">Cerrar</button>
+          <button class="btn btn-primary" id="btn-toggle-leido">Marcar como leído</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast, showModal, hideModal, fmtDate } from '../../scripts/admin/ui.js';
+
+  let records = [];
+  let activeId = null;
+
+  const tbody = document.getElementById('table-body');
+
+  (async () => {
+    const session = await requireAuth(); if (!session) return;
+    await loadRecords();
+  })();
+
+  async function loadRecords() {
+    const { data, error } = await supabase
+      .from('contactos').select('*').is('deleted_at', null).order('created_at', { ascending: false });
+    if (error) { showToast(error.message, 'error'); return; }
+    records = data ?? [];
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const filtro = document.getElementById('filtro').value;
+    const q = document.getElementById('search').value.toLowerCase();
+    let data = records;
+    if (filtro === 'no-leidos') data = data.filter(r => !r.leido);
+    if (filtro === 'leidos')    data = data.filter(r => r.leido);
+    if (q) data = data.filter(r => r.nombre.toLowerCase().includes(q) || r.email.toLowerCase().includes(q));
+    renderTable(data);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-box">Sin mensajes.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(r => `
+      <tr style="${!r.leido ? 'font-weight:600' : ''}">
+        <td>${!r.leido ? '<span class="badge badge-unread">Nuevo</span>' : '<span class="badge badge-gray">Leído</span>'}</td>
+        <td>${r.nombre}</td>
+        <td class="text-muted text-sm">${r.email}</td>
+        <td><span class="badge badge-blue">${r.naturaleza}</span></td>
+        <td class="text-muted text-xs">${fmtDate(r.created_at)}</td>
+        <td class="td-actions">
+          <button class="btn btn-outline btn-xs" data-action="ver" data-id="${r.id}">Ver</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  tbody.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]'); if (!btn) return;
+    if (btn.dataset.action === 'ver') openMsg(btn.dataset.id);
+  });
+
+  function openMsg(id) {
+    const r = records.find(x => x.id === id); if (!r) return;
+    activeId = id;
+    document.getElementById('msg-nombre').textContent = r.nombre;
+    document.getElementById('msg-email').textContent  = r.email;
+    document.getElementById('msg-tipo').innerHTML     = `<span class="badge badge-blue">${r.naturaleza}</span>`;
+    document.getElementById('msg-fecha').textContent  = fmtDate(r.created_at);
+    document.getElementById('msg-ip').textContent     = r.ip ?? '—';
+    document.getElementById('msg-texto').textContent  = r.mensaje;
+    const btn = document.getElementById('btn-toggle-leido');
+    btn.textContent = r.leido ? 'Marcar como no leído' : 'Marcar como leído';
+    showModal('modal-mensaje');
+    if (!r.leido) markRead(id, true);
+  }
+
+  async function markRead(id, leido) {
+    const { error } = await supabase.from('contactos').update({ leido }).eq('id', id);
+    if (error) return;
+    const r = records.find(x => x.id === id);
+    if (r) r.leido = leido;
+    applyFilters();
+    document.getElementById('btn-toggle-leido').textContent = leido ? 'Marcar como no leído' : 'Marcar como leído';
+  }
+
+  document.getElementById('btn-toggle-leido').addEventListener('click', async () => {
+    const r = records.find(x => x.id === activeId); if (!r) return;
+    await markRead(activeId, !r.leido);
+  });
+
+  document.getElementById('btn-delete-msg').addEventListener('click', async () => {
+    if (!confirm('¿Eliminar este mensaje?')) return;
+    const { error } = await supabase.from('contactos')
+      .update({ deleted_at: new Date().toISOString() }).eq('id', activeId);
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast('Mensaje eliminado');
+    hideModal('modal-mensaje');
+    await loadRecords();
+  });
+
+  document.getElementById('filtro').addEventListener('change', applyFilters);
+  document.getElementById('search').addEventListener('input', applyFilters);
+  document.getElementById('modal-close').addEventListener('click', () => hideModal('modal-mensaje'));
+  document.getElementById('modal-close-2').addEventListener('click', () => hideModal('modal-mensaje'));
+</script>

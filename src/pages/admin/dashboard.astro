@@ -1,7 +1,82 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Dashboard | Admin Guíñez Galaz">
-  <!-- TODO: Fase 8 — verificar sesión + MFA antes de renderizar -->
-  <main><h1>Dashboard</h1></main>
+<AdminLayout title="Dashboard | Admin Guíñez Galaz" pageTitle="Dashboard">
+
+  <div class="stats-grid" id="stats">
+    {['areas','abogados','articulos','contactos','pagos','clientes'].map(k => (
+      <div class="stat-card" id={`stat-${k}`}>
+        <div class="stat-label">{k}</div>
+        <div class="stat-value"><div class="spinner" style="width:20px;height:20px;border-width:2px"></div></div>
+      </div>
+    ))}
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Mensajes recientes sin leer</span>
+      <a href="/admin/contactos" class="btn btn-ghost btn-sm">Ver todos →</a>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nombre</th><th>Email</th><th>Tipo</th><th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="recent-contactos">
+          <tr><td colspan="4" class="empty-box">Cargando…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { fmtDate } from '../../scripts/admin/ui.js';
+
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+
+    const stats = [
+      { key: 'areas',     table: 'areas_practica',     label: 'Áreas activas',       filter: { activo: true } },
+      { key: 'abogados',  table: 'abogados',            label: 'Abogados activos',    filter: { activo: true } },
+      { key: 'articulos', table: 'articulos',           label: 'Artículos publicados', filter: { publicado: true } },
+      { key: 'contactos', table: 'contactos',           label: 'Mensajes sin leer',   filter: { leido: false } },
+      { key: 'pagos',     table: 'pagos',               label: 'Pagos aprobados',     filter: { estado: 'aprobado' } },
+      { key: 'clientes',  table: 'clientes_destacados', label: 'Clientes destacados', filter: { activo: true } },
+    ];
+
+    for (const s of stats) {
+      let q = supabase.from(s.table).select('*', { count: 'exact', head: true }).is('deleted_at', null);
+      for (const [k, v] of Object.entries(s.filter)) q = q.eq(k, v);
+      const { count } = await q;
+      const el = document.getElementById(`stat-${s.key}`);
+      el.innerHTML = `<div class="stat-label">${s.label}</div><div class="stat-value">${count ?? 0}</div>`;
+    }
+
+    const { data: msgs } = await supabase
+      .from('contactos')
+      .select('nombre,email,naturaleza,created_at')
+      .eq('leido', false)
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
+      .limit(8);
+
+    const tbody = document.getElementById('recent-contactos');
+    if (!msgs?.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-box">Sin mensajes sin leer</td></tr>';
+    } else {
+      tbody.innerHTML = msgs.map(m => `
+        <tr>
+          <td>${m.nombre}</td>
+          <td class="text-muted">${m.email}</td>
+          <td><span class="badge badge-blue">${m.naturaleza}</span></td>
+          <td class="text-muted text-xs">${fmtDate(m.created_at)}</td>
+        </tr>`).join('');
+    }
+  })();
+</script>

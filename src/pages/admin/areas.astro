@@ -1,7 +1,341 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
 ---
-<AdminLayout title="Áreas de Práctica | Admin">
-  <!-- TODO: Fase 8 — CRUD áreas con soft delete -->
-  <main><h1>Gestionar Áreas de Práctica</h1></main>
+<AdminLayout title="Áreas de Práctica | Admin" pageTitle="Áreas de Práctica">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Todas las áreas</span>
+      <div class="topbar-actions">
+        <input type="text" class="search-bar" id="search" placeholder="Buscar…" />
+        <button class="btn btn-gold" id="btn-new">+ Nueva área</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Slug</th><th>Título (ES)</th><th>Orden</th><th>Estado</th><th>Acciones</th></tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="5" class="loading-box"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal-area">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title">Nueva área</h2>
+        <button class="modal-close" id="modal-close">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-area">
+          <input type="hidden" name="id" />
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label req">Slug</label>
+              <input name="slug" class="form-input font-mono" required placeholder="ej: laboral" />
+              <p class="form-hint">Solo letras minúsculas y guiones. Ejemplo: <code>derecho-laboral</code></p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ícono (nombre Lucide)</label>
+              <input name="icono" class="form-input" placeholder="ej: scale" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Orden</label>
+              <input name="orden" type="number" class="form-input" value="0" min="0" />
+            </div>
+            <div class="form-group" style="display:flex;align-items:flex-end;padding-bottom:0.2rem">
+              <label class="form-check">
+                <input type="checkbox" name="activo" checked />
+                Área activa (visible en el sitio)
+              </label>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Título -->
+          <div class="form-group">
+            <label class="form-label req">Título</label>
+            <div class="lang-tabs" data-group="titulo">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="titulo" data-lang="es">
+              <input name="titulo_es" class="form-input" placeholder="Derecho Laboral" />
+            </div>
+            <div class="lang-panel" data-group="titulo" data-lang="en">
+              <input name="titulo_en" class="form-input" placeholder="Labour Law" />
+            </div>
+            <div class="lang-panel" data-group="titulo" data-lang="zh">
+              <input name="titulo_zh" class="form-input" placeholder="劳动法" />
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="form-group">
+            <label class="form-label">Descripción (resumen breve)</label>
+            <div class="lang-tabs" data-group="desc">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="desc" data-lang="es">
+              <textarea name="desc_es" class="form-textarea" placeholder="Descripción en español…"></textarea>
+            </div>
+            <div class="lang-panel" data-group="desc" data-lang="en">
+              <textarea name="desc_en" class="form-textarea" placeholder="Description in English…"></textarea>
+            </div>
+            <div class="lang-panel" data-group="desc" data-lang="zh">
+              <textarea name="desc_zh" class="form-textarea" placeholder="中文描述…"></textarea>
+            </div>
+          </div>
+
+          <!-- Contenido -->
+          <div class="form-group">
+            <label class="form-label">Contenido (HTML)</label>
+            <div class="lang-tabs" data-group="cont">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="cont" data-lang="es">
+              <textarea name="cont_es" class="form-textarea tall" placeholder="<p>Contenido HTML...</p>"></textarea>
+            </div>
+            <div class="lang-panel" data-group="cont" data-lang="en">
+              <textarea name="cont_en" class="form-textarea tall" placeholder="<p>HTML content...</p>"></textarea>
+            </div>
+            <div class="lang-panel" data-group="cont" data-lang="zh">
+              <textarea name="cont_zh" class="form-textarea tall" placeholder="<p>HTML内容...</p>"></textarea>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- FAQs -->
+          <div class="form-group">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
+              <label class="form-label" style="margin:0">Preguntas Frecuentes (FAQs)</label>
+              <button type="button" class="btn btn-outline btn-sm" id="btn-add-faq">+ Agregar pregunta</button>
+            </div>
+            <div class="faq-builder" id="faq-builder"></div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="btn-cancel">Cancelar</button>
+        <button class="btn btn-primary" id="btn-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
 </AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast, showModal, hideModal, initLangTabs, getLang, setLang } from '../../scripts/admin/ui.js';
+
+  let records = [];
+  let editingId = null;
+  let faqs = [];
+
+  const form  = document.getElementById('form-area');
+  const tbody = document.getElementById('table-body');
+
+  // ── Auth ──
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+    await loadRecords();
+  })();
+
+  // ── Load ──
+  async function loadRecords() {
+    const { data, error } = await supabase
+      .from('areas_practica')
+      .select('*')
+      .is('deleted_at', null)
+      .order('orden');
+    if (error) { showToast(error.message, 'error'); return; }
+    records = data ?? [];
+    renderTable(records);
+  }
+
+  function renderTable(data) {
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="5" class="empty-box">Sin áreas. Crea la primera.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.map(r => `
+      <tr>
+        <td class="font-mono text-xs">${r.slug}</td>
+        <td>${r.titulo?.es ?? '—'}</td>
+        <td class="text-muted">${r.orden}</td>
+        <td>${r.activo ? '<span class="badge badge-active">Activa</span>' : '<span class="badge badge-inactive">Inactiva</span>'}</td>
+        <td class="td-actions">
+          <button class="btn btn-outline btn-xs" data-action="edit" data-id="${r.id}">Editar</button>
+          <button class="btn btn-danger  btn-xs" data-action="delete" data-id="${r.id}">Eliminar</button>
+        </td>
+      </tr>`).join('');
+  }
+
+  // ── Search ──
+  document.getElementById('search').addEventListener('input', e => {
+    const q = e.target.value.toLowerCase();
+    renderTable(records.filter(r =>
+      r.slug.includes(q) || (r.titulo?.es ?? '').toLowerCase().includes(q)
+    ));
+  });
+
+  // ── Table actions ──
+  tbody.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.action === 'edit')   openEdit(id);
+    if (btn.dataset.action === 'delete') doDelete(id);
+  });
+
+  // ── New ──
+  document.getElementById('btn-new').addEventListener('click', () => {
+    editingId = null;
+    faqs = [];
+    form.reset();
+    form.id.value = '';
+    form.activo.checked = true;
+    renderFaqs();
+    document.getElementById('modal-title').textContent = 'Nueva área';
+    initLangTabs(form);
+    showModal('modal-area');
+  });
+
+  // ── Edit ──
+  function openEdit(id) {
+    const r = records.find(x => x.id === id);
+    if (!r) return;
+    editingId = id;
+    form.id.value = id;
+    form.slug.value = r.slug;
+    form.icono.value = r.icono ?? '';
+    form.orden.value = r.orden;
+    form.activo.checked = r.activo;
+    setLang(form, 'titulo', r.titulo);
+    setLang(form, 'desc',   r.descripcion);
+    setLang(form, 'cont',   r.contenido);
+    faqs = Array.isArray(r.faq) ? r.faq.map(f => ({ ...f })) : [];
+    renderFaqs();
+    document.getElementById('modal-title').textContent = 'Editar área';
+    initLangTabs(form);
+    showModal('modal-area');
+  }
+
+  // ── Save ──
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+
+    const payload = {
+      slug:        form.slug.value.trim(),
+      icono:       form.icono.value.trim() || 'scale',
+      orden:       Number(form.orden.value),
+      activo:      form.activo.checked,
+      titulo:      getLang(form, 'titulo'),
+      descripcion: getLang(form, 'desc'),
+      contenido:   getLang(form, 'cont'),
+      faq:         faqs,
+    };
+
+    let error;
+    if (editingId) {
+      ({ error } = await supabase.from('areas_practica').update(payload).eq('id', editingId));
+    } else {
+      ({ error } = await supabase.from('areas_practica').insert(payload));
+    }
+
+    btn.disabled = false; btn.textContent = 'Guardar';
+
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast(editingId ? 'Área actualizada' : 'Área creada');
+    hideModal('modal-area');
+    await loadRecords();
+  });
+
+  // ── Delete ──
+  async function doDelete(id) {
+    if (!confirm('¿Eliminar esta área? La acción es reversible desde la base de datos.')) return;
+    const { error } = await supabase
+      .from('areas_practica')
+      .update({ deleted_at: new Date().toISOString() })
+      .eq('id', id);
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast('Área eliminada');
+    await loadRecords();
+  }
+
+  // ── Close modal ──
+  document.getElementById('modal-close').addEventListener('click', () => hideModal('modal-area'));
+  document.getElementById('btn-cancel').addEventListener('click', () => hideModal('modal-area'));
+
+  // ── FAQ builder ──
+  function renderFaqs() {
+    const builder = document.getElementById('faq-builder');
+    if (!faqs.length) {
+      builder.innerHTML = '<p class="text-muted text-xs">Sin FAQs. Agrega preguntas con el botón superior.</p>';
+      return;
+    }
+    builder.innerHTML = faqs.map((f, i) => `
+      <div class="faq-entry">
+        <button type="button" class="faq-remove" data-fi="${i}">×</button>
+        <div class="faq-entry-label">Pregunta ${i + 1}</div>
+        <div class="lang-tabs" data-group="fq${i}">
+          <button type="button" class="lang-tab active" data-lang="es">ES</button>
+          <button type="button" class="lang-tab" data-lang="en">EN</button>
+          <button type="button" class="lang-tab" data-lang="zh">中文</button>
+        </div>
+        <div class="lang-panel active" data-group="fq${i}" data-lang="es">
+          <input class="form-input mb-4" name="fq_p_es_${i}" value="${f.pregunta?.es ?? ''}" placeholder="Pregunta en español…" />
+          <textarea class="form-textarea" name="fq_r_es_${i}" placeholder="Respuesta en español…">${f.respuesta?.es ?? ''}</textarea>
+        </div>
+        <div class="lang-panel" data-group="fq${i}" data-lang="en">
+          <input class="form-input mb-4" name="fq_p_en_${i}" value="${f.pregunta?.en ?? ''}" placeholder="Question in English…" />
+          <textarea class="form-textarea" name="fq_r_en_${i}" placeholder="Answer in English…">${f.respuesta?.en ?? ''}</textarea>
+        </div>
+        <div class="lang-panel" data-group="fq${i}" data-lang="zh">
+          <input class="form-input mb-4" name="fq_p_zh_${i}" value="${f.pregunta?.zh ?? ''}" placeholder="中文问题…" />
+          <textarea class="form-textarea" name="fq_r_zh_${i}" placeholder="中文回答…">${f.respuesta?.zh ?? ''}</textarea>
+        </div>
+      </div>`).join('');
+
+    builder.querySelectorAll('.faq-remove').forEach(btn => {
+      btn.addEventListener('click', () => {
+        faqs.splice(Number(btn.dataset.fi), 1);
+        renderFaqs();
+      });
+    });
+
+    initLangTabs(builder);
+  }
+
+  function collectFaqs() {
+    return faqs.map((_, i) => ({
+      pregunta: { es: form[`fq_p_es_${i}`]?.value ?? '', en: form[`fq_p_en_${i}`]?.value ?? '', zh: form[`fq_p_zh_${i}`]?.value ?? '' },
+      respuesta: { es: form[`fq_r_es_${i}`]?.value ?? '', en: form[`fq_r_en_${i}`]?.value ?? '', zh: form[`fq_r_zh_${i}`]?.value ?? '' },
+    }));
+  }
+
+  document.getElementById('btn-add-faq').addEventListener('click', () => {
+    faqs = collectFaqs();
+    faqs.push({ pregunta: { es: '', en: '', zh: '' }, respuesta: { es: '', en: '', zh: '' } });
+    renderFaqs();
+  });
+
+  // Collect FAQs before saving
+  document.getElementById('btn-save').addEventListener('click', () => { faqs = collectFaqs(); }, true);
+</script>

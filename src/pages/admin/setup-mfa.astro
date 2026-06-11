@@ -1,0 +1,109 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Configurar MFA | Admin Guíñez Galaz" requireAuth={false}>
+  <div class="login-page">
+    <div class="login-card" style="max-width:460px">
+      <div class="login-logo">Guíñez Galaz</div>
+      <div class="login-sub">Configurar autenticación de dos factores</div>
+
+      <div id="step-qr">
+        <p style="font-size:0.875rem;color:#6B7280;margin-bottom:1.25rem">
+          Escanee el código QR con su aplicación autenticadora (Google Authenticator, Authy, etc.) y luego ingrese el código de 6 dígitos para activar MFA.
+        </p>
+        <div id="qr-loading" class="loading-box"><div class="spinner"></div></div>
+        <div id="qr-content" style="display:none">
+          <div style="text-align:center;margin-bottom:1.25rem">
+            <img id="qr-img" src="" alt="QR TOTP" style="width:200px;height:200px;border-radius:8px;border:1px solid #E5E7EB" />
+          </div>
+          <p style="font-size:0.75rem;color:#9CA3AF;text-align:center;margin-bottom:1.25rem">
+            ¿Sin cámara? Ingrese este código manualmente:<br>
+            <code id="totp-secret" style="font-size:0.8rem;color:#374151;letter-spacing:0.05em"></code>
+          </p>
+          <div class="login-error" id="err-mfa"></div>
+          <form id="form-mfa">
+            <div class="form-group">
+              <label class="form-label req" for="inp-mfa-code">Código de verificación</label>
+              <input id="inp-mfa-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6"
+                class="form-input font-mono" required autocomplete="one-time-code" placeholder="000000"
+                style="letter-spacing:0.25em;font-size:1.25rem;text-align:center" />
+            </div>
+            <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center" id="btn-activate">
+              Activar MFA
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="step-done" style="display:none;text-align:center;padding:1rem 0">
+        <div style="font-size:3rem;margin-bottom:0.75rem">✅</div>
+        <p style="font-weight:700;font-size:1rem;color:#065F46;margin-bottom:0.5rem">MFA activado correctamente</p>
+        <p style="font-size:0.875rem;color:#6B7280;margin-bottom:1.5rem">La próxima vez que inicie sesión deberá ingresar su código TOTP.</p>
+        <a href="/admin/dashboard" class="btn btn-primary" style="justify-content:center">Ir al dashboard</a>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { supabase } from '../../scripts/admin/client.js';
+
+  let factorId = null;
+
+  (async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { window.location.replace('/admin'); return; }
+
+    // Check if already has TOTP — if AAL2 skip setup
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal?.currentLevel === 'aal2') {
+      window.location.replace('/admin/dashboard');
+      return;
+    }
+
+    // Start enrollment
+    const { data, error } = await supabase.auth.mfa.enroll({
+      factorType: 'totp',
+      issuer: 'Guíñez Galaz Admin',
+      friendlyName: 'Admin TOTP',
+    });
+
+    document.getElementById('qr-loading').style.display = 'none';
+
+    if (error) {
+      document.getElementById('qr-content').innerHTML = `<p style="color:#991B1B">${error.message}</p>`;
+      document.getElementById('qr-content').style.display = '';
+      return;
+    }
+
+    factorId = data.id;
+    document.getElementById('qr-img').src = data.totp.qr_code;
+    document.getElementById('totp-secret').textContent = data.totp.secret;
+    document.getElementById('qr-content').style.display = '';
+  })();
+
+  document.getElementById('form-mfa').addEventListener('submit', async e => {
+    e.preventDefault();
+    const code = document.getElementById('inp-mfa-code').value;
+    const errEl = document.getElementById('err-mfa');
+    errEl.style.display = 'none';
+
+    const btn = document.getElementById('btn-activate');
+    btn.disabled = true;
+    btn.textContent = 'Activando…';
+
+    const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId, code });
+
+    btn.disabled = false;
+    btn.textContent = 'Activar MFA';
+
+    if (error) {
+      errEl.textContent = 'Código incorrecto. Intente nuevamente.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    document.getElementById('step-qr').style.display = 'none';
+    document.getElementById('step-done').style.display = '';
+  });
+</script>
