@@ -69,8 +69,18 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">URL foto</label>
-              <input name="foto_url" type="url" class="form-input" placeholder="https://…" />
+              <label class="form-label">Foto</label>
+              <div class="upload-widget" id="upload-foto">
+                <input type="hidden" name="foto_url" class="upload-hidden" />
+                <input type="file" accept=".jpg,.jpeg,.png,.webp" class="upload-file-input" tabindex="-1" />
+                <div class="upload-preview">
+                  <img class="upload-preview-img" src="" alt="" />
+                  <button type="button" class="btn btn-danger btn-xs upload-remove">× Quitar</button>
+                </div>
+                <button type="button" class="btn btn-outline btn-sm upload-trigger">↑ Subir foto</button>
+                <p class="form-hint">JPG, PNG o WEBP · máx. 5 MB</p>
+                <span class="upload-status">Subiendo…</span>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Años de trayectoria</label>
@@ -135,6 +145,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 <script>
   import { supabase, requireAuth } from '../../scripts/admin/client.js';
   import { showToast, showModal, hideModal, initLangTabs, getLang, setLang, initTagInput } from '../../scripts/admin/ui.js';
+  import { initUploadWidget } from '../../scripts/admin/storage.js';
 
   let records = [];
   let editingId = null;
@@ -142,6 +153,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
   const form  = document.getElementById('form-abogado');
   const tbody = document.getElementById('table-body');
+  const fotoWidget = initUploadWidget('upload-foto', 'abogados');
 
   (async () => {
     const session = await requireAuth();
@@ -203,6 +215,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   document.getElementById('btn-new').addEventListener('click', () => {
     editingId = null; form.reset(); form.id.value = '';
     form.activo.checked = true; form.anos_trayectoria.value = 0;
+    fotoWidget.reset();
     initTagInputs([], []);
     document.getElementById('modal-title').textContent = 'Nuevo abogado';
     initLangTabs(form);
@@ -213,7 +226,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     const r = records.find(x => x.id === id); if (!r) return;
     editingId = id; form.id.value = id;
     form.nombre.value = r.nombre; form.slug.value = r.slug;
-    form.foto_url.value = r.foto_url ?? '';
+    fotoWidget.setValue(r.foto_url ?? '');
     form.anos_trayectoria.value = r.anos_trayectoria;
     form.email.value = r.email ?? '';
     form.telefono.value = r.telefono ?? '';

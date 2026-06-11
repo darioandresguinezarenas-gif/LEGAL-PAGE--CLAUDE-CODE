@@ -34,9 +34,18 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
             <input name="nombre" class="form-input" required />
           </div>
           <div class="form-group">
-            <label class="form-label req">URL del logo</label>
-            <input name="logo_url" type="url" class="form-input" required placeholder="https://…" />
-            <p class="form-hint">PNG/SVG horizontal, fondo transparente recomendado.</p>
+            <label class="form-label req">Logo</label>
+            <div class="upload-widget" id="upload-logo">
+              <input type="hidden" name="logo_url" class="upload-hidden" />
+              <input type="file" accept=".jpg,.jpeg,.png,.webp" class="upload-file-input" tabindex="-1" />
+              <div class="upload-preview">
+                <img class="upload-preview-img" src="" alt="" />
+                <button type="button" class="btn btn-danger btn-xs upload-remove">× Quitar</button>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm upload-trigger">↑ Subir logo</button>
+              <p class="form-hint">JPG, PNG o WEBP · máx. 5 MB · formato horizontal recomendado</p>
+              <span class="upload-status">Subiendo…</span>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">URL del sitio web</label>
@@ -68,11 +77,13 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 <script>
   import { supabase, requireAuth } from '../../scripts/admin/client.js';
   import { showToast, showModal, hideModal } from '../../scripts/admin/ui.js';
+  import { initUploadWidget } from '../../scripts/admin/storage.js';
 
   let records = [];
   let editingId = null;
   const form = document.getElementById('form-cliente');
   const tbody = document.getElementById('table-body');
+  const logoWidget = initUploadWidget('upload-logo', 'clientes');
 
   (async () => {
     const session = await requireAuth(); if (!session) return;
@@ -113,7 +124,9 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   });
 
   document.getElementById('btn-new').addEventListener('click', () => {
-    editingId = null; form.reset(); form.id.value = ''; form.activo.checked = true;
+    editingId = null; form.reset(); form.id.value = '';
+    form.activo.checked = true;
+    logoWidget.reset();
     document.getElementById('modal-title').textContent = 'Nuevo cliente';
     showModal('modal-cliente');
   });
@@ -121,21 +134,24 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   function openEdit(id) {
     const r = records.find(x => x.id === id); if (!r) return;
     editingId = id; form.id.value = id;
-    form.nombre.value   = r.nombre;
-    form.logo_url.value = r.logo_url;
+    form.nombre.value    = r.nombre;
     form.url_sitio.value = r.url ?? '';
-    form.orden.value    = r.orden;
-    form.activo.checked = r.activo;
+    form.orden.value     = r.orden;
+    form.activo.checked  = r.activo;
+    logoWidget.setValue(r.logo_url ?? '');
     document.getElementById('modal-title').textContent = 'Editar cliente';
     showModal('modal-cliente');
   }
 
   document.getElementById('btn-save').addEventListener('click', async () => {
+    const logo_url = logoWidget.getValue().trim();
+    if (!logo_url) { showToast('Sube un logo antes de guardar', 'error'); return; }
+
     const btn = document.getElementById('btn-save');
     btn.disabled = true; btn.textContent = 'Guardando…';
     const payload = {
       nombre:   form.nombre.value.trim(),
-      logo_url: form.logo_url.value.trim(),
+      logo_url,
       url:      form.url_sitio.value.trim() || null,
       orden:    Number(form.orden.value),
       activo:   form.activo.checked,
