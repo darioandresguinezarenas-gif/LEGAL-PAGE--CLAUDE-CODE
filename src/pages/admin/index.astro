@@ -52,14 +52,19 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
   let factorId = null;
   let challengeId = null;
 
-  // Redirect if already authenticated at AAL2
+  // Quick connectivity check — reveals misconfig or paused Supabase project
   (async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
-      if (!aal || aal.currentLevel === aal.nextLevel) {
-        window.location.replace('/admin/dashboard');
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) showError('err-password', `Error de conexión: ${error.message}`);
+      if (session) {
+        const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        if (!aal || aal.currentLevel === aal.nextLevel) {
+          window.location.replace('/admin/dashboard');
+        }
       }
+    } catch (e) {
+      showError('err-password', `No se puede conectar con Supabase: ${e?.message ?? e}. Verifica que el proyecto no esté pausado en app.supabase.com.`);
     }
   })();
 
@@ -96,7 +101,13 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     document.getElementById('btn-login').disabled = false;
     document.getElementById('btn-login').textContent = 'Ingresar';
 
-    if (error) { showError('err-password', error.message); return; }
+    if (error) {
+      const detail = error.message?.toLowerCase().includes('fetch')
+        ? `Error de red: no se pudo conectar con Supabase (${error.message}). ¿Está el proyecto pausado?`
+        : error.message;
+      showError('err-password', detail);
+      return;
+    }
 
     const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
 
