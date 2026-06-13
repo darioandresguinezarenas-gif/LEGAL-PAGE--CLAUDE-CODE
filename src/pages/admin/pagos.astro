@@ -78,7 +78,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
         <td style="font-weight:600">${fmtCLP(r.monto)}</td>
         <td><span class="badge ${estadoBadge[r.estado] ?? 'badge-gray'}">${r.estado}</span></td>
         <td class="font-mono text-xs">${r.authorization_code ?? '—'}</td>
-        <td class="text-muted text-xs">${r.card_detail?.last_four_digits ? `····${r.card_detail.last_four_digits}` : '—'}</td>
+        <td class="text-muted text-xs">${r.card_detail?.card_number ? `····${r.card_detail.card_number}` : '—'}</td>
         <td class="text-muted text-xs">${fmtDate(r.transaction_date ?? r.created_at)}</td>
       </tr>`).join('');
   }

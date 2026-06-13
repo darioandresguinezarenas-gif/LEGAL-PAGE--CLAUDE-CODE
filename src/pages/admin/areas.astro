@@ -114,6 +114,47 @@ import RichEditor from '../../components/admin/RichEditor.astro';
 
           <hr class="divider" />
 
+          <!-- SEO -->
+          <div class="form-group">
+            <label class="form-label">SEO — Título de página</label>
+            <p class="form-hint" style="margin-bottom:0.5rem">Aparece en Google. Incluir "Curicó" y nombre del área. Máx. 60 caracteres.</p>
+            <div class="lang-tabs" data-group="seo_tit">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="seo_tit" data-lang="es">
+              <input name="seo_tit_es" class="form-input" maxlength="70" placeholder="Abogado Laboral en Curicó | Guíñez Galaz" />
+            </div>
+            <div class="lang-panel" data-group="seo_tit" data-lang="en">
+              <input name="seo_tit_en" class="form-input" maxlength="70" placeholder="Labour Lawyer in Curicó, Chile | Guíñez Galaz" />
+            </div>
+            <div class="lang-panel" data-group="seo_tit" data-lang="zh">
+              <input name="seo_tit_zh" class="form-input" maxlength="70" placeholder="库里科劳动律师 | Guíñez Galaz" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">SEO — Meta descripción</label>
+            <p class="form-hint" style="margin-bottom:0.5rem">Texto que aparece bajo el título en Google. 150-160 caracteres ideal.</p>
+            <div class="lang-tabs" data-group="seo_desc">
+              <button type="button" class="lang-tab active" data-lang="es">ES</button>
+              <button type="button" class="lang-tab" data-lang="en">EN</button>
+              <button type="button" class="lang-tab" data-lang="zh">中文</button>
+            </div>
+            <div class="lang-panel active" data-group="seo_desc" data-lang="es">
+              <textarea name="seo_desc_es" class="form-textarea" maxlength="200" placeholder="Abogado laboral en Curicó con experiencia en despidos, licencias y negociación colectiva. Consulta gratuita."></textarea>
+            </div>
+            <div class="lang-panel" data-group="seo_desc" data-lang="en">
+              <textarea name="seo_desc_en" class="form-textarea" maxlength="200" placeholder="Labour lawyer in Curicó with experience in wrongful dismissal, sick leave, and collective bargaining. Free consultation."></textarea>
+            </div>
+            <div class="lang-panel" data-group="seo_desc" data-lang="zh">
+              <textarea name="seo_desc_zh" class="form-textarea" maxlength="200" placeholder="库里科劳动律师，专注于解雇、病假和集体谈判。提供免费咨询。"></textarea>
+            </div>
+          </div>
+
+          <hr class="divider" />
+
           <!-- FAQs -->
           <div class="form-group">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem">
@@ -249,6 +290,13 @@ import RichEditor from '../../components/admin/RichEditor.astro';
     form.activo.checked = r.activo;
     setLang(form, 'titulo', r.titulo);
     setLang(form, 'desc',   r.descripcion);
+    // SEO fields
+    (['es', 'en', 'zh'] as const).forEach(l => {
+      const tEl = form[`seo_tit_${l}`]  as HTMLInputElement | undefined;
+      const dEl = form[`seo_desc_${l}`] as HTMLTextAreaElement | undefined;
+      if (tEl) tEl.value = r.seo_titulo?.[l] ?? '';
+      if (dEl) dEl.value = r.seo_descripcion?.[l] ?? '';
+    });
     faqs = Array.isArray(r.faq) ? r.faq.map(f => ({ ...f })) : [];
     renderFaqs();
     document.getElementById('modal-title').textContent = 'Editar área';
@@ -263,15 +311,28 @@ import RichEditor from '../../components/admin/RichEditor.astro';
     const btn = document.getElementById('btn-save');
     btn.disabled = true; btn.textContent = 'Guardando…';
 
+    const seoTitulo = {
+      es: (form.seo_tit_es as HTMLInputElement)?.value?.trim() || null,
+      en: (form.seo_tit_en as HTMLInputElement)?.value?.trim() || null,
+      zh: (form.seo_tit_zh as HTMLInputElement)?.value?.trim() || null,
+    };
+    const seoDescripcion = {
+      es: (form.seo_desc_es as HTMLTextAreaElement)?.value?.trim() || null,
+      en: (form.seo_desc_en as HTMLTextAreaElement)?.value?.trim() || null,
+      zh: (form.seo_desc_zh as HTMLTextAreaElement)?.value?.trim() || null,
+    };
+
     const payload = {
-      slug:        form.slug.value.trim(),
-      icono:       form.icono.value.trim() || 'scale',
-      orden:       Number(form.orden.value),
-      activo:      form.activo.checked,
-      titulo:      getLang(form, 'titulo'),
-      descripcion: getLang(form, 'desc'),
-      contenido:   getContent(),
-      faq:         faqs,
+      slug:            form.slug.value.trim(),
+      icono:           form.icono.value.trim() || 'scale',
+      orden:           Number(form.orden.value),
+      activo:          form.activo.checked,
+      titulo:          getLang(form, 'titulo'),
+      descripcion:     getLang(form, 'desc'),
+      contenido:       getContent(),
+      faq:             faqs,
+      seo_titulo:      seoTitulo,
+      seo_descripcion: seoDescripcion,
     };
 
     let error;

@@ -10,6 +10,10 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
+      filter: (page) =>
+        !page.includes('/admin') &&
+        !page.includes('/pago-resultado') &&
+        !page.includes('/gracias'),
       i18n: {
         defaultLocale: 'es',
         locales: {

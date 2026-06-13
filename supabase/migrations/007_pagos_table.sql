@@ -1,31 +1,39 @@
--- Migración 007: tabla de transacciones Webpay
--- Usa nombres de columna que coinciden con admin/pagos.astro (monto, estado, card_detail)
+-- Migración 007: Actualiza tabla pagos para Webpay Transbank
+-- La tabla 'pagos' ya existe desde migración 001 con schema básico.
+-- Este ALTER adapta la estructura para las Edge Functions de Webpay.
 
-CREATE TABLE IF NOT EXISTS pagos (
-  id               UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-  buy_order        TEXT        NOT NULL UNIQUE,
-  session_id       TEXT        NOT NULL,
-  monto            INTEGER     NOT NULL CHECK (monto >= 50),
-  descripcion      TEXT,
-  nombre           TEXT,
-  token_ws         TEXT,
-  estado           TEXT        NOT NULL DEFAULT 'pendiente'
-    CHECK (estado IN ('pendiente','aprobado','rechazado','anulado','init_failed')),
-  authorization_code TEXT,
-  response_code    INTEGER,
-  payment_type_code TEXT,
-  card_detail      JSONB,
-  transaction_date TIMESTAMPTZ,
-  raw_response     JSONB,
-  created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
-  deleted_at       TIMESTAMPTZ
-);
+-- 1. Renombrar columna 'token' → 'token_ws' y hacerla nullable
+--    (Transbank usa el nombre token_ws; la columna se actualiza en un paso posterior al INSERT)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'pagos' AND column_name = 'token'
+  ) THEN
+    ALTER TABLE pagos RENAME COLUMN token TO token_ws;
+    ALTER TABLE pagos ALTER COLUMN token_ws DROP NOT NULL;
+  END IF;
+END $$;
 
+-- 2. Agregar columnas nuevas
+ALTER TABLE pagos
+  ADD COLUMN IF NOT EXISTS descripcion       TEXT,
+  ADD COLUMN IF NOT EXISTS nombre            TEXT,
+  ADD COLUMN IF NOT EXISTS payment_type_code TEXT,
+  ADD COLUMN IF NOT EXISTS raw_response      JSONB;
+
+-- 3. Actualizar CHECK constraint de estado para incluir 'init_failed'
+ALTER TABLE pagos DROP CONSTRAINT IF EXISTS pagos_estado_check;
+ALTER TABLE pagos ADD CONSTRAINT pagos_estado_check
+  CHECK (estado IN ('pendiente','aprobado','rechazado','anulado','init_failed'));
+
+-- 4. Actualizar CHECK constraint de monto (>0 → >=50, mínimo Transbank)
+ALTER TABLE pagos DROP CONSTRAINT IF EXISTS pagos_monto_check;
+ALTER TABLE pagos ADD CONSTRAINT pagos_monto_check
+  CHECK (monto >= 50);
+
+-- 5. Habilitar RLS y agregar política para admin autenticado
 ALTER TABLE pagos ENABLE ROW LEVEL SECURITY;
-
--- Admin autenticado puede ver todas las transacciones
+DROP POLICY IF EXISTS "admin_select_pagos" ON pagos;
 CREATE POLICY "admin_select_pagos" ON pagos
   FOR SELECT TO authenticated USING (true);
-
--- Las Edge Functions usan service_role (bypass RLS) para INSERT/UPDATE
--- No se necesita policy pública de escritura
