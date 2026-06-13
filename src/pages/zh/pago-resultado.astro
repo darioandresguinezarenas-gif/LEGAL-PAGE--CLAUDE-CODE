@@ -1,0 +1,69 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'zh';
+const EDGE_CONFIRM = `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/webpay-confirm`;
+---
+
+<BaseLayout title="支付结果 | Guíñez Galaz" description="您的Transbank Webpay交易结果。" lang={lang} noindex={true}>
+  <main class="resultado-main">
+    <div class="resultado-container">
+      <div class="spinner-wrap" id="loading-state"><div class="spinner"></div><p>正在通过Transbank确认您的付款…</p></div>
+      <div class="estado-panel" id="success-state" hidden>
+        <div class="estado-icon estado-icon--ok"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h1>付款成功！</h1>
+        <p>您的交易已成功处理。我们将尽快向您发送确认信息。</p>
+        <dl class="detalle-pago" id="detalle-pago"></dl>
+        <a href="/zh" class="btn-volver">返回首页</a>
+      </div>
+      <div class="estado-panel" id="error-state" hidden>
+        <div class="estado-icon estado-icon--fail"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+        <h1 id="error-title">付款未处理</h1>
+        <p id="error-msg">您的交易未能完成。您的银行卡未被扣款。</p>
+        <a href="/zh/pagos" class="btn-volver btn-volver--secondary">重新尝试</a>
+      </div>
+      <div class="estado-panel" id="cancel-state" hidden>
+        <div class="estado-icon estado-icon--warn"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <h1>付款已取消</h1>
+        <p>您已退出付款流程。未发生任何扣款。您可以随时重新尝试。</p>
+        <a href="/zh/pagos" class="btn-volver btn-volver--secondary">返回付款表单</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script define:vars={{ EDGE_CONFIRM }}>
+function fmtCLP(n){if(!n)return'—';return new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n);}
+function show(id){['loading-state','success-state','error-state','cancel-state'].forEach(s=>{const el=document.getElementById(s);if(el)el.hidden=s!==id;});}
+(async()=>{
+  const p=new URLSearchParams(window.location.search),tokenWs=p.get('token_ws'),tbkToken=p.get('TBK_TOKEN');
+  if(tbkToken||(!tokenWs&&p.has('TBK_ORDER_ID'))){show('cancel-state');return;}
+  if(!tokenWs){document.getElementById('error-title').textContent='访问无效';document.getElementById('error-msg').textContent='未找到交易信息。';show('error-state');return;}
+  try{
+    const res=await fetch(`${EDGE_CONFIRM}?token_ws=${encodeURIComponent(tokenWs)}`),data=await res.json();
+    if(data.ok){
+      const dl=document.getElementById('detalle-pago');
+      dl.innerHTML=[data.buy_order&&`<div><dt>订单号</dt><dd>${data.buy_order}</dd></div>`,data.monto&&`<div><dt>金额</dt><dd>${fmtCLP(data.monto)}</dd></div>`,data.authorization_code&&`<div><dt>授权码</dt><dd>${data.authorization_code}</dd></div>`,data.card_detail?.card_number&&`<div><dt>银行卡</dt><dd>···· ${data.card_detail.card_number}</dd></div>`].filter(Boolean).join('');
+      show('success-state');
+    }else{show('error-state');}
+  }catch{document.getElementById('error-msg').textContent='无法验证您的付款状态。如有疑问，请联系我们。';show('error-state');}
+})();
+</script>
+
+<style>
+  .resultado-main{min-height:80vh;background:#F5F5F0;padding:4rem 1.5rem;display:flex;align-items:flex-start;justify-content:center;}
+  .resultado-container{width:100%;max-width:500px;background:#fff;border-radius:12px;border:1px solid #E8E8E0;padding:2.5rem;box-shadow:0 4px 24px rgba(0,0,0,.07);}
+  .spinner-wrap{text-align:center;padding:2rem 0;color:#6B6B6B;}.spinner-wrap p{margin-top:1rem;font-size:.9rem;}
+  .spinner{width:40px;height:40px;border:3px solid #E8E8E0;border-top-color:#C9A84C;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .estado-panel{text-align:center;}
+  .estado-icon{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;}
+  .estado-icon--ok{background:#DCFCE7;color:#16A34A;}.estado-icon--fail{background:#FEE2E2;color:#DC2626;}.estado-icon--warn{background:#FEF9C3;color:#CA8A04;}
+  .estado-panel h1{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:700;color:#0D1F2D;margin:0 0 .75rem;}
+  .estado-panel p{font-size:.9rem;color:#6B6B6B;line-height:1.6;margin:0 0 1.5rem;}
+  .detalle-pago{background:#F5F5F0;border-radius:8px;padding:1rem 1.25rem;margin:0 0 1.5rem;text-align:left;}
+  .detalle-pago div{display:flex;justify-content:space-between;gap:1rem;padding:.35rem 0;border-bottom:1px solid #E8E8E0;}.detalle-pago div:last-child{border-bottom:none;}
+  .detalle-pago dt{font-size:.8rem;color:#6B6B6B;}.detalle-pago dd{font-size:.8rem;font-weight:600;color:#1A1A1A;margin:0;}
+  .btn-volver{display:inline-block;padding:.75rem 2rem;background:#C9A84C;color:#0D1F2D;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.9375rem;font-weight:700;text-decoration:none;transition:background .2s;}
+  .btn-volver:hover{background:#b8943e;}.btn-volver--secondary{background:#0D1F2D;color:#C9A84C;}.btn-volver--secondary:hover{background:#162d40;}
+  @media(max-width:600px){.resultado-main{padding:2rem 1rem;}.resultado-container{padding:1.75rem 1.25rem;}}
+</style>

@@ -1,0 +1,214 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'es';
+const EDGE_CONFIRM = `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/webpay-confirm`;
+---
+
+<BaseLayout
+  title="Resultado del Pago | Guíñez Galaz"
+  description="Resultado de su transacción con Transbank Webpay."
+  lang={lang}
+  noindex={true}
+>
+  <main class="resultado-main">
+    <div class="resultado-container" id="resultado-box">
+      <!-- Cargando estado inicial -->
+      <div class="spinner-wrap" id="loading-state">
+        <div class="spinner"></div>
+        <p>Confirmando su pago con Transbank…</p>
+      </div>
+
+      <!-- Éxito -->
+      <div class="estado-panel" id="success-state" hidden>
+        <div class="estado-icon estado-icon--ok">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h1>¡Pago aprobado!</h1>
+        <p>Su transacción fue procesada exitosamente. Recibirá una confirmación a la brevedad.</p>
+        <dl class="detalle-pago" id="detalle-pago"></dl>
+        <a href="/es" class="btn-volver">Volver al inicio</a>
+      </div>
+
+      <!-- Rechazo / error -->
+      <div class="estado-panel" id="error-state" hidden>
+        <div class="estado-icon estado-icon--fail">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </div>
+        <h1 id="error-title">Pago no procesado</h1>
+        <p id="error-msg">Su transacción no pudo completarse. No se realizó ningún cargo a su tarjeta.</p>
+        <a href="/es/pagos" class="btn-volver btn-volver--secondary">Intentar nuevamente</a>
+      </div>
+
+      <!-- Pago cancelado (TBK_TOKEN) -->
+      <div class="estado-panel" id="cancel-state" hidden>
+        <div class="estado-icon estado-icon--warn">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h1>Pago cancelado</h1>
+        <p>Abandonó el proceso de pago. No se realizó ningún cargo. Puede intentarlo nuevamente cuando lo desee.</p>
+        <a href="/es/pagos" class="btn-volver btn-volver--secondary">Volver al formulario</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script define:vars={{ EDGE_CONFIRM }}>
+function fmtCLP(n) {
+  if (!n) return '—';
+  return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', maximumFractionDigits: 0 }).format(n);
+}
+
+function show(id) {
+  ['loading-state','success-state','error-state','cancel-state'].forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.hidden = s !== id;
+  });
+}
+
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const tokenWs  = params.get('token_ws');
+  const tbkToken = params.get('TBK_TOKEN'); // pago abortado por timeout
+
+  if (tbkToken || (!tokenWs && params.has('TBK_ORDER_ID'))) {
+    show('cancel-state');
+    return;
+  }
+
+  if (!tokenWs) {
+    document.getElementById('error-title').textContent = 'Acceso inválido';
+    document.getElementById('error-msg').textContent = 'No se encontró información de la transacción.';
+    show('error-state');
+    return;
+  }
+
+  try {
+    const res  = await fetch(`${EDGE_CONFIRM}?token_ws=${encodeURIComponent(tokenWs)}`);
+    const data = await res.json();
+
+    if (data.ok) {
+      const dl = document.getElementById('detalle-pago');
+      dl.innerHTML = [
+        data.buy_order        && `<div><dt>N° de orden</dt><dd>${data.buy_order}</dd></div>`,
+        data.monto            && `<div><dt>Monto</dt><dd>${fmtCLP(data.monto)}</dd></div>`,
+        data.authorization_code && `<div><dt>Código de autorización</dt><dd>${data.authorization_code}</dd></div>`,
+        data.card_detail?.card_number && `<div><dt>Tarjeta</dt><dd>···· ${data.card_detail.card_number}</dd></div>`,
+      ].filter(Boolean).join('');
+      show('success-state');
+    } else {
+      show('error-state');
+    }
+  } catch {
+    document.getElementById('error-msg').textContent = 'No pudimos verificar el estado de su pago. Contáctenos si tiene dudas.';
+    show('error-state');
+  }
+})();
+</script>
+
+<style>
+  .resultado-main {
+    min-height: 80vh;
+    background: #F5F5F0;
+    padding: 4rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .resultado-container {
+    width: 100%;
+    max-width: 500px;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #E8E8E0;
+    padding: 2.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  }
+  .spinner-wrap {
+    text-align: center;
+    padding: 2rem 0;
+    color: #6B6B6B;
+  }
+  .spinner-wrap p { margin-top: 1rem; font-size: 0.9rem; }
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #E8E8E0;
+    border-top-color: #C9A84C;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .estado-panel { text-align: center; }
+  .estado-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .estado-icon--ok   { background: #DCFCE7; color: #16A34A; }
+  .estado-icon--fail { background: #FEE2E2; color: #DC2626; }
+  .estado-icon--warn { background: #FEF9C3; color: #CA8A04; }
+  .estado-panel h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #0D1F2D;
+    margin: 0 0 0.75rem;
+  }
+  .estado-panel p {
+    font-size: 0.9rem;
+    color: #6B6B6B;
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+  }
+  .detalle-pago {
+    background: #F5F5F0;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.5rem;
+    text-align: left;
+  }
+  .detalle-pago div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px solid #E8E8E0;
+  }
+  .detalle-pago div:last-child { border-bottom: none; }
+  .detalle-pago dt { font-size: 0.8rem; color: #6B6B6B; }
+  .detalle-pago dd { font-size: 0.8rem; font-weight: 600; color: #1A1A1A; margin: 0; }
+  .btn-volver {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: #C9A84C;
+    color: #0D1F2D;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-volver:hover { background: #b8943e; }
+  .btn-volver--secondary {
+    background: #0D1F2D;
+    color: #C9A84C;
+  }
+  .btn-volver--secondary:hover { background: #162d40; }
+  @media (max-width: 600px) {
+    .resultado-main { padding: 2rem 1rem; }
+    .resultado-container { padding: 1.75rem 1.25rem; }
+  }
+</style>
