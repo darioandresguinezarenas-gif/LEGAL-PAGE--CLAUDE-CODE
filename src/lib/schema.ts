@@ -11,7 +11,7 @@ export function generateOrganizationSchema() {
     url: BASE_URL,
     logo: `${BASE_URL}/logo.svg`,
     image: `${BASE_URL}/og-default.jpg`,
-    description: 'Estudio jurídico en Curicó, Chile. Derecho Laboral, Civil, Penal, Corporativo y Familia. Atención también en Valparaíso.',
+    description: 'Estudio jurídico en Curicó y Valparaíso, Chile. Derecho Laboral, Civil, Penal, Corporativo y Familia.',
     telephone: '+56900000000',
     email: 'contacto@guinezgalaz.cl',
     address: {

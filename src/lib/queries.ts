@@ -46,6 +46,9 @@ export type AbogadoRow = {
   anos_trayectoria: number;
   formacion: string[];
   especialidades: string[];
+  email: string | null;
+  telefono: string | null;
+  linkedin_url: string | null;
   orden: number;
 };
 
@@ -160,7 +163,7 @@ export async function getAbogados(): Promise<AbogadoRow[]> {
     async () => {
       const { data, error } = await supabase
         .from('abogados')
-        .select('id, slug, nombre, cargo, bio, foto_url, anos_trayectoria, formacion, especialidades, orden')
+        .select('id, slug, nombre, cargo, bio, foto_url, anos_trayectoria, formacion, especialidades, email, telefono, linkedin_url, orden')
         .order('orden', { ascending: true });
       if (error) throw error;
       return (data ?? []) as AbogadoRow[];
@@ -181,10 +184,11 @@ const DEFAULT_CONFIG: ConfigMap = {
   region: 'Región del Maule',
   sede_secundaria: 'Valparaíso, Chile · atención presencial bajo cita',
   horario: 'Lunes a Viernes, 9:00 - 18:00',
-  whatsapp: '+56900000000',
+  whatsapp: '+56971704455',
   google_business: '',
   linkedin: '',
   instagram: '',
+  hero_image_url: '',
 };
 
 export async function getConfig(): Promise<ConfigMap> {

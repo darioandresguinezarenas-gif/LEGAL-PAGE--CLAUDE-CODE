@@ -1,0 +1,160 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+<AdminLayout title="Configuración | Admin" pageTitle="Configuración del estudio">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Datos del estudio y branding</span>
+    </div>
+
+    <div style="padding:1.5rem">
+      <form id="form-config">
+        <!-- ─── Imagen del Hero ─── -->
+        <fieldset style="border:1px solid #E8E8E0;padding:1.25rem;margin-bottom:1.5rem">
+          <legend style="font-weight:600;color:#0D1F2D;padding:0 0.5rem">Imagen del banner del Home</legend>
+          <p class="form-hint" style="margin-bottom:1rem">
+            Esta foto se muestra a pantalla completa en el banner del home (con overlay oscuro).
+            Recomendado: 1920×1080 px, JPG, máx. 5 MB.
+            Si no subes ninguna, se usa una foto corporativa por defecto.
+          </p>
+
+          <div class="upload-widget" id="upload-hero">
+            <input type="hidden" name="hero_image_url" class="upload-hidden" />
+            <input type="file" accept=".jpg,.jpeg,.png,.webp" class="upload-file-input" tabindex="-1" />
+            <div class="upload-preview">
+              <img class="upload-preview-img" src="" alt="Imagen actual del banner" />
+              <button type="button" class="btn btn-danger btn-xs upload-remove">× Quitar imagen</button>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm upload-trigger">↑ Subir imagen del banner</button>
+            <span class="upload-status">Subiendo…</span>
+          </div>
+        </fieldset>
+
+        <!-- ─── Datos de contacto y sede ─── -->
+        <fieldset style="border:1px solid #E8E8E0;padding:1.25rem">
+          <legend style="font-weight:600;color:#0D1F2D;padding:0 0.5rem">Datos del estudio</legend>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Teléfono</label>
+              <input name="telefono" class="form-input" placeholder="+56 9 XXXX XXXX" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp (número)</label>
+              <input name="whatsapp" class="form-input" placeholder="+56971704455" />
+              <p class="form-hint">Solo dígitos con prefijo +. Aparece en el botón flotante.</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Email de contacto</label>
+              <input name="email" type="email" class="form-input" placeholder="contacto@guinezgalaz.cl" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Horario</label>
+              <input name="horario" class="form-input" placeholder="Lunes a Viernes, 9:00 - 18:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Dirección completa</label>
+            <input name="direccion" class="form-input" placeholder="Calle, Comuna, Región, País" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ciudad principal</label>
+              <input name="ciudad" class="form-input" placeholder="Curicó" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sede (texto público)</label>
+              <input name="sede" class="form-input" placeholder="Curicó y Valparaíso, Chile" />
+              <p class="form-hint">Aparece en metadatos y resumen. Mantener "Curicó y Valparaíso".</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Sede secundaria (descripción)</label>
+            <input name="sede_secundaria" class="form-input" placeholder="Valparaíso, Chile · atención presencial bajo cita" />
+          </div>
+
+          <div class="form-row-3">
+            <div class="form-group">
+              <label class="form-label">LinkedIn</label>
+              <input name="linkedin" type="url" class="form-input" placeholder="https://linkedin.com/company/…" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Instagram</label>
+              <input name="instagram" type="url" class="form-input" placeholder="https://instagram.com/…" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Google Business</label>
+              <input name="google_business" type="url" class="form-input" placeholder="https://g.page/…" />
+            </div>
+          </div>
+        </fieldset>
+
+        <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1.5rem">
+          <button type="button" class="btn btn-primary" id="btn-save">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</AdminLayout>
+
+<script>
+  import { supabase, requireAuth } from '../../scripts/admin/client.js';
+  import { showToast } from '../../scripts/admin/ui.js';
+  import { initUploadWidget } from '../../scripts/admin/storage.js';
+
+  const FIELDS = [
+    'telefono', 'whatsapp', 'email', 'horario', 'direccion',
+    'ciudad', 'sede', 'sede_secundaria',
+    'linkedin', 'instagram', 'google_business',
+  ];
+
+  const form = document.getElementById('form-config');
+  // Bucket 'branding' debe existir en Supabase Storage (público).
+  const heroWidget = initUploadWidget('upload-hero', 'branding');
+
+  (async () => {
+    const session = await requireAuth();
+    if (!session) return;
+
+    const { data, error } = await supabase
+      .from('configuracion_estudio')
+      .select('clave, valor');
+    if (error) { showToast(error.message, 'error'); return; }
+
+    const map = Object.fromEntries((data ?? []).map((r) => [r.clave, r.valor]));
+
+    for (const k of FIELDS) {
+      const el = form.querySelector(`[name="${k}"]`);
+      if (el) el.value = map[k] ?? '';
+    }
+    heroWidget.setValue(map['hero_image_url'] ?? '');
+  })();
+
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true; btn.textContent = 'Guardando…';
+
+    const updates = FIELDS.map((k) => ({
+      clave: k,
+      valor: (form.querySelector(`[name="${k}"]`)?.value ?? '').trim(),
+    }));
+    updates.push({ clave: 'hero_image_url', valor: heroWidget.getValue() });
+
+    // upsert por clave — funciona porque `clave` es PRIMARY KEY
+    const { error } = await supabase
+      .from('configuracion_estudio')
+      .upsert(updates, { onConflict: 'clave' });
+
+    btn.disabled = false; btn.textContent = 'Guardar cambios';
+    if (error) { showToast(error.message, 'error'); return; }
+    showToast('Configuración guardada');
+  });
+</script>

@@ -2,7 +2,7 @@
 
 ## Proyecto
 
-Sitio web institucional trilingüe (es/en/zh) para estudio jurídico con sede en Curicó (Calle Hernán Correa 2140, Galilea), Región del Maule, Chile. Catalina Galaz atiende también casos en Valparaíso de forma presencial, sin oficina física aún.
+Sitio web institucional trilingüe (es/en/zh) para estudio jurídico con sede principal en Curicó (Calle Hernán Correa 2140, Galilea — Región del Maule, Chile) y atención presencial en Valparaíso (sin oficina física aún). Siempre referirse a la cobertura como "Curicó y Valparaíso".
 Stack: Astro 5 SSG · Supabase · Vercel · Transbank Webpay · Resend · TypeScript.
 
 ## Stack técnico

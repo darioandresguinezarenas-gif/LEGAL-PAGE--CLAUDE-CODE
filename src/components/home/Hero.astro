@@ -1,13 +1,20 @@
 ---
 import { t } from '../../i18n/utils';
+import { getConfig } from '../../lib/queries';
 
 interface Props {
   lang: 'es' | 'en' | 'zh';
 }
 const { lang } = Astro.props;
+
+const config = await getConfig();
+// Si el admin no ha subido imagen, cae a una foto corporativa de Unsplash
+// (reemplazable directamente desde /admin/configuracion).
+const DEFAULT_HERO = 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80';
+const heroImage = config.hero_image_url?.trim() || DEFAULT_HERO;
 ---
 
-<section class="hero" aria-label={t(lang, 'hero.label')}>
+<section class="hero" aria-label={t(lang, 'hero.label')} style={`background-image:url('${heroImage}')`}>
   <div class="hero-overlay" aria-hidden="true"></div>
 
   <div class="hero-content">
@@ -45,8 +52,8 @@ const { lang } = Astro.props;
     justify-content: center;
     overflow: hidden;
 
-    /* Foto corporativa Unsplash — reemplazar con foto del cliente cuando esté disponible */
-    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1920&q=80');
+    /* Imagen de fondo: viene como inline style desde configuracion_estudio.hero_image_url
+       (editable desde /admin/configuracion). Aquí solo posicionamiento. */
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
