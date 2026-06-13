@@ -1,0 +1,62 @@
+---
+// Sin HTML en el servidor — el botón se crea únicamente si hay sesión Supabase activa.
+// Visitantes no autenticados no ven nada en el source ni en el DOM.
+---
+
+<script>
+import { createClient } from '@supabase/supabase-js';
+
+const url = import.meta.env.PUBLIC_SUPABASE_URL as string;
+const key = import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string;
+
+if (url && key) {
+  const sb = createClient(url, key);
+  sb.auth.getSession().then(({ data }) => {
+    if (!data.session) return;
+    const btn = document.createElement('a');
+    btn.href = '/admin';
+    btn.className = 'admin-fab';
+    btn.setAttribute('aria-label', 'Panel de administración');
+    btn.innerHTML =
+      '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Admin';
+    document.body.appendChild(btn);
+  });
+}
+</script>
+
+<style>
+  /* :global para aplicar a elemento inyectado por JS (sin atributo Astro scope) */
+  :global(.admin-fab) {
+    position: fixed;
+    bottom: 96px;
+    right: 1.5rem;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 15px;
+    background: #0D1F2D;
+    color: #C9A84C;
+    border: 1.5px solid #C9A84C;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transition: background 0.2s, color 0.2s;
+  }
+  :global(.admin-fab:hover) {
+    background: #C9A84C;
+    color: #0D1F2D;
+  }
+  @media (max-width: 600px) {
+    :global(.admin-fab) {
+      bottom: 80px;
+      right: 1rem;
+      font-size: 12px;
+      padding: 8px 13px;
+    }
+  }
+</style>

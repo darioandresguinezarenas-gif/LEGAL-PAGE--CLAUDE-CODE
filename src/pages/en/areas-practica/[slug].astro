@@ -3,13 +3,20 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AreaDetail from '../../../components/areas/AreaDetail.astro';
 import { t } from '../../../i18n/utils';
 import { generateFaqSchema, generateBreadcrumbSchema } from '../../../lib/schema';
+import { getAreas } from '../../../lib/queries';
 
 const lang = 'en' as const;
 
 export async function getStaticPaths() {
-  return ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos']
-    .map((slug) => ({ params: { slug } }));
+  const areas = await getAreas();
+  const slugs = ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos'];
+  return slugs.map((slug) => {
+    const area = areas.find((a) => a.slug === slug);
+    return { params: { slug }, props: { areaSeo: area ?? null } };
+  });
 }
+
+const { areaSeo } = Astro.props as { areaSeo: import('../../../lib/queries').AreaRow | null };
 
 const { slug } = Astro.params;
 
@@ -60,6 +67,27 @@ const faqs = faqsBySlug[slug] ?? [];
 const icon = icons[slug] ?? '';
 const BASE_URL = 'https://www.guinezgalaz.cl';
 
+// Fallbacks estáticos — Supabase tiene precedencia (migración 006)
+const SEO_TITLE_FB: Record<string, string> = {
+  laboral:     'Labour Lawyer in Curicó, Chile | Guíñez Galaz',
+  civil:       'Civil Lawyer in Curicó, Chile | Guíñez Galaz',
+  penal:       'Criminal Lawyer in Curicó, Chile | Guíñez Galaz',
+  familia:     'Family & Inheritance Lawyer in Curicó, Chile | Guíñez Galaz',
+  corporativo: 'Business Lawyer in Curicó, Chile | Guíñez Galaz',
+  contratos:   'Contract Lawyer in Curicó, Chile | Guíñez Galaz',
+};
+const SEO_DESC_FB: Record<string, string> = {
+  laboral:     'Employment law defence for workers and businesses in Curicó. Dismissals, workplace harassment and collective bargaining. Free first consultation.',
+  civil:       'Contracts, inheritances, estates, civil liability and property law in Curicó. Clear and effective legal solutions.',
+  penal:       'Expert criminal defence in Curicó. We protect your rights at every stage of the process. Immediate consultation.',
+  familia:     'Divorces, inheritances, alimony, child custody and family mediation in Curicó. Personalised and professional care.',
+  corporativo: 'Company formation, regulatory compliance and strategic advisory for businesses in Curicó and Chile.',
+  contratos:   'Contract drafting, review and negotiation in Curicó. Protect your business and personal interests.',
+};
+
+const seoTitle = areaSeo?.seo_titulo?.en ?? SEO_TITLE_FB[slug] ?? `${areaTitle} | Guíñez Galaz`;
+const seoDesc  = areaSeo?.seo_descripcion?.en ?? SEO_DESC_FB[slug] ?? '';
+
 const pageJsonLd = [
   ...(faqs.length ? [generateFaqSchema(faqs)] : []),
   generateBreadcrumbSchema([
@@ -71,8 +99,8 @@ const pageJsonLd = [
 ---
 
 <BaseLayout
-  title={`${areaTitle} | Guíñez Galaz Abogados`}
-  description={t(lang, `areas.${slug}.desc`)}
+  title={seoTitle}
+  description={seoDesc}
   lang={lang}
   jsonLd={pageJsonLd}
 >

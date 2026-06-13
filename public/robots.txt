@@ -1,4 +1,4 @@
-# Güinez Galaz Abogados — robots.txt
+# Guíñez Galaz Abogados — robots.txt
 # IA-optimizado: permite rastreo a motores de búsqueda clásicos y bots de IA
 
 User-agent: Googlebot
@@ -36,4 +36,4 @@ Disallow: /
 User-agent: *
 Disallow: /admin
 
-Sitemap: https://www.guinezgalaz.cl/sitemap.xml
+Sitemap: https://www.guinezgalaz.cl/sitemap-index.xml

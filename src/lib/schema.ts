@@ -3,7 +3,7 @@ import type { Lang } from '../i18n/utils';
 
 const BASE_URL = 'https://www.guinezgalaz.cl';
 
-export function generateOrganizationSchema() {
+export function generateOrganizationSchema(config?: { telefono?: string; email?: string }) {
   return {
     '@context': 'https://schema.org',
     '@type': 'LegalService',
@@ -11,9 +11,9 @@ export function generateOrganizationSchema() {
     url: BASE_URL,
     logo: `${BASE_URL}/logo.svg`,
     image: `${BASE_URL}/og-default.jpg`,
-    description: 'Estudio jurídico en Curicó y Valparaíso, Chile. Derecho Laboral, Civil, Penal, Corporativo y Familia.',
-    telephone: '+56900000000',
-    email: 'contacto@guinezgalaz.cl',
+    description: 'Abogados en Curicó, Región del Maule. Derecho Laboral, Civil, Penal, Corporativo y Familia. Atención en español, inglés y chino.',
+    ...(config?.telefono && { telephone: config.telefono }),
+    ...(config?.email && { email: config.email }),
     address: {
       '@type': 'PostalAddress',
       streetAddress: 'Calle Hernán Correa 2140, Galilea',

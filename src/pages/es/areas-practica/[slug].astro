@@ -3,13 +3,20 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AreaDetail from '../../../components/areas/AreaDetail.astro';
 import { t } from '../../../i18n/utils';
 import { generateFaqSchema, generateBreadcrumbSchema } from '../../../lib/schema';
+import { getAreas } from '../../../lib/queries';
 
 const lang = 'es' as const;
 
 export async function getStaticPaths() {
-  return ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos']
-    .map((slug) => ({ params: { slug } }));
+  const areas = await getAreas();
+  const slugs = ['laboral', 'civil', 'penal', 'familia', 'corporativo', 'contratos'];
+  return slugs.map((slug) => {
+    const area = areas.find((a) => a.slug === slug);
+    return { params: { slug }, props: { areaSeo: area ?? null } };
+  });
 }
+
+const { areaSeo } = Astro.props as { areaSeo: import('../../../lib/queries').AreaRow | null };
 
 const { slug } = Astro.params;
 
@@ -60,19 +67,41 @@ const faqs = faqsBySlug[slug] ?? [];
 const icon = icons[slug] ?? '';
 const BASE_URL = 'https://www.guinezgalaz.cl';
 
+// Fallbacks estáticos — Supabase tiene precedencia (migración 006)
+const SEO_TITLE_FB: Record<string, string> = {
+  laboral:     'Abogado Laboral en Curicó | Guíñez Galaz',
+  civil:       'Abogado Civil en Curicó | Guíñez Galaz',
+  penal:       'Abogado Penalista en Curicó | Guíñez Galaz',
+  familia:     'Abogado de Herencias en Curicó | Guíñez Galaz',
+  corporativo: 'Abogado Empresarial en Curicó | Guíñez Galaz',
+  contratos:   'Abogado de Contratos en Curicó | Guíñez Galaz',
+};
+const SEO_DESC_FB: Record<string, string> = {
+  laboral:     'Defensa de trabajadores y empresas en Curicó: despidos, tutela laboral y negociación colectiva. Primera consulta gratuita.',
+  civil:       'Contratos, herencias, sucesiones, responsabilidad civil y propiedad en Curicó. Soluciones legales claras y efectivas.',
+  penal:       'Defensa penal experta en Curicó. Protegemos sus derechos en todas las etapas del proceso. Consulta inmediata.',
+  familia:     'Divorcios, herencias, pensiones alimenticias y mediación familiar en Curicó. Atención personalizada y profesional.',
+  corporativo: 'Constitución de empresas, cumplimiento regulatorio y asesoría estratégica para negocios en Curicó y Chile.',
+  contratos:   'Redacción, revisión y negociación de contratos en Curicó. Proteja sus intereses empresariales y personales.',
+};
+
+// SEO dinámico: Supabase → fallback estático
+const seoTitle = areaSeo?.seo_titulo?.es ?? SEO_TITLE_FB[slug] ?? `${areaTitle} | Guíñez Galaz`;
+const seoDesc  = areaSeo?.seo_descripcion?.es ?? SEO_DESC_FB[slug] ?? '';
+
 const pageJsonLd = [
   ...(faqs.length ? [generateFaqSchema(faqs)] : []),
   generateBreadcrumbSchema([
-    { name: 'Inicio',          url: `${BASE_URL}/es` },
+    { name: 'Inicio',            url: `${BASE_URL}/es` },
     { name: 'Áreas de Práctica', url: `${BASE_URL}/es/areas-practica` },
-    { name: areaTitle,         url: `${BASE_URL}/es/areas-practica/${slug}` },
+    { name: areaTitle,           url: `${BASE_URL}/es/areas-practica/${slug}` },
   ]),
 ];
 ---
 
 <BaseLayout
-  title={`${areaTitle} | Guíñez Galaz Abogados`}
-  description={t(lang, `areas.${slug}.desc`)}
+  title={seoTitle}
+  description={seoDesc}
   lang={lang}
   jsonLd={pageJsonLd}
 >

@@ -14,6 +14,8 @@ export type AreaRow = {
   contenido: I18nText;
   faq: Array<{ pregunta: I18nText; respuesta: I18nText }>;
   orden: number;
+  seo_titulo?: I18nText;
+  seo_descripcion?: I18nText;
 };
 
 export type ClienteRow = {
@@ -75,7 +77,7 @@ export async function getAreas(): Promise<AreaRow[]> {
     async () => {
       const { data, error } = await supabase
         .from('areas_practica')
-        .select('id, slug, icono, titulo, descripcion, contenido, faq, orden')
+        .select('id, slug, icono, titulo, descripcion, contenido, faq, orden, seo_titulo, seo_descripcion')
         .order('orden', { ascending: true });
       if (error) throw error;
       return (data ?? []) as AreaRow[];
@@ -90,7 +92,7 @@ export async function getAreaBySlug(slug: string): Promise<AreaRow | null> {
     async () => {
       const { data, error } = await supabase
         .from('areas_practica')
-        .select('id, slug, icono, titulo, descripcion, contenido, faq, orden')
+        .select('id, slug, icono, titulo, descripcion, contenido, faq, orden, seo_titulo, seo_descripcion')
         .eq('slug', slug)
         .maybeSingle();
       if (error) throw error;
@@ -191,8 +193,12 @@ const DEFAULT_CONFIG: ConfigMap = {
   hero_image_url: '',
 };
 
+// Caché de módulo: una sola llamada a Supabase por build completo
+let _configCache: ConfigMap | null = null;
+
 export async function getConfig(): Promise<ConfigMap> {
-  return safeQuery(
+  if (_configCache) return _configCache;
+  const result = await safeQuery(
     'getConfig',
     async () => {
       const { data, error } = await supabase
@@ -207,6 +213,8 @@ export async function getConfig(): Promise<ConfigMap> {
     },
     { ...DEFAULT_CONFIG },
   );
+  _configCache = result;
+  return result;
 }
 
 // ============================================================
