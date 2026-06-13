@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import RichEditor from '../../components/admin/RichEditor.astro';
 ---
 <AdminLayout title="Blog | Admin" pageTitle="Artículos del Blog">
 
@@ -104,15 +105,15 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
           </div>
 
           <div class="form-group">
-            <label class="form-label">Contenido (HTML)</label>
+            <label class="form-label">Contenido</label>
             <div class="lang-tabs" data-group="cont">
               <button type="button" class="lang-tab active" data-lang="es">ES</button>
               <button type="button" class="lang-tab" data-lang="en">EN</button>
               <button type="button" class="lang-tab" data-lang="zh">中文</button>
             </div>
-            <div class="lang-panel active" data-group="cont" data-lang="es"><textarea name="cont_es" class="form-textarea tall" placeholder="<p>Contenido HTML…</p>"></textarea></div>
-            <div class="lang-panel"        data-group="cont" data-lang="en"><textarea name="cont_en" class="form-textarea tall"></textarea></div>
-            <div class="lang-panel"        data-group="cont" data-lang="zh"><textarea name="cont_zh" class="form-textarea tall"></textarea></div>
+            <div class="lang-panel active" data-group="cont" data-lang="es"><RichEditor name="cont_es" lang="es" /></div>
+            <div class="lang-panel"        data-group="cont" data-lang="en"><RichEditor name="cont_en" lang="en" /></div>
+            <div class="lang-panel"        data-group="cont" data-lang="zh"><RichEditor name="cont_zh" lang="zh" /></div>
           </div>
 
           <div class="form-group">
@@ -133,12 +134,41 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 <script>
   import { supabase, requireAuth } from '../../scripts/admin/client.js';
   import { showToast, showModal, hideModal, initLangTabs, getLang, setLang, fmtDate } from '../../scripts/admin/ui.js';
+  import { mountRichEditor } from '../../scripts/admin/tiptap.js';
 
   let records = [];
   let editingId = null;
+  /** Map name → wrapper devuelto por mountRichEditor */
+  const richEditors = new Map();
 
   const form  = document.getElementById('form-articulo');
   const tbody = document.getElementById('table-body');
+
+  function ensureRichEditors() {
+    if (richEditors.size > 0) return;
+    form.querySelectorAll('[data-rich-editor]').forEach((root) => {
+      const name = root.dataset.richName;
+      richEditors.set(name, mountRichEditor(root));
+    });
+  }
+
+  function getContent() {
+    const obj = {};
+    for (const [name, ed] of richEditors) {
+      // name = 'cont_es' | 'cont_en' | 'cont_zh' → key 'es'/'en'/'zh'
+      const lang = name.split('_')[1];
+      obj[lang] = ed.getHTML();
+    }
+    return obj;
+  }
+
+  function setContent(value) {
+    if (!value || typeof value !== 'object') value = {};
+    for (const [name, ed] of richEditors) {
+      const lang = name.split('_')[1];
+      ed.setHTML(value[lang] ?? '');
+    }
+  }
 
   (async () => {
     const session = await requireAuth();
@@ -203,6 +233,8 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     document.getElementById('modal-title').textContent = 'Nuevo artículo';
     initLangTabs(form);
     showModal('modal-articulo');
+    ensureRichEditors();
+    setContent({});
   });
 
   function openEdit(id) {
@@ -221,10 +253,11 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       form.meta_descripcion.value = r.meta_descripcion ?? '';
       setLang(form, 'tit',  r.titulo);
       setLang(form, 'ext',  r.extracto);
-      setLang(form, 'cont', r.contenido);
       document.getElementById('modal-title').textContent = 'Editar artículo';
       initLangTabs(form);
       showModal('modal-articulo');
+      ensureRichEditors();
+      setContent(r.contenido);
     })();
   }
 
@@ -242,9 +275,9 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
       destacado:        form.destacado.checked,
       autor_id:         form.autor_id.value || null,
       meta_descripcion: form.meta_descripcion.value.trim() || null,
-      titulo:   getLang(form, 'tit'),
-      extracto: getLang(form, 'ext'),
-      contenido: getLang(form, 'cont'),
+      titulo:    getLang(form, 'tit'),
+      extracto:  getLang(form, 'ext'),
+      contenido: getContent(),
       published_at: form.publicado.checked ? new Date().toISOString() : null,
     };
 

@@ -1,14 +1,175 @@
 ---
+// Wrapper de TipTap. El editor se monta en cliente vía mountRichEditor()
+// desde el script de cada página del admin que lo use.
+//
+// Atributos:
+//   data-rich-editor       → marca el contenedor para que el page script lo descubra
+//   data-rich-name="..."   → nombre del campo (ej. "cont_es"). Se usa como key
+//                            para asociarlo con el panel/idioma desde el form.
+//   data-rich-lang="..."   → 'es' | 'en' | 'zh'
+
 interface Props {
   name: string;
-  value?: string;
   lang: 'es' | 'en' | 'zh';
+  placeholder?: string;
+  /** Altura mínima del área editable en px (default 280) */
+  minHeight?: number;
 }
-const { name, value = '', lang } = Astro.props;
+const { name, lang, placeholder, minHeight = 280 } = Astro.props;
+
+const PLACEHOLDERS: Record<string, string> = {
+  es: 'Escriba aquí el contenido…',
+  en: 'Write the content here…',
+  zh: '在此输入内容…',
+};
+const ph = placeholder ?? PLACEHOLDERS[lang];
 ---
-<!-- TODO: Fase 8 — TipTap wrapper con soporte multiidioma -->
-<div class="rich-editor" data-name={name} data-lang={lang}>
-  <textarea name={name} hidden>{value}</textarea>
-  <div class="rich-editor-toolbar"></div>
-  <div class="rich-editor-content" contenteditable="true" set:html={value}></div>
+
+<div
+  class="rich-editor"
+  data-rich-editor
+  data-rich-name={name}
+  data-rich-lang={lang}
+  style={`--rich-min-h:${minHeight}px`}
+>
+  <div class="rich-toolbar" role="toolbar" aria-label="Formato">
+    <button type="button" class="rich-btn" data-cmd="bold"       title="Negrita (Ctrl+B)"><strong>B</strong></button>
+    <button type="button" class="rich-btn" data-cmd="italic"     title="Itálica (Ctrl+I)"><em>I</em></button>
+    <button type="button" class="rich-btn" data-cmd="strike"     title="Tachado"><span style="text-decoration:line-through">S</span></button>
+    <span class="rich-sep" aria-hidden="true"></span>
+    <button type="button" class="rich-btn" data-cmd="h2" title="Título nivel 2">H2</button>
+    <button type="button" class="rich-btn" data-cmd="h3" title="Título nivel 3">H3</button>
+    <button type="button" class="rich-btn" data-cmd="h4" title="Título nivel 4">H4</button>
+    <button type="button" class="rich-btn" data-cmd="p"  title="Párrafo normal">¶</button>
+    <span class="rich-sep" aria-hidden="true"></span>
+    <button type="button" class="rich-btn" data-cmd="ul" title="Lista con viñetas">•</button>
+    <button type="button" class="rich-btn" data-cmd="ol" title="Lista numerada">1.</button>
+    <button type="button" class="rich-btn" data-cmd="blockquote" title="Cita">”</button>
+    <button type="button" class="rich-btn" data-cmd="hr" title="Línea horizontal">―</button>
+    <span class="rich-sep" aria-hidden="true"></span>
+    <button type="button" class="rich-btn" data-cmd="link" title="Enlace">🔗</button>
+    <span class="rich-sep" aria-hidden="true"></span>
+    <button type="button" class="rich-btn" data-cmd="clear" title="Quitar formato">⌫</button>
+    <span class="rich-grow"></span>
+    <button type="button" class="rich-btn" data-cmd="undo" title="Deshacer (Ctrl+Z)">↶</button>
+    <button type="button" class="rich-btn" data-cmd="redo" title="Rehacer (Ctrl+Shift+Z)">↷</button>
+  </div>
+
+  <div class="rich-content" data-placeholder={ph}></div>
 </div>
+
+<style>
+  .rich-editor {
+    border: 1px solid #E8E8E0;
+    border-radius: 4px;
+    background: #ffffff;
+    overflow: hidden;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  /* ── Toolbar ─────────────────────────────────────── */
+  .rich-toolbar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.125rem;
+    padding: 0.5rem;
+    background: #F5F5F0;
+    border-bottom: 1px solid #E8E8E0;
+  }
+
+  .rich-btn {
+    min-width: 30px;
+    height: 30px;
+    padding: 0 0.5rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #1A1A1A;
+    font-size: 0.8125rem;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .rich-btn:hover  { background: #E8E8E0; }
+  .rich-btn.active { background: #0D1F2D; color: #C9A84C; border-color: #0D1F2D; }
+  .rich-btn:focus-visible { outline: 2px solid #C9A84C; outline-offset: 1px; }
+
+  .rich-sep {
+    width: 1px;
+    height: 20px;
+    background: #D8D8D0;
+    margin: 0 0.25rem;
+  }
+
+  .rich-grow { flex: 1; }
+
+  /* ── Área editable ───────────────────────────────── */
+  .rich-content {
+    min-height: var(--rich-min-h, 280px);
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #1A1A1A;
+  }
+
+  /* Cuando ProseMirror inicializa, agrega .ProseMirror al div.
+     Placeholder vacío: aprovechamos el data-placeholder. */
+  .rich-content :global(.ProseMirror) {
+    outline: none;
+    min-height: var(--rich-min-h, 280px);
+  }
+
+  .rich-content :global(.ProseMirror p) { margin: 0 0 0.875rem; }
+  .rich-content :global(.ProseMirror h2),
+  .rich-content :global(.ProseMirror h3),
+  .rich-content :global(.ProseMirror h4) {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: #0D1F2D;
+    line-height: 1.2;
+    margin: 1.5rem 0 0.75rem;
+  }
+  .rich-content :global(.ProseMirror h2) { font-size: 1.6rem; }
+  .rich-content :global(.ProseMirror h3) { font-size: 1.3rem; }
+  .rich-content :global(.ProseMirror h4) { font-size: 1.1rem; }
+
+  .rich-content :global(.ProseMirror ul),
+  .rich-content :global(.ProseMirror ol) {
+    padding-left: 1.5rem;
+    margin: 0 0 1rem;
+  }
+
+  .rich-content :global(.ProseMirror blockquote) {
+    border-left: 3px solid #C9A84C;
+    padding-left: 1rem;
+    margin: 0 0 1rem;
+    color: rgba(26,26,26,0.7);
+    font-style: italic;
+  }
+
+  .rich-content :global(.ProseMirror a) {
+    color: #C9A84C;
+    border-bottom: 1px solid #C9A84C;
+  }
+
+  .rich-content :global(.ProseMirror hr) {
+    border: 0;
+    border-top: 1px solid #E8E8E0;
+    margin: 1.25rem 0;
+  }
+
+  /* Placeholder TipTap (activa con extension-placeholder) */
+  .rich-content :global(.ProseMirror p.is-editor-empty:first-child::before) {
+    content: attr(data-placeholder);
+    color: rgba(26,26,26,0.35);
+    pointer-events: none;
+    height: 0;
+    float: left;
+  }
+</style>
