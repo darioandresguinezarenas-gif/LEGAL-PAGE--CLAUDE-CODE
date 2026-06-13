@@ -63,6 +63,18 @@ export function generateArticleSchema(article: {
   };
 }
 
+export function generateFaqSchema(faqs: { pregunta: string; respuesta: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.pregunta,
+      acceptedAnswer: { '@type': 'Answer', text: f.respuesta },
+    })),
+  };
+}
+
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
   return {
     '@context': 'https://schema.org',

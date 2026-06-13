@@ -1,11 +1,85 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'zh' as const;
 ---
-<BaseLayout title="消息已发送 | Guíñez Galaz Abogados" lang="zh">
-  <main>
-    <h1>消息发送成功！</h1>
-    <p>我们将尽快与您联系。</p>
-    <a href="/zh">返回首页</a>
-    <a href="/zh/areas-practica">我们的业务领域</a>
-  </main>
+<BaseLayout
+  title="消息已发送 · 感谢您 | 律师事务所"
+  description="我们已收到您的咨询，将在24至48个工作小时内与您联系。"
+  lang={lang}
+  noindex={true}
+>
+  <section class="gracias-section">
+    <div class="gracias-card">
+      <div class="check-icon" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <p class="label">GUÍÑEZ GALAZ 律师事务所</p>
+      <h1 class="title">消息已成功发送！</h1>
+      <p class="body">
+        我们已收到您的咨询，将在 <strong>24–48 个工作小时</strong>内与您取得联系。
+        如有紧急事项，请通过 WhatsApp 联系我们。
+      </p>
+      <div class="actions">
+        <a href="/zh" class="btn-primary">返回首页</a>
+        <a href="/zh/areas-practica" class="btn-outline">查看业务领域</a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .gracias-section {
+    min-height: calc(100vh - 80px);
+    background: #F5F5F0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 6rem 1.5rem;
+  }
+  .gracias-card {
+    background: #ffffff; border: 1px solid #E8E8E0;
+    max-width: 560px; width: 100%; padding: 3.5rem 3rem;
+    text-align: center; box-shadow: 0 4px 24px rgba(13, 31, 45, 0.06);
+  }
+  .check-icon {
+    width: 72px; height: 72px;
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.25);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.75rem;
+  }
+  .label {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem; font-weight: 600;
+    letter-spacing: 0.14em; color: #C9A84C; margin-bottom: 0.875rem;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700;
+    color: #0D1F2D; line-height: 1.15; margin-bottom: 1.125rem;
+  }
+  .body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1rem; line-height: 1.8;
+    color: rgba(26, 26, 26, 0.72); margin-bottom: 2.25rem;
+  }
+  .body strong { color: #0D1F2D; font-weight: 600; }
+  .actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em;
+    color: #ffffff; background: #0D1F2D; padding: 0.9375rem 2rem;
+    text-decoration: none; transition: background 0.2s ease;
+  }
+  .btn-primary:hover { background: #C9A84C; color: #0D1F2D; }
+  .btn-outline {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.06em;
+    color: #0D1F2D; background: transparent; border: 1px solid #0D1F2D;
+    padding: 0.9375rem 2rem; text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .btn-outline:hover { background: #0D1F2D; color: #ffffff; }
+</style>

@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleDetail from '../../../components/blog/ArticleDetail.astro';
 import { getArticulos, pickLang, type ArticuloRow } from '../../../lib/queries';
+import { generateArticleSchema, generateBreadcrumbSchema } from '../../../lib/schema';
 
 export async function getStaticPaths() {
   const articulos = await getArticulos();
@@ -13,7 +14,26 @@ const { article } = Astro.props;
 const lang = 'es' as const;
 const title = `${pickLang(article.titulo, lang)} | Guíñez Galaz Abogados`;
 const description = pickLang(article.extracto, lang);
+const BASE_URL = 'https://www.guinezgalaz.cl';
+
+const pageJsonLd = [
+  generateArticleSchema(
+    {
+      titulo:      article.titulo as Record<string, string>,
+      extracto:    article.extracto as Record<string, string>,
+      imagen_url:  article.imagen_url ?? `${BASE_URL}/og-default.jpg`,
+      published_at: article.published_at ?? new Date().toISOString(),
+      slug:         article.slug,
+    },
+    lang,
+  ),
+  generateBreadcrumbSchema([
+    { name: 'Inicio', url: `${BASE_URL}/es` },
+    { name: 'Blog',   url: `${BASE_URL}/es/blog` },
+    { name: pickLang(article.titulo, lang), url: `${BASE_URL}/es/blog/${article.slug}` },
+  ]),
+];
 ---
-<BaseLayout title={title} description={description} lang={lang} ogImage={article.imagen_url ?? undefined}>
+<BaseLayout title={title} description={description} lang={lang} ogImage={article.imagen_url ?? undefined} jsonLd={pageJsonLd}>
   <ArticleDetail article={article} lang={lang} />
 </BaseLayout>

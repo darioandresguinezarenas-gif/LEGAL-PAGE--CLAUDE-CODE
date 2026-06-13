@@ -3,6 +3,7 @@ import SeoHead from '../components/shared/SeoHead.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
 import WhatsAppButton from '../components/shared/WhatsAppButton.astro';
+import { generateOrganizationSchema } from '../lib/schema';
 import '../styles/global.css';
 import '../styles/typography.css';
 
@@ -12,6 +13,7 @@ interface Props {
   lang: 'es' | 'en' | 'zh';
   ogImage?: string;
   noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
@@ -20,7 +22,11 @@ const {
   lang,
   ogImage,
   noindex = false,
+  jsonLd = [],
 } = Astro.props;
+
+// Organization schema presente en todas las páginas; se fusiona con schemas adicionales
+const allJsonLd = [generateOrganizationSchema(), ...jsonLd];
 
 const langMap = { es: 'es-CL', en: 'en-US', zh: 'zh-CN' };
 ---
@@ -47,6 +53,7 @@ const langMap = { es: 'es-CL', en: 'en-US', zh: 'zh-CN' };
       lang={lang}
       ogImage={ogImage}
       noindex={noindex}
+      jsonLd={allJsonLd}
     />
   </head>
   <body>
@@ -56,3 +63,7 @@ const langMap = { es: 'es-CL', en: 'en-US', zh: 'zh-CN' };
     <WhatsAppButton />
   </body>
 </html>
+
+<script>
+  import '../scripts/analytics.js';
+</script>

@@ -60,7 +60,7 @@ const MAX_CHARS = 3000;
       <h1 class="form-title">{t(lang, 'contact.title')}</h1>
       <p class="form-intro">{t(lang, 'contact.heroSubtitle')}</p>
 
-      <form class="contact-form" id="contact-form" method="post" action="#">
+      <form class="contact-form" id="contact-form" data-lang={lang} novalidate>
         <!-- Honeypot anti-spam (oculto a usuarios) -->
         <div class="hp-field" aria-hidden="true">
           <label for="website">No completar</label>
@@ -93,7 +93,8 @@ const MAX_CHARS = 3000;
           <span class="char-counter"><span id="char-count">0</span> / {MAX_CHARS}</span>
         </div>
 
-        <button type="submit" class="form-submit">{t(lang, 'contact.send')}</button>
+        <div class="form-error" id="form-error" role="alert" aria-live="assertive"></div>
+        <button type="submit" class="form-submit" id="btn-submit">{t(lang, 'contact.send')}</button>
       </form>
     </div>
 
@@ -278,6 +279,25 @@ const MAX_CHARS = 3000;
     color: #0D1F2D;
   }
 
+  .form-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .form-error {
+    display: none;
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: #991B1B;
+    line-height: 1.5;
+  }
+
+  .form-error:not(:empty) { display: block; }
+
   /* Responsive */
   @media (max-width: 820px) {
     .contact-container {
@@ -295,12 +315,75 @@ const MAX_CHARS = 3000;
 </style>
 
 <script>
+  // ── Contador de caracteres ─────────────────────────────────
   const textarea = document.getElementById('mensaje') as HTMLTextAreaElement | null;
-  const counter = document.getElementById('char-count');
-
+  const counter  = document.getElementById('char-count');
   if (textarea && counter) {
     const update = () => { counter.textContent = String(textarea.value.length); };
     textarea.addEventListener('input', update);
     update();
   }
+
+  // ── Envío del formulario ───────────────────────────────────
+  const form      = document.getElementById('contact-form') as HTMLFormElement | null;
+  const btnSubmit = document.getElementById('btn-submit') as HTMLButtonElement | null;
+  const errorBox  = document.getElementById('form-error') as HTMLElement | null;
+
+  const EDGE_URL = `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/contacto`;
+
+  const SENDING_LABELS: Record<string, string> = {
+    es: 'Enviando…',
+    en: 'Sending…',
+    zh: '发送中…',
+  };
+  const ERROR_GENERIC: Record<string, string> = {
+    es: 'Ocurrió un error al enviar. Inténtalo nuevamente.',
+    en: 'An error occurred. Please try again.',
+    zh: '发送失败，请重试。',
+  };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const lang = (form.dataset.lang as string) || 'es';
+
+    if (errorBox) errorBox.textContent = '';
+    if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.textContent = SENDING_LABELS[lang] ?? SENDING_LABELS.es; }
+
+    const data = {
+      nombre:     (form.querySelector<HTMLInputElement>('[name="nombre"]')?.value ?? '').trim(),
+      email:      (form.querySelector<HTMLInputElement>('[name="email"]')?.value ?? '').trim(),
+      naturaleza: (form.querySelector<HTMLSelectElement>('[name="naturaleza"]')?.value ?? ''),
+      mensaje:    (form.querySelector<HTMLTextAreaElement>('[name="mensaje"]')?.value ?? '').trim(),
+      website:    (form.querySelector<HTMLInputElement>('[name="website"]')?.value ?? ''),
+    };
+
+    let result: { ok?: boolean; error?: string } = {};
+
+    try {
+      const res = await fetch(EDGE_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(data),
+      });
+      result = await res.json();
+    } catch {
+      result = { error: ERROR_GENERIC[lang] ?? ERROR_GENERIC.es };
+    }
+
+    if (result.ok) {
+      window.location.href = `/${lang}/gracias`;
+      return;
+    }
+
+    if (errorBox) errorBox.textContent = result.error ?? ERROR_GENERIC[lang] ?? ERROR_GENERIC.es;
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      // Restore original label from i18n (baked into the initial button text, saved on first load)
+      btnSubmit.textContent = (btnSubmit.dataset.label ?? btnSubmit.textContent);
+    }
+  });
+
+  // Guardar la label original del botón al cargar
+  if (btnSubmit) btnSubmit.dataset.label = btnSubmit.textContent ?? '';
 </script>

@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AreaDetail from '../../../components/areas/AreaDetail.astro';
 import { t } from '../../../i18n/utils';
+import { generateFaqSchema, generateBreadcrumbSchema } from '../../../lib/schema';
 
 const lang = 'en' as const;
 
@@ -57,12 +58,23 @@ const faqsBySlug: Record<string, Array<{ pregunta: string; respuesta: string }>>
 const areaTitle = t(lang, `areas.${slug}.title`);
 const faqs = faqsBySlug[slug] ?? [];
 const icon = icons[slug] ?? '';
+const BASE_URL = 'https://www.guinezgalaz.cl';
+
+const pageJsonLd = [
+  ...(faqs.length ? [generateFaqSchema(faqs)] : []),
+  generateBreadcrumbSchema([
+    { name: 'Home',           url: `${BASE_URL}/en` },
+    { name: 'Practice Areas', url: `${BASE_URL}/en/areas-practica` },
+    { name: areaTitle,        url: `${BASE_URL}/en/areas-practica/${slug}` },
+  ]),
+];
 ---
 
 <BaseLayout
   title={`${areaTitle} | Guíñez Galaz Abogados`}
   description={t(lang, `areas.${slug}.desc`)}
   lang={lang}
+  jsonLd={pageJsonLd}
 >
   <AreaDetail lang={lang} areaKey={slug} areaSlug={slug} faqs={faqs} icon={icon} />
 </BaseLayout>

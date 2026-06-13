@@ -5,6 +5,7 @@ interface Props {
   lang: 'es' | 'en' | 'zh';
   ogImage?: string;
   noindex?: boolean;
+  jsonLd?: Record<string, unknown>[];
 }
 
 const {
@@ -13,11 +14,13 @@ const {
   lang,
   ogImage = 'https://www.guinezgalaz.cl/og-default.jpg',
   noindex = false,
+  jsonLd = [],
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, 'https://www.guinezgalaz.cl').href;
-
 const hreflangPaths = Astro.url.pathname.replace(/^\/(es|en|zh)/, '');
+
+const GA4_ID = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID;
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
@@ -25,22 +28,32 @@ const hreflangPaths = Astro.url.pathname.replace(/^\/(es|en|zh)/, '');
 
 {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-<!-- hreflang para multiidioma -->
-<link rel="alternate" hreflang="es-CL" href={`https://www.guinezgalaz.cl/es${hreflangPaths}`} />
-<link rel="alternate" hreflang="en-US" href={`https://www.guinezgalaz.cl/en${hreflangPaths}`} />
-<link rel="alternate" hreflang="zh-CN" href={`https://www.guinezgalaz.cl/zh${hreflangPaths}`} />
+<!-- hreflang multiidioma -->
+<link rel="alternate" hreflang="es-CL"    href={`https://www.guinezgalaz.cl/es${hreflangPaths}`} />
+<link rel="alternate" hreflang="en-US"    href={`https://www.guinezgalaz.cl/en${hreflangPaths}`} />
+<link rel="alternate" hreflang="zh-CN"    href={`https://www.guinezgalaz.cl/zh${hreflangPaths}`} />
 <link rel="alternate" hreflang="x-default" href={`https://www.guinezgalaz.cl/es${hreflangPaths}`} />
 
 <!-- Open Graph -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={canonicalUrl} />
-<meta property="og:title" content={title} />
+<meta property="og:type"        content="website" />
+<meta property="og:url"         content={canonicalUrl} />
+<meta property="og:title"       content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={ogImage} />
-<meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : lang === 'en' ? 'en_US' : 'es_CL'} />
+<meta property="og:image"       content={ogImage} />
+<meta property="og:locale"      content={lang === 'zh' ? 'zh_CN' : lang === 'en' ? 'en_US' : 'es_CL'} />
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={title} />
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content={title} />
 <meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image"       content={ogImage} />
+
+<!-- JSON-LD (schema.org) — no es JavaScript ejecutable, no afecta CSP -->
+{jsonLd.map((schema) => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+))}
+
+<!-- GA4 (solo si PUBLIC_GA4_MEASUREMENT_ID está configurado) -->
+{GA4_ID && (
+  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
+)}
