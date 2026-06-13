@@ -1,11 +1,17 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getConfig } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+
+const config = await getConfig();
+const direccion = config.direccion || t(lang, 'footer.address');
+const telefono = config.telefono || t(lang, 'footer.phone');
+const horario = config.horario || t(lang, 'footer.hours');
 
 const natures = ['laboral', 'civil', 'penal', 'familia', 'otro'];
 const MAX_CHARS = 3000;
@@ -30,19 +36,19 @@ const MAX_CHARS = 3000;
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
             </svg>
-            <span>{t(lang, 'footer.address')}</span>
+            <span>{direccion}</span>
           </li>
           <li class="card-item">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
             </svg>
-            <span>{t(lang, 'footer.phone')}</span>
+            <span>{telefono}</span>
           </li>
           <li class="card-item">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
             </svg>
-            <span>{t(lang, 'footer.hours')}</span>
+            <span>{horario}</span>
           </li>
         </ul>
       </div>

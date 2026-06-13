@@ -1,26 +1,31 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getArticulos } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 
-// Fase 5: fetch desde Supabase:
-//   SELECT * FROM articulos
-//   WHERE publicado = true AND deleted_at IS NULL
-//   ORDER BY published_at DESC LIMIT 3
 type Article = {
   slug: string;
   titulo: Record<string, string>;
   extracto: Record<string, string>;
   imagen_url: string | null;
   categoria: string;
-  published_at: string;
+  published_at: string | null;
 };
 
-const articles: Article[] = []; // Placeholder - vacio hasta Fase 5
+const dbArticulos = await getArticulos(3);
+const articles: Article[] = dbArticulos.map((a) => ({
+  slug: a.slug,
+  titulo: a.titulo as Record<string, string>,
+  extracto: a.extracto as Record<string, string>,
+  imagen_url: a.imagen_url,
+  categoria: a.categoria,
+  published_at: a.published_at,
+}));
 
 // Colores por categoria
 const categoryColors: Record<string, string> = {

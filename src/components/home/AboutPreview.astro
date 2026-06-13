@@ -1,11 +1,19 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getAbogados } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+
+const abogados = await getAbogados();
+const maxAnos = abogados.length > 0
+  ? Math.max(...abogados.map((a) => a.anos_trayectoria ?? 0))
+  : 0;
+const showYearsStat = maxAnos > 0;
+const yearsLabel = `${maxAnos}+`;
 ---
 
 <section class="about-preview">
@@ -19,17 +27,21 @@ const { lang } = Astro.props;
 
       <!-- Estadísticas rápidas -->
       <div class="about-stats">
+        {showYearsStat && (
+          <>
+            <div class="stat">
+              <span class="stat-number">{yearsLabel}</span>
+              <span class="stat-label">
+                {lang === 'es' ? 'Años de trayectoria' : lang === 'en' ? 'Years of experience' : '年经验'}
+              </span>
+            </div>
+            <div class="stat-divider" aria-hidden="true"></div>
+          </>
+        )}
         <div class="stat">
-          <span class="stat-number">15+</span>
+          <span class="stat-number">2</span>
           <span class="stat-label">
-            {lang === 'es' ? 'Años de experiencia' : lang === 'en' ? 'Years of experience' : '年经验'}
-          </span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat">
-          <span class="stat-number">500+</span>
-          <span class="stat-label">
-            {lang === 'es' ? 'Casos resueltos' : lang === 'en' ? 'Cases resolved' : '案例解决'}
+            {lang === 'es' ? 'Sedes de atención' : lang === 'en' ? 'Service locations' : '服务地点'}
           </span>
         </div>
         <div class="stat-divider" aria-hidden="true"></div>
@@ -58,7 +70,7 @@ const { lang } = Astro.props;
       <div class="about-badge">
         <p class="badge-name">GUÍÑEZ GALAZ</p>
         <p class="badge-tagline">
-          {lang === 'es' ? 'Est. Rancagua, Chile' : lang === 'en' ? 'Est. Rancagua, Chile' : '成立于智利兰卡瓜'}
+          {lang === 'es' ? 'Est. Curicó, Chile' : lang === 'en' ? 'Est. Curicó, Chile' : '成立于智利库里科'}
         </p>
       </div>
     </div>

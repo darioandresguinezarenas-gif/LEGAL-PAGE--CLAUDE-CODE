@@ -24,3 +24,10 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# documentos de trabajo (specs, handoffs) — fuera del repo
+spec_*.docx
+spec_*.txt
+handoff*.docx
+handoff*.txt
+*.docx

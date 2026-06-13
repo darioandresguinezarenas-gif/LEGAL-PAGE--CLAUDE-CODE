@@ -1,14 +1,13 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getArticulos } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 
-// Placeholder - Fase posterior: fetch desde Supabase
-//   SELECT * FROM articulos WHERE publicado = true AND deleted_at IS NULL ORDER BY published_at DESC
 type Article = {
   slug: string;
   titulo: Record<Lang, string>;
@@ -16,9 +15,20 @@ type Article = {
   categoria: string;
   fecha: string;
   gradient: string;
+  imagen_url?: string | null;
 };
 
-const articles: Article[] = [
+// Gradientes rotativos para artículos sin imagen_url
+const GRADIENTS = [
+  'linear-gradient(135deg, #0D1F2D 0%, #2d4a5c 100%)',
+  'linear-gradient(135deg, #2a1f1f 0%, #3d2e2e 100%)',
+  'linear-gradient(135deg, #1f2a1f 0%, #2e3d2e 100%)',
+  'linear-gradient(135deg, #241f2e 0%, #3a2e4d 100%)',
+];
+
+const dbArticulos = await getArticulos();
+
+const placeholderArticles: Article[] = [
   {
     slug: 'reforma-laboral-2025',
     categoria: 'Laboral',
@@ -85,6 +95,18 @@ const articles: Article[] = [
   },
 ];
 
+const articles: Article[] = dbArticulos.length > 0
+  ? dbArticulos.map((a, i) => ({
+      slug: a.slug,
+      titulo: a.titulo as Record<Lang, string>,
+      extracto: a.extracto as Record<Lang, string>,
+      categoria: a.categoria,
+      fecha: a.published_at ?? new Date().toISOString(),
+      gradient: GRADIENTS[i % GRADIENTS.length],
+      imagen_url: a.imagen_url,
+    }))
+  : placeholderArticles;
+
 const categoryColors: Record<string, string> = {
   Laboral: '#C9A84C',
   Civil: '#5B8BA3',
@@ -138,7 +160,9 @@ const isEmpty = articles.length === 0;
       <>
         <!-- Artículo destacado -->
         <a href={`/${lang}/blog/${featured.slug}`} class="featured-card" data-categoria={featured.categoria}>
-          <div class="featured-image" style={`background:${featured.gradient}`}>
+          <div class="featured-image" style={featured.imagen_url
+              ? `background-image:url('${featured.imagen_url}');background-size:cover;background-position:center`
+              : `background:${featured.gradient}`}>
             <span class="featured-tag">{t(lang, 'blog.featuredLabel')}</span>
           </div>
           <div class="featured-body">
@@ -158,7 +182,9 @@ const isEmpty = articles.length === 0;
         <div class="blog-grid">
           {rest.map((article) => (
             <a href={`/${lang}/blog/${article.slug}`} class="blog-card" data-categoria={article.categoria}>
-              <div class="blog-card-image" style={`background:${article.gradient}`}></div>
+              <div class="blog-card-image" style={article.imagen_url
+                  ? `background-image:url('${article.imagen_url}');background-size:cover;background-position:center`
+                  : `background:${article.gradient}`}></div>
               <div class="blog-card-body">
                 <span class="article-category" style={`color:${categoryColors[article.categoria] ?? '#C9A84C'}`}>
                   {article.categoria.toUpperCase()}

@@ -1,8 +1,11 @@
 ---
-// Número cargado desde configuracion_estudio en Supabase — placeholder hasta Fase 2
-const whatsappNumber = '+56900000000';
+import { getConfig } from '../../lib/queries';
+
+const config = await getConfig();
+const whatsappNumber = config.whatsapp || '+56900000000';
 const message = encodeURIComponent('Hola, quisiera consultar sobre sus servicios legales.');
-const href = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}`;
+const digits = whatsappNumber.replace(/\D/g, '');
+const href = `https://wa.me/${digits}?text=${message}`;
 ---
 <a
   href={href}

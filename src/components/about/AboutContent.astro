@@ -1,15 +1,13 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getAbogados, pickLang } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 
-// Placeholder del equipo - Fase posterior: fetch desde Supabase
-//   SELECT * FROM abogados WHERE activo = true AND deleted_at IS NULL ORDER BY orden
-// Los datos reales se cargaran desde el panel de administracion.
 type TeamMember = {
   nombre: string;
   cargo: Record<Lang, string>;
@@ -19,40 +17,76 @@ type TeamMember = {
   foto_url: string | null;
 };
 
-const team: TeamMember[] = [
+const dbAbogados = await getAbogados();
+
+// IMPORTANTE: Darío Guíñez es Egresado de Derecho — NUNCA usar "Abogado" para referirse a él.
+// Catalina Galaz es Abogada habilitada. Atiende además casos en Valparaíso de forma presencial
+// (sin oficina física aún en esa ciudad).
+const placeholderTeam: TeamMember[] = [
   {
-    nombre: 'Patricio Guíñez',
-    cargo: { es: 'Socio Fundador', en: 'Founding Partner', zh: '创始合伙人' },
+    nombre: 'Darío Guíñez Arenas',
+    cargo: {
+      es: 'Egresado de Derecho · Socio Fundador',
+      en: 'Law Graduate · Founding Partner',
+      zh: '法律毕业生 · 创始合伙人',
+    },
     bio: {
-      es: 'Con casi dos décadas de trayectoria, lidera el área de litigios laborales y civiles del estudio. Su enfoque estratégico y su sólida experiencia en tribunales respaldan cada defensa, combinando rigor técnico con una visión orientada a resultados concretos para sus clientes.',
-      en: 'With nearly two decades of experience, he leads the firm’s labour and civil litigation practice. His strategic approach and solid courtroom experience back every defense, combining technical rigor with a vision focused on concrete results for his clients.',
-      zh: '凭借近二十年的经验，他领导着事务所的劳动和民事诉讼业务。他的战略眼光和扎实的庭审经验为每一次辩护提供支持，将专业的技术与为客户取得切实成果的愿景相结合。',
+      es: 'Egresado de Derecho y fundador del estudio. Lidera la gestión institucional y la coordinación estratégica de los casos en las áreas Laboral, Civil, Corporativa y Penal Económico. Su trabajo combina rigor técnico, visión integral del cliente y un enfoque orientado a resultados concretos.',
+      en: 'Law graduate and founder of the firm. He leads institutional management and strategic coordination of cases in Labour, Civil, Corporate and Economic Criminal Law. His work combines technical rigor, an integral view of the client and a results-driven approach.',
+      zh: '法律毕业生，事务所创始人。负责事务所的整体管理及劳动法、民法、公司法与经济刑法案件的战略协调。其工作将专业的技术、对客户的整体视角与以成果为导向的方法相结合。',
     },
     especialidades: {
-      es: ['Derecho Laboral', 'Derecho Civil'],
-      en: ['Labour Law', 'Civil Law'],
-      zh: ['劳动法', '民法'],
+      es: ['Derecho Laboral', 'Derecho Civil', 'Derecho Corporativo'],
+      en: ['Labour Law', 'Civil Law', 'Corporate Law'],
+      zh: ['劳动法', '民法', '公司法'],
     },
-    anos: 18,
+    anos: 0,
     foto_url: null,
   },
   {
-    nombre: 'Camila Galaz',
-    cargo: { es: 'Socia', en: 'Partner', zh: '合伙人' },
+    nombre: 'Catalina Galaz Díaz',
+    cargo: {
+      es: 'Abogada · Socia Fundadora',
+      en: 'Attorney · Founding Partner',
+      zh: '律师 · 创始合伙人',
+    },
     bio: {
-      es: 'Especialista en derecho de familia y mediación, combina el rigor jurídico con un trato cercano y humano en cada proceso. Acompaña a las familias en momentos sensibles con empatía, claridad y un firme compromiso con la protección de sus derechos.',
-      en: 'A specialist in family law and mediation, she combines legal rigor with a close, human approach in every case. She supports families through sensitive moments with empathy, clarity and a firm commitment to protecting their rights.',
-      zh: '作为家庭法和调解专家，她在每个案件中将法律的严谨与亲切人性化的服务相结合。她以同理心、清晰的思路和保护客户权利的坚定承诺，陪伴家庭度过敏感时刻。',
+      es: 'Abogada del estudio y socia. Se desempeña en Derecho Penal, Familia y Civil, con un trato cercano y profesional con cada cliente. Atiende casos en Curicó y también de forma presencial en Valparaíso, según las necesidades del caso.',
+      en: 'Attorney and partner of the firm. She practices Criminal, Family and Civil Law, with a close and professional approach to every client. She handles cases in Curicó and also in person in Valparaíso, depending on case requirements.',
+      zh: '事务所律师与合伙人。从事刑法、家庭法和民法工作，以亲切而专业的态度对待每一位客户。可在库里科及瓦尔帕莱索现场处理案件，视案件需要而定。',
     },
     especialidades: {
-      es: ['Derecho de Familia', 'Derecho Civil'],
-      en: ['Family Law', 'Civil Law'],
-      zh: ['家庭法', '民法'],
+      es: ['Derecho Penal', 'Derecho de Familia', 'Derecho Civil'],
+      en: ['Criminal Law', 'Family Law', 'Civil Law'],
+      zh: ['刑法', '家庭法', '民法'],
     },
-    anos: 14,
+    anos: 0,
     foto_url: null,
   },
 ];
+
+const team: TeamMember[] = dbAbogados.length > 0
+  ? dbAbogados.map((a) => ({
+      nombre: a.nombre,
+      cargo: {
+        es: pickLang(a.cargo, 'es'),
+        en: pickLang(a.cargo, 'en'),
+        zh: pickLang(a.cargo, 'zh'),
+      } as Record<Lang, string>,
+      bio: {
+        es: pickLang(a.bio, 'es'),
+        en: pickLang(a.bio, 'en'),
+        zh: pickLang(a.bio, 'zh'),
+      } as Record<Lang, string>,
+      especialidades: {
+        es: a.especialidades ?? [],
+        en: a.especialidades ?? [],
+        zh: a.especialidades ?? [],
+      } as Record<Lang, string[]>,
+      anos: a.anos_trayectoria ?? 0,
+      foto_url: a.foto_url,
+    }))
+  : placeholderTeam;
 
 const getInitials = (nombre: string) =>
   nombre
@@ -95,10 +129,12 @@ const getInitials = (nombre: string) =>
               </div>
             )
           }
-          <div class="team-badge">
-            <span class="badge-number">{member.anos}</span>
-            <span class="badge-label">{t(lang, 'about.experienceLabel')}</span>
-          </div>
+          {member.anos > 0 && (
+            <div class="team-badge">
+              <span class="badge-number">{member.anos}</span>
+              <span class="badge-label">{t(lang, 'about.experienceLabel')}</span>
+            </div>
+          )}
         </div>
 
         <!-- Texto -->

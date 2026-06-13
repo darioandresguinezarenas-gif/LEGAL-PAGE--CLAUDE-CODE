@@ -1,0 +1,157 @@
+---
+import { t } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+import { pickLang, type ArticuloRow } from '../../lib/queries';
+
+interface Props {
+  article: ArticuloRow;
+  lang: Lang;
+}
+const { article, lang } = Astro.props;
+
+const titulo = pickLang(article.titulo, lang);
+const extracto = pickLang(article.extracto, lang);
+const contenido = pickLang(article.contenido, lang);
+
+const locales: Record<Lang, string> = { es: 'es-CL', en: 'en-US', zh: 'zh-CN' };
+const fecha = article.published_at
+  ? new Date(article.published_at).toLocaleDateString(locales[lang], {
+      year: 'numeric', month: 'long', day: 'numeric',
+    })
+  : '';
+---
+
+<article class="article-detail">
+  <header class="article-header" style={article.imagen_url
+      ? `background-image:linear-gradient(rgba(13,31,45,0.75),rgba(13,31,45,0.85)),url('${article.imagen_url}');background-size:cover;background-position:center`
+      : 'background:#0D1F2D'}>
+    <div class="article-header-inner">
+      <span class="article-category">{article.categoria.toUpperCase()}</span>
+      <h1 class="article-title">{titulo}</h1>
+      <p class="article-excerpt">{extracto}</p>
+      {fecha && <p class="article-date">{fecha}</p>}
+    </div>
+  </header>
+
+  <div class="article-body">
+    <div class="article-content" set:html={contenido}></div>
+    <a href={`/${lang}/blog`} class="back-link">
+      ← {t(lang, 'blog.heroLabel')}
+    </a>
+  </div>
+</article>
+
+<style>
+  .article-detail { background: #ffffff; }
+
+  .article-header {
+    padding: 9rem 0 5rem;
+    color: #ffffff;
+    text-align: center;
+  }
+
+  .article-header-inner {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .article-category {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: #C9A84C;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .article-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+  }
+
+  .article-excerpt {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 1.5rem;
+  }
+
+  .article-date {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .article-body {
+    max-width: 720px;
+    margin-inline: auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+
+  .article-content {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 1.0625rem;
+    line-height: 1.85;
+    color: #1A1A1A;
+  }
+
+  .article-content :global(h2) {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.75rem;
+    color: #0D1F2D;
+    margin: 2.5rem 0 1rem;
+    line-height: 1.2;
+  }
+
+  .article-content :global(h3) {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.375rem;
+    color: #0D1F2D;
+    margin: 2rem 0 0.875rem;
+  }
+
+  .article-content :global(p) { margin-bottom: 1.25rem; }
+  .article-content :global(ul),
+  .article-content :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+  .article-content :global(li) { margin-bottom: 0.5rem; }
+
+  .article-content :global(a) {
+    color: #C9A84C;
+    border-bottom: 1px solid #C9A84C;
+    transition: color 0.2s ease;
+  }
+
+  .article-content :global(a:hover) { color: #b8953e; }
+
+  .article-content :global(blockquote) {
+    border-left: 3px solid #C9A84C;
+    padding-left: 1.25rem;
+    margin: 1.5rem 0;
+    color: rgba(26,26,26,0.7);
+    font-style: italic;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-top: 3rem;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0D1F2D;
+    border-bottom: 1px solid #C9A84C;
+    padding-bottom: 2px;
+  }
+
+  .back-link:hover { color: #C9A84C; }
+
+  @media (max-width: 580px) {
+    .article-header { padding: 7rem 0 3.5rem; }
+    .article-body { padding: 3rem 1.5rem 4rem; }
+  }
+</style>

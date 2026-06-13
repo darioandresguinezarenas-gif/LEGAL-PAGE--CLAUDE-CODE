@@ -1,8 +1,19 @@
 ---
-export async function getStaticPaths() { return []; }
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-const { slug } = Astro.params;
+import ArticleDetail from '../../../components/blog/ArticleDetail.astro';
+import { getArticulos, pickLang, type ArticuloRow } from '../../../lib/queries';
+
+export async function getStaticPaths() {
+  const articulos = await getArticulos();
+  return articulos.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+interface Props { article: ArticuloRow }
+const { article } = Astro.props;
+const lang = 'en' as const;
+const title = `${pickLang(article.titulo, lang)} | Guíñez Galaz Abogados`;
+const description = pickLang(article.extracto, lang);
 ---
-<BaseLayout title={`${slug} | Guíñez Galaz Abogados`} lang="en">
-  <main><article><h1>{slug}</h1></article></main>
+<BaseLayout title={title} description={description} lang={lang} ogImage={article.imagen_url ?? undefined}>
+  <ArticleDetail article={article} lang={lang} />
 </BaseLayout>

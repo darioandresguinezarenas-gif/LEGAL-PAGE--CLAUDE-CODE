@@ -1,19 +1,22 @@
 ---
 import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
+import { getClientes } from '../../lib/queries';
 
 interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
 
-// Fase 4: fetch desde Supabase (clientes_destacados WHERE activo=true AND deleted_at IS NULL ORDER BY orden)
-// Por ahora: 3 tarjetas placeholder
-const clients: Array<{ nombre: string; logo_url: string | null }> = [
-  { nombre: 'Manpower',     logo_url: null },
-  { nombre: 'MAQBike',      logo_url: null },
-  { nombre: 'Cygnus Hotel', logo_url: null },
-];
+const dbClientes = await getClientes();
+const clients: Array<{ nombre: string; logo_url: string | null; url: string | null }> =
+  dbClientes.length > 0
+    ? dbClientes.map((c) => ({ nombre: c.nombre, logo_url: c.logo_url, url: c.url }))
+    : [
+        { nombre: 'Manpower',     logo_url: null, url: null },
+        { nombre: 'MAQBike',      logo_url: null, url: null },
+        { nombre: 'Cygnus Hotel', logo_url: null, url: null },
+      ];
 ---
 
 <section class="clients-section">
