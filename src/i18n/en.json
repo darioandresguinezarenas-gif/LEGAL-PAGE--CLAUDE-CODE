@@ -7,7 +7,7 @@
     "cta": "Book Consultation"
   },
   "hero": {
-    "label": "LAW FIRM · RANCAGUA, CHILE",
+    "label": "LAW FIRM · CURICÓ, CHILE",
     "title": "Excellence in Legal Defense in Chile",
     "subtitle": "High-level legal advice in Labour, Civil, Criminal and Family Law. Services in three languages.",
     "ctaPrimary": "Free Consultation",
@@ -15,11 +15,11 @@
   },
   "areas": {
     "sectionTitle": "Practice Areas",
-    "sectionSubtitle": "Comprehensive legal advice for individuals and businesses in Rancagua and the O'Higgins Region.",
+    "sectionSubtitle": "Comprehensive legal advice for individuals and businesses in Curicó, the Maule Region and Valparaíso.",
     "explore": "EXPLORE →",
     "heroLabel": "PRACTICE AREAS",
     "heroTitle": "Comprehensive Legal Advice",
-    "heroSubtitle": "Expert coverage across the main branches of law, with a team dedicated to each specialty in Rancagua and the O'Higgins Region.",
+    "heroSubtitle": "Expert coverage across the main branches of law, with a team dedicated to each specialty in Curicó, the Maule Region and Valparaíso.",
     "laboral":     { "title": "Labour Law",              "desc": "Defense of workers and employers in dismissals, labour injunctions, collective bargaining and regulatory compliance." },
     "civil":       { "title": "Civil Law",               "desc": "Contracts, civil liability, property, possession and succession. Clear and effective legal solutions." },
     "penal":       { "title": "Criminal Law",            "desc": "Solid criminal defense at every stage of the proceeding. We protect your rights with experience and determination." },
@@ -30,13 +30,13 @@
   "about_preview": {
     "label": "OUR FIRM",
     "title": "Legal Defense with Commitment and Experience",
-    "desc": "At Guíñez Galaz Abogados we combine decades of legal experience with a deeply personalised approach. We advise individuals and businesses in Rancagua and the entire O'Higgins Region, providing effective, transparent and accessible legal solutions in Spanish, English and Mandarin.",
+    "desc": "At Guíñez Galaz Abogados we combine decades of legal experience with a deeply personalised approach. We advise individuals and businesses in Curicó, the entire Maule Region and Valparaíso, providing effective, transparent and accessible legal solutions in Spanish, English and Mandarin.",
     "cta": "Meet the Team →"
   },
   "about": {
     "heroLabel": "OUR FIRM",
     "heroTitle": "About Us",
-    "heroSubtitle": "A team of attorneys committed to excellence, closeness and the rigorous defense of every client in Rancagua and the O'Higgins Region.",
+    "heroSubtitle": "A team of attorneys committed to excellence, closeness and the rigorous defense of every client in Curicó, the Maule Region and Valparaíso.",
     "introTitle": "A track record at the service of justice",
     "introBody": "Guíñez Galaz Abogados was born from the conviction that every individual and business deserves first-class legal defense. We combine technical rigor, courtroom experience and a transparent, human approach. We serve clients in Spanish, English and Mandarin, bringing the law closer to a diverse community.",
     "teamTitle": "Our Team",
@@ -113,7 +113,7 @@
     "newsletterTitle": "NEWSLETTER",
     "newsletterPlaceholder": "Your email address",
     "newsletterBtn": "SUBSCRIBE",
-    "address": "Rancagua, O'Higgins Region, Chile",
+    "address": "Calle Hernán Correa 2140, Galilea, Curicó, Maule Region, Chile",
     "phone": "+56 9 XXXX XXXX",
     "hours": "Monday to Friday, 9:00–18:00",
     "copyright": "All rights reserved",
