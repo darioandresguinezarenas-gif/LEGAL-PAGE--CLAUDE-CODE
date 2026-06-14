@@ -71,6 +71,35 @@ serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   );
 
+  // Rate limiting: máximo 5 inicios de pago por IP en 15 minutos
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+           ?? req.headers.get('x-real-ip')
+           ?? null;
+  if (ip) {
+    const resetAt = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+    const { data: rl } = await supabase
+      .from('rate_limits')
+      .select('hits, reset_at')
+      .eq('ip', ip)
+      .eq('endpoint', 'webpay-init')
+      .maybeSingle();
+
+    if (rl && new Date(rl.reset_at) > new Date()) {
+      if (rl.hits >= 5) {
+        return new Response(JSON.stringify({ error: 'Demasiados intentos. Espera 15 minutos.' }), {
+          status: 429,
+          headers: { ...cors, 'Content-Type': 'application/json', 'Retry-After': '900' },
+        });
+      }
+      await supabase.from('rate_limits')
+        .update({ hits: rl.hits + 1 })
+        .eq('ip', ip).eq('endpoint', 'webpay-init');
+    } else {
+      await supabase.from('rate_limits')
+        .upsert({ ip, endpoint: 'webpay-init', hits: 1, reset_at: resetAt }, { onConflict: 'ip,endpoint' });
+    }
+  }
+
   // Generar identificadores únicos
   const buyOrder = `ORD-${Date.now()}`;
   const sessionId = `SES-${crypto.randomUUID()}`;

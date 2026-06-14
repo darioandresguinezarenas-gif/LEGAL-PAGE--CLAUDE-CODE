@@ -10,7 +10,7 @@ export function generateOrganizationSchema(config?: { telefono?: string; email?:
     name: 'Guíñez Galaz Abogados',
     url: BASE_URL,
     logo: `${BASE_URL}/logo.svg`,
-    image: `${BASE_URL}/og-default.jpg`,
+    image: `${BASE_URL}/og-default.svg`,
     description: 'Abogados en Curicó, Región del Maule. Derecho Laboral, Civil, Penal, Corporativo y Familia. Atención en español, inglés y chino.',
     ...(config?.telefono && { telephone: config.telefono }),
     ...(config?.email && { email: config.email }),

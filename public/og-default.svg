@@ -22,7 +22,7 @@
   <rect x="80" y="370" width="600" height="1" fill="rgba(201,168,76,0.35)"/>
 
   <!-- Description -->
-  <text x="80" y="415" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="rgba(255,255,255,0.70)">Curicó y Valparaíso, Chile  ·  Derecho Laboral · Civil · Penal · Familia</text>
+  <text x="80" y="415" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="rgba(255,255,255,0.70)">Curicó y Valparaíso, Chile  ·  Derecho Laboral · Civil · Penal · Corporativo</text>
 
   <!-- Location badge -->
   <rect x="80" y="475" width="220" height="40" rx="4" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1"/>
