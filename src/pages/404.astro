@@ -1,11 +1,105 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Página no encontrada | Guíñez Galaz Abogados" lang="es">
+<BaseLayout title="Página no encontrada | Guíñez Galaz Abogados" lang="es" noindex={true}>
   <main class="error-page">
-    <h1>404</h1>
-    <p>La página que buscas no existe.</p>
-    <a href="/es">Volver al Inicio</a>
-    <a href="/es/contacto">Contáctanos</a>
+    <div data-lang="es" class="error-content">
+      <p class="error-label">GUÍÑEZ GALAZ ABOGADOS</p>
+      <h1>404</h1>
+      <p class="error-msg">La página que buscas no existe o fue movida.</p>
+      <div class="error-links">
+        <a href="/es" class="btn-primary">Volver al inicio</a>
+        <a href="/es/contacto" class="btn-secondary">Contáctanos</a>
+      </div>
+    </div>
+    <div data-lang="en" class="error-content" style="display:none">
+      <p class="error-label">GUÍÑEZ GALAZ ABOGADOS</p>
+      <h1>404</h1>
+      <p class="error-msg">The page you are looking for does not exist or has been moved.</p>
+      <div class="error-links">
+        <a href="/en" class="btn-primary">Back to home</a>
+        <a href="/en/contacto" class="btn-secondary">Contact us</a>
+      </div>
+    </div>
+    <div data-lang="zh" class="error-content" style="display:none">
+      <p class="error-label">GUÍÑEZ GALAZ ABOGADOS</p>
+      <h1>404</h1>
+      <p class="error-msg">您要查找的页面不存在或已被移动。</p>
+      <div class="error-links">
+        <a href="/zh" class="btn-primary">返回首页</a>
+        <a href="/zh/contacto" class="btn-secondary">联系我们</a>
+      </div>
+    </div>
   </main>
 </BaseLayout>
+
+<script>
+  const seg = window.location.pathname.split('/').find(s => s === 'en' || s === 'zh');
+  const lang = seg ?? 'es';
+  document.querySelectorAll<HTMLElement>('[data-lang]').forEach(el => {
+    el.style.display = el.dataset.lang === lang ? '' : 'none';
+  });
+</script>
+
+<style>
+  .error-page {
+    min-height: 70vh;
+    background: #F5F5F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem;
+  }
+  .error-content { text-align: center; }
+  .error-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #C9A84C;
+    margin: 0 0 1.5rem;
+  }
+  .error-content h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(5rem, 15vw, 9rem);
+    font-weight: 700;
+    color: #0D1F2D;
+    line-height: 1;
+    margin: 0 0 1rem;
+  }
+  .error-msg {
+    font-size: 1rem;
+    color: #6B6B6B;
+    margin: 0 0 2.5rem;
+    line-height: 1.6;
+  }
+  .error-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-block;
+    padding: .75rem 1.75rem;
+    background: #C9A84C;
+    color: #0D1F2D;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: .9375rem;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .btn-primary:hover { background: #b8943e; }
+  .btn-secondary {
+    display: inline-block;
+    padding: .75rem 1.75rem;
+    background: transparent;
+    color: #0D1F2D;
+    border: 2px solid #0D1F2D;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: .9375rem;
+    text-decoration: none;
+    transition: background .2s, color .2s;
+  }
+  .btn-secondary:hover { background: #0D1F2D; color: #fff; }
+</style>

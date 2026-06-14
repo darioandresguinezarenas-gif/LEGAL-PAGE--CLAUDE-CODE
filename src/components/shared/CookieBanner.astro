@@ -1,0 +1,108 @@
+---
+import type { Lang } from '../../i18n/utils';
+interface Props { lang: Lang; }
+const { lang } = Astro.props;
+
+const copy = {
+  es: {
+    msg: 'Usamos Google Analytics para mejorar el sitio. Los datos se anonimizan y no se comparten con terceros.',
+    accept: 'Aceptar',
+    decline: 'Rechazar',
+    link: 'Política de privacidad',
+  },
+  en: {
+    msg: 'We use Google Analytics to improve this site. Data is anonymised and never shared with third parties.',
+    accept: 'Accept',
+    decline: 'Decline',
+    link: 'Privacy policy',
+  },
+  zh: {
+    msg: '我们使用Google Analytics改善网站体验。数据已匿名处理，不与第三方共享。',
+    accept: '接受',
+    decline: '拒绝',
+    link: '隐私政策',
+  },
+};
+const c = copy[lang];
+---
+
+<div id="cookie-banner" class="cb" role="dialog" aria-live="polite" aria-label="Aviso de cookies" hidden>
+  <p class="cb-msg">
+    {c.msg}
+    <a href={`/${lang}/privacidad`} class="cb-link">{c.link}</a>
+  </p>
+  <div class="cb-actions">
+    <button id="cb-decline" class="cb-btn cb-btn--out">{c.decline}</button>
+    <button id="cb-accept"  class="cb-btn cb-btn--gold">{c.accept}</button>
+  </div>
+</div>
+
+<script>
+  const CONSENT_KEY = 'gg_cookie_consent';
+  const banner = document.getElementById('cookie-banner');
+  if (banner && !localStorage.getItem(CONSENT_KEY)) {
+    banner.hidden = false;
+  }
+  document.getElementById('cb-accept')?.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'accepted');
+    (window as any).__ga4Accept?.();
+    banner?.remove();
+  });
+  document.getElementById('cb-decline')?.addEventListener('click', () => {
+    localStorage.setItem(CONSENT_KEY, 'declined');
+    banner?.remove();
+  });
+</script>
+
+<style>
+  .cb {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #0D1F2D;
+    border-top: 2px solid #C9A84C;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    z-index: 9000;
+    box-shadow: 0 -4px 24px rgba(0,0,0,.25);
+  }
+  .cb-msg {
+    flex: 1;
+    min-width: 240px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: .875rem;
+    color: rgba(255,255,255,.75);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .cb-link {
+    color: #C9A84C;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-left: .25rem;
+  }
+  .cb-actions { display: flex; gap: .75rem; flex-shrink: 0; }
+  .cb-btn {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: .8125rem;
+    font-weight: 600;
+    padding: .55rem 1.25rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    border: 1.5px solid transparent;
+  }
+  .cb-btn--gold { background: #C9A84C; color: #0D1F2D; border-color: #C9A84C; }
+  .cb-btn--gold:hover { background: #b8943e; }
+  .cb-btn--out { background: transparent; color: rgba(255,255,255,.7); border-color: rgba(255,255,255,.25); }
+  .cb-btn--out:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+  @media (max-width: 580px) {
+    .cb { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .cb-actions { width: 100%; }
+    .cb-btn { flex: 1; text-align: center; }
+  }
+</style>

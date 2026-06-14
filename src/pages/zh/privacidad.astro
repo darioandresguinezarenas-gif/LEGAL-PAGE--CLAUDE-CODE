@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'zh';
+const updated = '2026年6月14日';
+---
+<BaseLayout
+  title="隐私政策 | Guíñez Galaz Abogados"
+  description="Guíñez Galaz Abogados如何根据智利第19.628号法律收集、使用和保护您的个人数据。"
+  lang={lang}
+>
+  <main class="legal-page">
+    <div class="legal-container">
+      <div class="legal-header">
+        <p class="legal-label">GUÍÑEZ GALAZ ABOGADOS</p>
+        <h1>隐私政策</h1>
+        <p class="legal-updated">最后更新：{updated}</p>
+      </div>
+
+      <div class="legal-body">
+
+        <section>
+          <h2>1. 数据控制者</h2>
+          <p>
+            <strong>Guíñez Galaz Abogados</strong>，地址：智利马乌莱大区库里科市Galilea区Hernán Correa 2140号，
+            是通过网站 <strong>www.guinezgalaz.cl</strong> 收集的个人数据的控制者。
+          </p>
+          <p>隐私事务联系：<a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a></p>
+        </section>
+
+        <section>
+          <h2>2. 我们收集的数据</h2>
+          <h3>2.1 联系表单</h3>
+          <ul>
+            <li>全名</li>
+            <li>电子邮件地址</li>
+            <li>法律咨询类型</li>
+            <li>留言内容</li>
+            <li>IP地址（用于防止垃圾邮件和滥用）</li>
+          </ul>
+
+          <h3>2.2 在线支付</h3>
+          <p>支付由 <strong>Transbank Webpay Plus</strong> 处理。我们不存储完整的信用卡或借记卡号码。我们仅保留：</p>
+          <ul>
+            <li>付款人姓名和电子邮件（用于发送收据）</li>
+            <li>服务说明和金额</li>
+            <li>订单号和授权码</li>
+            <li>卡号后四位（由Transbank提供）</li>
+            <li>交易状态和日期</li>
+          </ul>
+
+          <h3>2.3 网络分析</h3>
+          <p>我们使用启用了IP匿名化的 <strong>Google Analytics 4</strong>。仅在您通过Cookie横幅明确同意后才收集分析数据。</p>
+        </section>
+
+        <section>
+          <h2>3. 处理目的和法律依据</h2>
+          <table class="legal-table">
+            <thead>
+              <tr><th>数据</th><th>目的</th><th>法律依据</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>联系表单数据</td><td>回复您的法律咨询</td><td>同意（第19.628号法律第4条）</td></tr>
+              <tr><td>支付数据</td><td>处理交易并履行会计义务</td><td>合同履行和法律义务</td></tr>
+              <tr><td>IP地址</td><td>防止垃圾邮件和速率限制滥用</td><td>合法利益</td></tr>
+              <tr><td>分析数据（GA4）</td><td>改善网站内容和可用性</td><td>同意</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>4. 第三方接收者</h2>
+          <ul>
+            <li><strong>Transbank S.A.</strong> — 智利支付处理商。</li>
+            <li><strong>Supabase Inc.</strong> — 云数据库（AWS，us-east-1或欧盟区域）。静态和传输中均已加密。</li>
+            <li><strong>Resend Inc.</strong> — 用于联系通知和支付收据的事务性电子邮件服务。</li>
+            <li><strong>Google LLC（Analytics）</strong> — 仅在获得同意后使用。数据已匿名化。</li>
+            <li><strong>Vercel Inc.</strong> — 托管基础设施。服务器日志保留30天。</li>
+          </ul>
+          <p>我们不会将您的个人数据出售或以商业目的与第三方共享。</p>
+        </section>
+
+        <section>
+          <h2>5. 保留期限</h2>
+          <ul>
+            <li><strong>联系消息：</strong>自收到之日起2年，或直至您请求删除。</li>
+            <li><strong>支付记录：</strong>6年（智利税务局要求，税法第200条）。</li>
+            <li><strong>IP日志：</strong>90天。</li>
+            <li><strong>分析数据：</strong>14个月（GA4默认设置）。</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>6. 您的权利</h2>
+          <p>根据智利 <strong>第19.628号关于保护私人生活的法律</strong>，您有权：</p>
+          <ul>
+            <li><strong>访问：</strong>请求了解我们持有的您的个人数据。</li>
+            <li><strong>更正：</strong>更正不准确或不完整的数据。</li>
+            <li><strong>删除：</strong>在数据不再需要时请求删除。</li>
+            <li><strong>反对：</strong>在某些情况下反对数据处理。</li>
+          </ul>
+          <p>如需行使您的权利，请发送电子邮件至 <a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a>，主题注明"隐私请求"。我们将在30个工作日内回复。</p>
+        </section>
+
+        <section>
+          <h2>7. 安全性</h2>
+          <p>我们实施TLS传输加密、静态加密（Supabase/AWS）、基于角色的访问控制、数据库行级安全策略，以及管理访问的双因素身份验证（TOTP）。</p>
+        </section>
+
+        <section>
+          <h2>8. Cookie</h2>
+          <p>我们仅在您明确同意的情况下设置 <strong>分析Cookie</strong>（Google Analytics）。您可以随时通过清除浏览器Cookie或在下次访问时拒绝Cookie横幅来撤回同意。</p>
+          <p>我们不使用广告追踪Cookie或未经您同意的第三方Cookie。</p>
+        </section>
+
+        <section>
+          <h2>9. 政策变更</h2>
+          <p>我们可能会定期更新本政策。本页顶部的"最后更新"日期始终反映当前版本。重大变更将通过网站上的显著通知公告。</p>
+        </section>
+
+        <section>
+          <h2>10. 适用法律</h2>
+          <p>本政策受智利共和国法律管辖。任何争议应提交智利马乌莱大区库里科市普通法院解决。</p>
+        </section>
+
+      </div>
+      <div class="legal-footer"><a href="/zh" class="legal-back">← 返回首页</a></div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal-page { background: #F5F5F0; min-height: 80vh; padding: 4rem 1.5rem; }
+  .legal-container { max-width: 800px; margin: 0 auto; }
+  .legal-header { margin-bottom: 3rem; }
+  .legal-label { font-family: 'DM Sans', sans-serif; font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; }
+  .legal-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; color: #0D1F2D; margin: 0 0 .5rem; }
+  .legal-updated { font-size: .875rem; color: #6B6B6B; }
+  .legal-body { background: #fff; border: 1px solid #E8E8E0; padding: 2.5rem; }
+  .legal-body section { margin-bottom: 2.25rem; padding-bottom: 2.25rem; border-bottom: 1px solid #E8E8E0; }
+  .legal-body section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .legal-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; font-weight: 700; color: #0D1F2D; margin: 0 0 1rem; }
+  .legal-body h3 { font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 600; color: #0D1F2D; margin: 1.25rem 0 .5rem; }
+  .legal-body p { font-size: .9375rem; line-height: 1.85; color: #1A1A1A; margin: 0 0 .875rem; }
+  .legal-body ul { padding-left: 1.5rem; margin: 0 0 .875rem; }
+  .legal-body li { font-size: .9375rem; line-height: 1.8; color: #1A1A1A; margin-bottom: .375rem; }
+  .legal-body a { color: #C9A84C; text-underline-offset: 3px; }
+  .legal-table { width: 100%; border-collapse: collapse; font-size: .875rem; margin-top: .75rem; }
+  .legal-table th { background: #0D1F2D; color: #fff; padding: .625rem .875rem; text-align: left; font-weight: 600; font-size: .8125rem; }
+  .legal-table td { padding: .625rem .875rem; border-bottom: 1px solid #E8E8E0; color: #1A1A1A; vertical-align: top; }
+  .legal-table tr:last-child td { border-bottom: none; }
+  .legal-table tr:nth-child(even) td { background: #F5F5F0; }
+  .legal-footer { margin-top: 2rem; }
+  .legal-back { font-family: 'DM Sans', sans-serif; font-size: .875rem; color: #6B6B6B; transition: color .2s; }
+  .legal-back:hover { color: #C9A84C; }
+  @media (max-width: 600px) { .legal-body { padding: 1.5rem 1.125rem; } .legal-table { font-size: .8125rem; } }
+</style>

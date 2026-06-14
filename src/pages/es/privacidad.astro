@@ -1,0 +1,231 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'es';
+const updated = '14 de junio de 2026';
+---
+<BaseLayout
+  title="Política de Privacidad | Guíñez Galaz Abogados"
+  description="Cómo Guíñez Galaz Abogados recopila, usa y protege sus datos personales conforme a la Ley 19.628 de Chile."
+  lang={lang}
+>
+  <main class="legal-page">
+    <div class="legal-container">
+      <div class="legal-header">
+        <p class="legal-label">GUÍÑEZ GALAZ ABOGADOS</p>
+        <h1>Política de Privacidad</h1>
+        <p class="legal-updated">Última actualización: {updated}</p>
+      </div>
+
+      <div class="legal-body">
+
+        <section>
+          <h2>1. Responsable del tratamiento</h2>
+          <p>
+            <strong>Guíñez Galaz Abogados</strong>, con domicilio en Calle Hernán Correa 2140, Galilea,
+            Curicó, Región del Maule, Chile, es responsable del tratamiento de los datos personales
+            recopilados a través del sitio web <strong>www.guinezgalaz.cl</strong>.
+          </p>
+          <p>Contacto para asuntos de privacidad: <a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a></p>
+        </section>
+
+        <section>
+          <h2>2. Datos que recopilamos</h2>
+          <h3>2.1 Formulario de contacto</h3>
+          <p>Cuando nos envía una consulta recopilamos:</p>
+          <ul>
+            <li>Nombre completo</li>
+            <li>Dirección de correo electrónico</li>
+            <li>Tipo de consulta legal</li>
+            <li>Texto del mensaje</li>
+            <li>Dirección IP (para prevenir spam y abuso)</li>
+          </ul>
+
+          <h3>2.2 Pagos en línea</h3>
+          <p>
+            Los pagos son procesados por <strong>Transbank Webpay Plus</strong>. Nosotros no almacenamos
+            datos completos de tarjetas de crédito o débito. Solo conservamos:
+          </p>
+          <ul>
+            <li>Nombre del pagador</li>
+            <li>Correo electrónico (para envío de comprobante)</li>
+            <li>Descripción y monto del servicio</li>
+            <li>Número de orden de compra</li>
+            <li>Código de autorización</li>
+            <li>Últimos 4 dígitos de la tarjeta (proporcionados por Transbank)</li>
+            <li>Estado y fecha de la transacción</li>
+          </ul>
+
+          <h3>2.3 Analítica web</h3>
+          <p>
+            Utilizamos <strong>Google Analytics 4</strong> con anonimización de IP activada. Solo
+            recopilamos datos analíticos si usted otorga su consentimiento mediante el aviso de cookies
+            que aparece al visitar el sitio por primera vez.
+          </p>
+
+          <h3>2.4 Datos técnicos</h3>
+          <p>
+            Como cualquier servidor web, registramos automáticamente el tipo de navegador, sistema
+            operativo y páginas visitadas. Estos datos son anónimos y se usan únicamente para
+            diagnóstico técnico.
+          </p>
+        </section>
+
+        <section>
+          <h2>3. Finalidad del tratamiento</h2>
+          <table class="legal-table">
+            <thead>
+              <tr><th>Dato</th><th>Finalidad</th><th>Base legal</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Datos del formulario de contacto</td>
+                <td>Responder a su consulta legal</td>
+                <td>Consentimiento (art. 4 Ley 19.628)</td>
+              </tr>
+              <tr>
+                <td>Datos de pago</td>
+                <td>Procesar la transacción y cumplir obligaciones contables</td>
+                <td>Ejecución de contrato y obligación legal</td>
+              </tr>
+              <tr>
+                <td>IP del formulario de contacto</td>
+                <td>Prevenir spam y abuso</td>
+                <td>Interés legítimo</td>
+              </tr>
+              <tr>
+                <td>Datos de analítica (GA4)</td>
+                <td>Mejorar el contenido y la usabilidad del sitio</td>
+                <td>Consentimiento</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>4. Terceros que reciben sus datos</h2>
+          <ul>
+            <li>
+              <strong>Transbank S.A.</strong> — procesador de pagos autorizado en Chile. Rige la
+              <a href="https://www.transbank.cl/politica-de-privacidad" rel="noopener noreferrer" target="_blank">política de privacidad de Transbank</a>.
+            </li>
+            <li>
+              <strong>Supabase Inc.</strong> — base de datos en la nube (AWS, región us-east-1 o EU).
+              Datos cifrados en reposo y en tránsito.
+            </li>
+            <li>
+              <strong>Resend Inc.</strong> — servicio de correo transaccional para el envío de
+              notificaciones de contacto y comprobantes de pago.
+            </li>
+            <li>
+              <strong>Google LLC (Analytics)</strong> — solo si otorga consentimiento. Datos anonimizados.
+              Rige la <a href="https://policies.google.com/privacy" rel="noopener noreferrer" target="_blank">política de privacidad de Google</a>.
+            </li>
+            <li>
+              <strong>Vercel Inc.</strong> — infraestructura de hosting. Los logs del servidor se
+              conservan por 30 días.
+            </li>
+          </ul>
+          <p>No vendemos ni cedemos sus datos personales a terceros con fines comerciales.</p>
+        </section>
+
+        <section>
+          <h2>5. Plazos de conservación</h2>
+          <ul>
+            <li><strong>Mensajes de contacto:</strong> 2 años desde la recepción, o hasta que solicite su eliminación.</li>
+            <li><strong>Registros de pago:</strong> 6 años (exigencia del SII para documentos contables, art. 200 CT).</li>
+            <li><strong>Logs de IP:</strong> 90 días.</li>
+            <li><strong>Datos de analítica:</strong> 14 meses (configuración por defecto de GA4).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>6. Sus derechos</h2>
+          <p>
+            Conforme a la <strong>Ley N.º 19.628 sobre Protección de la Vida Privada</strong> (Chile)
+            y su futura modificación por la <strong>Ley N.º 21.719</strong>, usted tiene derecho a:
+          </p>
+          <ul>
+            <li><strong>Acceso:</strong> solicitar qué datos personales tenemos sobre usted.</li>
+            <li><strong>Rectificación:</strong> corregir datos inexactos o incompletos.</li>
+            <li><strong>Cancelación:</strong> solicitar la eliminación de sus datos cuando ya no sean necesarios.</li>
+            <li><strong>Oposición:</strong> oponerse al tratamiento de sus datos en determinadas circunstancias.</li>
+          </ul>
+          <p>
+            Para ejercer sus derechos, escríbanos a
+            <a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a> indicando
+            "Solicitud de privacidad" en el asunto. Responderemos dentro de 30 días hábiles.
+          </p>
+        </section>
+
+        <section>
+          <h2>7. Seguridad</h2>
+          <p>
+            Implementamos medidas técnicas y organizativas para proteger sus datos: cifrado TLS en
+            tránsito, cifrado en reposo (Supabase/AWS), control de acceso basado en roles, y políticas
+            de seguridad a nivel de fila (Row Level Security) en la base de datos. El acceso
+            administrativo está protegido con autenticación de doble factor (TOTP).
+          </p>
+        </section>
+
+        <section>
+          <h2>8. Cookies</h2>
+          <p>
+            Utilizamos <strong>cookies de análisis</strong> (Google Analytics) únicamente con su
+            consentimiento explícito, que puede revocar en cualquier momento borrando las cookies de
+            su navegador o visitando nuevamente el sitio y rechazando el aviso de cookies.
+          </p>
+          <p>No usamos cookies de rastreo publicitario ni cookies de terceros sin su consentimiento.</p>
+        </section>
+
+        <section>
+          <h2>9. Cambios a esta política</h2>
+          <p>
+            Podemos actualizar esta política periódicamente. La fecha de "Última actualización"
+            al inicio del documento siempre refleja la versión vigente. Cambios sustanciales
+            serán comunicados mediante un aviso visible en el sitio.
+          </p>
+        </section>
+
+        <section>
+          <h2>10. Ley aplicable</h2>
+          <p>
+            Esta política se rige por la legislación de la República de Chile. Cualquier controversia
+            será sometida a los tribunales ordinarios de justicia de Curicó, Región del Maule.
+          </p>
+        </section>
+
+      </div>
+
+      <div class="legal-footer">
+        <a href="/es" class="legal-back">← Volver al inicio</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal-page { background: #F5F5F0; min-height: 80vh; padding: 4rem 1.5rem; }
+  .legal-container { max-width: 800px; margin: 0 auto; }
+  .legal-header { margin-bottom: 3rem; }
+  .legal-label { font-family: 'DM Sans', sans-serif; font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; }
+  .legal-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; color: #0D1F2D; margin: 0 0 .5rem; }
+  .legal-updated { font-size: .875rem; color: #6B6B6B; }
+  .legal-body { background: #fff; border: 1px solid #E8E8E0; padding: 2.5rem; }
+  .legal-body section { margin-bottom: 2.25rem; padding-bottom: 2.25rem; border-bottom: 1px solid #E8E8E0; }
+  .legal-body section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .legal-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; font-weight: 700; color: #0D1F2D; margin: 0 0 1rem; }
+  .legal-body h3 { font-family: 'DM Sans', sans-serif; font-size: .875rem; font-weight: 600; color: #0D1F2D; margin: 1.25rem 0 .5rem; text-transform: uppercase; letter-spacing: .05em; }
+  .legal-body p { font-size: .9375rem; line-height: 1.75; color: #1A1A1A; margin: 0 0 .875rem; }
+  .legal-body ul { padding-left: 1.5rem; margin: 0 0 .875rem; }
+  .legal-body li { font-size: .9375rem; line-height: 1.7; color: #1A1A1A; margin-bottom: .375rem; }
+  .legal-body a { color: #C9A84C; text-underline-offset: 3px; }
+  .legal-table { width: 100%; border-collapse: collapse; font-size: .875rem; margin-top: .75rem; }
+  .legal-table th { background: #0D1F2D; color: #fff; padding: .625rem .875rem; text-align: left; font-weight: 600; font-size: .8125rem; }
+  .legal-table td { padding: .625rem .875rem; border-bottom: 1px solid #E8E8E0; color: #1A1A1A; vertical-align: top; }
+  .legal-table tr:last-child td { border-bottom: none; }
+  .legal-table tr:nth-child(even) td { background: #F5F5F0; }
+  .legal-footer { margin-top: 2rem; }
+  .legal-back { font-family: 'DM Sans', sans-serif; font-size: .875rem; color: #6B6B6B; transition: color .2s; }
+  .legal-back:hover { color: #C9A84C; }
+  @media (max-width: 600px) { .legal-body { padding: 1.5rem 1.125rem; } .legal-table { font-size: .8125rem; } }
+</style>

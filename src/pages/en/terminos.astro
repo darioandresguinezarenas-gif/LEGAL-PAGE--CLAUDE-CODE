@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'en';
+const updated = 'June 14, 2026';
+---
+<BaseLayout
+  title="Terms of Service | Guíñez Galaz Abogados"
+  description="Terms and conditions for using the Guíñez Galaz Abogados website."
+  lang={lang}
+>
+  <main class="legal-page">
+    <div class="legal-container">
+      <div class="legal-header">
+        <p class="legal-label">GUÍÑEZ GALAZ ABOGADOS</p>
+        <h1>Terms of Service</h1>
+        <p class="legal-updated">Last updated: {updated}</p>
+      </div>
+
+      <div class="legal-body">
+
+        <section>
+          <h2>1. Acceptance</h2>
+          <p>Accessing or using <strong>www.guinezgalaz.cl</strong> constitutes full acceptance of these Terms of Service. If you do not agree, please refrain from using this website.</p>
+        </section>
+
+        <section>
+          <h2>2. Information Only — Not Legal Advice</h2>
+          <p>All content on this site is for <strong>informational purposes only</strong>. Nothing published here constitutes legal advice, professional representation, or an attorney-client relationship, unless a written legal services agreement has been signed between you and Guíñez Galaz Abogados.</p>
+          <p>For advice on your specific situation, please <a href="/en/contacto">contact us</a>.</p>
+        </section>
+
+        <section>
+          <h2>3. Intellectual Property</h2>
+          <p>All site content (text, logos, images, design, source code) is owned by Guíñez Galaz Abogados or used under licence, and is protected by Chilean <strong>Law N.º 17.336 on Intellectual Property</strong>. Reproduction or distribution without prior written consent is prohibited, except for personal, non-commercial use.</p>
+        </section>
+
+        <section>
+          <h2>4. Online Payments</h2>
+          <ul>
+            <li>Payments are processed by <strong>Transbank Webpay Plus</strong> (PCI DSS certified).</li>
+            <li>Amounts are in <strong>Chilean Pesos (CLP)</strong>, no decimals.</li>
+            <li>Minimum payment: $50 CLP.</li>
+            <li>Approved transactions are final. Contact us directly to request a refund.</li>
+            <li>Declined transactions are not charged; you may retry.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>5. Limitation of Liability</h2>
+          <p>Guíñez Galaz Abogados shall not be liable for any direct, indirect, incidental, or consequential damages arising from use or inability to use this website, including errors in content, service interruptions, or reliance on site content as a substitute for professional legal advice.</p>
+        </section>
+
+        <section>
+          <h2>6. Contact Form Use</h2>
+          <p>The contact form is provided solely for legal services enquiries. Sending spam, advertising, offensive, or illegal content is strictly prohibited. We implement anti-spam measures (honeypot fields and rate limiting).</p>
+        </section>
+
+        <section>
+          <h2>7. Privacy</h2>
+          <p>Data handling is described in our <a href="/en/privacidad">Privacy Policy</a>, which forms an integral part of these terms.</p>
+        </section>
+
+        <section>
+          <h2>8. Modifications</h2>
+          <p>We reserve the right to modify these terms at any time. The current version will always be available here with the "Last updated" date. Continued use after changes are posted implies acceptance.</p>
+        </section>
+
+        <section>
+          <h2>9. Governing Law and Jurisdiction</h2>
+          <p>These Terms are governed exclusively by the laws of the <strong>Republic of Chile</strong>. Any dispute shall be submitted to the exclusive jurisdiction of the <strong>Ordinary Courts of Curicó</strong>, Maule Region, Chile.</p>
+        </section>
+
+        <section>
+          <h2>10. Contact</h2>
+          <p>Questions about these terms: <a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a></p>
+        </section>
+
+      </div>
+      <div class="legal-footer"><a href="/en" class="legal-back">← Back to home</a></div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal-page { background: #F5F5F0; min-height: 80vh; padding: 4rem 1.5rem; }
+  .legal-container { max-width: 800px; margin: 0 auto; }
+  .legal-header { margin-bottom: 3rem; }
+  .legal-label { font-family: 'DM Sans', sans-serif; font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; }
+  .legal-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; color: #0D1F2D; margin: 0 0 .5rem; }
+  .legal-updated { font-size: .875rem; color: #6B6B6B; }
+  .legal-body { background: #fff; border: 1px solid #E8E8E0; padding: 2.5rem; }
+  .legal-body section { margin-bottom: 2.25rem; padding-bottom: 2.25rem; border-bottom: 1px solid #E8E8E0; }
+  .legal-body section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .legal-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; font-weight: 700; color: #0D1F2D; margin: 0 0 1rem; }
+  .legal-body p { font-size: .9375rem; line-height: 1.75; color: #1A1A1A; margin: 0 0 .875rem; }
+  .legal-body ul { padding-left: 1.5rem; margin: 0 0 .875rem; }
+  .legal-body li { font-size: .9375rem; line-height: 1.7; color: #1A1A1A; margin-bottom: .375rem; }
+  .legal-body a { color: #C9A84C; text-underline-offset: 3px; }
+  .legal-footer { margin-top: 2rem; }
+  .legal-back { font-family: 'DM Sans', sans-serif; font-size: .875rem; color: #6B6B6B; transition: color .2s; }
+  .legal-back:hover { color: #C9A84C; }
+  @media (max-width: 600px) { .legal-body { padding: 1.5rem 1.125rem; } }
+</style>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D1F2D"/>
+      <stop offset="100%" style="stop-color:#162d40"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Gold top accent line -->
+  <rect x="80" y="80" width="120" height="3" fill="#C9A84C"/>
+
+  <!-- Firm name -->
+  <text x="80" y="270" font-family="Georgia, 'Times New Roman', serif" font-size="74" font-weight="700" letter-spacing="8" fill="#FFFFFF">GUÍÑEZ GALAZ</text>
+
+  <!-- Tagline -->
+  <text x="80" y="330" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="400" letter-spacing="2" fill="#C9A84C">ABOGADOS</text>
+
+  <!-- Divider -->
+  <rect x="80" y="370" width="600" height="1" fill="rgba(201,168,76,0.35)"/>
+
+  <!-- Description -->
+  <text x="80" y="415" font-family="Arial, Helvetica, sans-serif" font-size="20" fill="rgba(255,255,255,0.70)">Curicó y Valparaíso, Chile  ·  Derecho Laboral · Civil · Penal · Familia</text>
+
+  <!-- Location badge -->
+  <rect x="80" y="475" width="220" height="40" rx="4" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1"/>
+  <text x="190" y="500" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="2" fill="#C9A84C" text-anchor="middle">www.guinezgalaz.cl</text>
+
+  <!-- Decorative corner element -->
+  <rect x="1040" y="80" width="80" height="80" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+  <rect x="1050" y="90" width="60" height="60" fill="none" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+  <text x="1080" y="126" font-family="Georgia, serif" font-size="28" fill="rgba(201,168,76,0.4)" text-anchor="middle">⚖</text>
+</svg>

@@ -28,6 +28,11 @@ const EDGE_INIT = `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/webpay-in
         </div>
 
         <div class="form-field">
+          <label for="email">Correo electrónico <span class="opt-hint">(opcional — para recibir comprobante)</span></label>
+          <input type="email" id="email" name="email" maxlength="254" autocomplete="email" placeholder="ejemplo@correo.cl" />
+        </div>
+
+        <div class="form-field">
           <label for="descripcion">Descripción del servicio <span aria-hidden="true">*</span></label>
           <input type="text" id="descripcion" name="descripcion" maxlength="200"
             placeholder="Ej.: Honorarios consulta laboral" required />
@@ -75,6 +80,7 @@ form.addEventListener('submit', async (e) => {
   btn.textContent = 'Procesando…';
 
   const nombre      = document.getElementById('nombre').value.trim();
+  const email       = document.getElementById('email').value.trim();
   const descripcion = document.getElementById('descripcion').value.trim();
   const monto       = parseInt(document.getElementById('monto').value, 10);
 
@@ -95,7 +101,7 @@ form.addEventListener('submit', async (e) => {
     const res = await fetch(EDGE_INIT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ monto, descripcion, nombre, lang }),
+      body: JSON.stringify({ monto, descripcion, nombre, email: email || undefined, lang }),
     });
     const data = await res.json();
 
@@ -264,6 +270,7 @@ form.addEventListener('submit', async (e) => {
     color: #6B6B6B;
     text-align: center;
   }
+  .opt-hint { color: #6B6B6B; font-weight: 400; font-size: .78rem; }
   @media (max-width: 600px) {
     .pagos-main { padding: 2rem 1rem; }
     .pagos-container { padding: 1.75rem 1.25rem; }

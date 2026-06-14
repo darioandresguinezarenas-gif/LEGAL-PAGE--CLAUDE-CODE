@@ -12,15 +12,13 @@ const {
   title,
   description,
   lang,
-  ogImage = 'https://www.guinezgalaz.cl/og-default.jpg',
+  ogImage = 'https://www.guinezgalaz.cl/og-default.svg',
   noindex = false,
   jsonLd = [],
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, 'https://www.guinezgalaz.cl').href;
 const hreflangPaths = Astro.url.pathname.replace(/^\/(es|en|zh)/, '');
-
-const GA4_ID = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID;
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
@@ -53,7 +51,3 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_MEASUREMENT_ID;
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 ))}
 
-<!-- GA4 (solo si PUBLIC_GA4_MEASUREMENT_ID está configurado) -->
-{GA4_ID && (
-  <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`} />
-)}

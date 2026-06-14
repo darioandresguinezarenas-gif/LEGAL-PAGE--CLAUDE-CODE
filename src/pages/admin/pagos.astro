@@ -14,15 +14,16 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
           <option value="pendiente">Pendiente</option>
           <option value="anulado">Anulado</option>
         </select>
+        <button id="btn-csv" class="btn btn-outline btn-sm">Exportar CSV</button>
       </div>
     </div>
     <div class="table-wrap">
       <table class="data-table">
         <thead>
-          <tr><th>Buy Order</th><th>Monto</th><th>Estado</th><th>Cód. autorización</th><th>Tarjeta</th><th>Fecha</th></tr>
+          <tr><th>Buy Order</th><th>Nombre</th><th>Monto</th><th>Estado</th><th>Cód. autorización</th><th>Tarjeta</th><th>Email</th><th>Fecha</th></tr>
         </thead>
         <tbody id="table-body">
-          <tr><td colspan="6" class="loading-box"><div class="spinner"></div></td></tr>
+          <tr><td colspan="8" class="loading-box"><div class="spinner"></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -69,19 +70,54 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
   function renderTable(data) {
     if (!data.length) {
-      tbody.innerHTML = '<tr><td colspan="6" class="empty-box">Sin transacciones.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="empty-box">Sin transacciones.</td></tr>';
       return;
     }
     tbody.innerHTML = data.map(r => `
       <tr>
         <td class="font-mono text-xs">${r.buy_order}</td>
+        <td class="text-xs">${r.nombre ?? '—'}</td>
         <td style="font-weight:600">${fmtCLP(r.monto)}</td>
         <td><span class="badge ${estadoBadge[r.estado] ?? 'badge-gray'}">${r.estado}</span></td>
         <td class="font-mono text-xs">${r.authorization_code ?? '—'}</td>
         <td class="text-muted text-xs">${r.card_detail?.card_number ? `····${r.card_detail.card_number}` : '—'}</td>
+        <td class="text-muted text-xs">${r.email ?? '—'}</td>
         <td class="text-muted text-xs">${fmtDate(r.transaction_date ?? r.created_at)}</td>
       </tr>`).join('');
   }
 
   document.getElementById('filtro-estado').addEventListener('change', applyFilter);
+
+  document.getElementById('btn-csv').addEventListener('click', () => {
+    const estado = document.getElementById('filtro-estado').value;
+    const data = estado === 'todos' ? records : records.filter(r => r.estado === estado);
+    if (!data.length) { showToast('Sin datos para exportar', 'info'); return; }
+
+    const cols = ['buy_order','nombre','email','monto','estado','authorization_code','card_number','transaction_date','created_at'];
+    const header = ['Buy Order','Nombre','Email','Monto (CLP)','Estado','Cód. autorización','Tarjeta (últimos 4)','Fecha transacción','Fecha creación'];
+
+    const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const rows = data.map(r => [
+      esc(r.buy_order),
+      esc(r.nombre),
+      esc(r.email),
+      esc(r.monto),
+      esc(r.estado),
+      esc(r.authorization_code),
+      esc(r.card_detail?.card_number ?? ''),
+      esc(r.transaction_date ?? ''),
+      esc(r.created_at),
+    ].join(','));
+
+    const csv = [header.map(esc).join(','), ...rows].join('\r\n');
+    const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pagos_${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
 </script>

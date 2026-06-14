@@ -34,7 +34,7 @@ serve(async (req) => {
     });
   }
 
-  let body: { monto?: unknown; descripcion?: unknown; nombre?: unknown; lang?: unknown };
+  let body: { monto?: unknown; descripcion?: unknown; nombre?: unknown; email?: unknown; lang?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -53,6 +53,8 @@ serve(async (req) => {
   const descripcion = String(body.descripcion ?? '').slice(0, 200);
   const nombre      = String(body.nombre ?? '').slice(0, 100);
   const lang        = ['es', 'en', 'zh'].includes(String(body.lang)) ? String(body.lang) : 'es';
+  const emailRaw    = typeof body.email === 'string' ? body.email.trim().slice(0, 254) : '';
+  const email       = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) ? emailRaw : null;
 
   const env = (Deno.env.get('TRANSBANK_ENV') ?? 'integration') as 'integration' | 'production';
   const commerceCode = Deno.env.get('TRANSBANK_COMMERCE_CODE') ?? (env === 'integration' ? TBK_INTEGRATION_CODE : '');
@@ -77,7 +79,7 @@ serve(async (req) => {
   // Crear registro previo (estado pendiente)
   const { data: pagoRow, error: dbErr } = await supabase
     .from('pagos')
-    .insert({ buy_order: buyOrder, session_id: sessionId, monto, descripcion, nombre, estado: 'pendiente' })
+    .insert({ buy_order: buyOrder, session_id: sessionId, monto, descripcion, nombre, email, estado: 'pendiente' })
     .select('id')
     .single();
 

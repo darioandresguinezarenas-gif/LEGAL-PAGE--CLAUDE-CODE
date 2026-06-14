@@ -27,6 +27,10 @@ const EDGE_INIT = `${import.meta.env.PUBLIC_SUPABASE_URL}/functions/v1/webpay-in
           <input type="text" id="nombre" name="nombre" maxlength="100" autocomplete="name" required />
         </div>
         <div class="form-field">
+          <label for="email">Email address <span class="opt-hint">(optional — to receive receipt)</span></label>
+          <input type="email" id="email" name="email" maxlength="254" autocomplete="email" placeholder="example@email.com" />
+        </div>
+        <div class="form-field">
           <label for="descripcion">Service description <span aria-hidden="true">*</span></label>
           <input type="text" id="descripcion" name="descripcion" maxlength="200"
             placeholder="e.g. Labour law consultation" required />
@@ -69,6 +73,7 @@ form.addEventListener('submit', async (e) => {
   btn.textContent = 'Processing…';
 
   const nombre      = document.getElementById('nombre').value.trim();
+  const email       = document.getElementById('email').value.trim();
   const descripcion = document.getElementById('descripcion').value.trim();
   const monto       = parseInt(document.getElementById('monto').value, 10);
 
@@ -76,7 +81,7 @@ form.addEventListener('submit', async (e) => {
   if (!Number.isInteger(monto) || monto < 50) { err.textContent = 'Amount must be a whole number of at least $50 CLP.'; btn.disabled = false; btn.textContent = 'Pay with Webpay'; return; }
 
   try {
-    const res  = await fetch(EDGE_INIT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ monto, descripcion, nombre, lang }) });
+    const res  = await fetch(EDGE_INIT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ monto, descripcion, nombre, email: email || undefined, lang }) });
     const data = await res.json();
     if (!res.ok || data.error) { err.textContent = data.error || 'Payment initiation failed. Please try again.'; btn.disabled = false; btn.textContent = 'Pay with Webpay'; return; }
     const f = document.createElement('form'); f.method = 'POST'; f.action = data.url;
@@ -110,5 +115,6 @@ form.addEventListener('submit', async (e) => {
   .btn-pagar:hover:not(:disabled) { background:#b8943e; }
   .btn-pagar:disabled { opacity:.6;cursor:not-allowed; }
   .pagos-seguridad { display:flex;align-items:center;justify-content:center;gap:6px;font-size:.78rem;color:#6B6B6B;text-align:center; }
+  .opt-hint { color: #6B6B6B; font-weight: 400; font-size: .78rem; }
   @media(max-width:600px){ .pagos-main{padding:2rem 1rem;} .pagos-container{padding:1.75rem 1.25rem;} }
 </style>

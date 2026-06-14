@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const lang = 'es';
+const updated = '14 de junio de 2026';
+---
+<BaseLayout
+  title="Términos de Servicio | Guíñez Galaz Abogados"
+  description="Términos y condiciones de uso del sitio web de Guíñez Galaz Abogados."
+  lang={lang}
+>
+  <main class="legal-page">
+    <div class="legal-container">
+      <div class="legal-header">
+        <p class="legal-label">GUÍÑEZ GALAZ ABOGADOS</p>
+        <h1>Términos de Servicio</h1>
+        <p class="legal-updated">Última actualización: {updated}</p>
+      </div>
+
+      <div class="legal-body">
+
+        <section>
+          <h2>1. Aceptación de los términos</h2>
+          <p>
+            El acceso y uso del sitio web <strong>www.guinezgalaz.cl</strong> implica la aceptación
+            plena y sin reservas de los presentes Términos de Servicio. Si no está de acuerdo con
+            alguno de ellos, le rogamos que se abstenga de usar este sitio.
+          </p>
+        </section>
+
+        <section>
+          <h2>2. Información, no asesoría legal</h2>
+          <p>
+            El contenido de este sitio tiene carácter <strong>meramente informativo</strong>. Nada de
+            lo publicado aquí constituye asesoría legal, representación profesional ni relación
+            abogado-cliente, salvo que exista un contrato de prestación de servicios jurídicos
+            suscrito entre el usuario y Guíñez Galaz Abogados.
+          </p>
+          <p>
+            Para obtener asesoría jurídica sobre su situación particular, contáctenos a través del
+            formulario de contacto o por teléfono.
+          </p>
+        </section>
+
+        <section>
+          <h2>3. Propiedad intelectual</h2>
+          <p>
+            Todos los contenidos del sitio (textos, logotipos, imágenes, diseño, código fuente) son
+            propiedad de Guíñez Galaz Abogados o se usan con las licencias correspondientes, y están
+            protegidos por la <strong>Ley N.º 17.336 sobre Propiedad Intelectual</strong> de Chile.
+          </p>
+          <p>
+            Queda prohibida la reproducción, distribución o comunicación pública de los contenidos
+            sin autorización escrita previa, salvo para uso personal y no comercial.
+          </p>
+        </section>
+
+        <section>
+          <h2>4. Pagos en línea</h2>
+          <p>
+            Los pagos de honorarios se realizan a través de <strong>Transbank Webpay Plus</strong>,
+            plataforma certificada PCI DSS. Al iniciar un pago acepta además los términos y
+            condiciones de Transbank.
+          </p>
+          <ul>
+            <li>Los montos se expresan en <strong>Pesos Chilenos (CLP)</strong>, sin decimales.</li>
+            <li>Monto mínimo: $50 CLP.</li>
+            <li>Las transacciones aprobadas son definitivas. Para solicitar devoluciones, contáctenos directamente.</li>
+            <li>Los pagos rechazados no generan cargo. Puede reintentar la transacción.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>5. Limitación de responsabilidad</h2>
+          <p>
+            Guíñez Galaz Abogados no será responsable por daños directos, indirectos, incidentales o
+            consecuentes derivados del uso o imposibilidad de uso del sitio web, incluyendo:
+          </p>
+          <ul>
+            <li>Errores u omisiones en los contenidos.</li>
+            <li>Interrupciones del servicio por mantenimiento o causas ajenas a nuestro control.</li>
+            <li>Uso del contenido del sitio como sustituto de asesoría legal profesional.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>6. Uso del formulario de contacto</h2>
+          <p>
+            El formulario de contacto está habilitado exclusivamente para consultas relacionadas con
+            servicios jurídicos. Queda prohibido su uso para envío de publicidad, spam, o contenido
+            ofensivo o ilegal. Implementamos medidas anti-spam (honeypot y limitación de tasa) para
+            proteger la integridad del servicio.
+          </p>
+        </section>
+
+        <section>
+          <h2>7. Privacidad</h2>
+          <p>
+            El tratamiento de datos personales se describe en nuestra
+            <a href="/es/privacidad">Política de Privacidad</a>, que forma parte integrante de estos
+            términos.
+          </p>
+        </section>
+
+        <section>
+          <h2>8. Modificaciones</h2>
+          <p>
+            Nos reservamos el derecho de modificar estos términos en cualquier momento. La versión
+            vigente siempre estará disponible en esta página con la fecha de última actualización.
+            El uso continuado del sitio tras publicar cambios implica su aceptación.
+          </p>
+        </section>
+
+        <section>
+          <h2>9. Ley aplicable y jurisdicción</h2>
+          <p>
+            Estos Términos de Servicio se rigen exclusivamente por la legislación de la
+            <strong>República de Chile</strong>. Cualquier controversia que surja de o en relación con
+            ellos será sometida a la competencia exclusiva de los <strong>Tribunales Ordinarios de
+            Justicia de Curicó</strong>, Región del Maule, Chile.
+          </p>
+        </section>
+
+        <section>
+          <h2>10. Contacto</h2>
+          <p>
+            Para consultas sobre estos términos: <a href="mailto:contacto@guinezgalaz.cl">contacto@guinezgalaz.cl</a>
+            o a través del <a href="/es/contacto">formulario de contacto</a>.
+          </p>
+        </section>
+
+      </div>
+
+      <div class="legal-footer">
+        <a href="/es" class="legal-back">← Volver al inicio</a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .legal-page { background: #F5F5F0; min-height: 80vh; padding: 4rem 1.5rem; }
+  .legal-container { max-width: 800px; margin: 0 auto; }
+  .legal-header { margin-bottom: 3rem; }
+  .legal-label { font-family: 'DM Sans', sans-serif; font-size: .6875rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #C9A84C; margin-bottom: .75rem; }
+  .legal-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; color: #0D1F2D; margin: 0 0 .5rem; }
+  .legal-updated { font-size: .875rem; color: #6B6B6B; }
+  .legal-body { background: #fff; border: 1px solid #E8E8E0; padding: 2.5rem; }
+  .legal-body section { margin-bottom: 2.25rem; padding-bottom: 2.25rem; border-bottom: 1px solid #E8E8E0; }
+  .legal-body section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .legal-body h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.375rem; font-weight: 700; color: #0D1F2D; margin: 0 0 1rem; }
+  .legal-body p { font-size: .9375rem; line-height: 1.75; color: #1A1A1A; margin: 0 0 .875rem; }
+  .legal-body ul { padding-left: 1.5rem; margin: 0 0 .875rem; }
+  .legal-body li { font-size: .9375rem; line-height: 1.7; color: #1A1A1A; margin-bottom: .375rem; }
+  .legal-body a { color: #C9A84C; text-underline-offset: 3px; }
+  .legal-footer { margin-top: 2rem; }
+  .legal-back { font-family: 'DM Sans', sans-serif; font-size: .875rem; color: #6B6B6B; transition: color .2s; }
+  .legal-back:hover { color: #C9A84C; }
+  @media (max-width: 600px) { .legal-body { padding: 1.5rem 1.125rem; } }
+</style>
