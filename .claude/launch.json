@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "astro-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["astro", "dev", "--port", "4321"],
+      "port": 4321,
+      "env": {
+        "PUBLIC_SUPABASE_URL": "https://placeholder.supabase.co",
+        "PUBLIC_SUPABASE_ANON_KEY": "placeholder_anon_key"
+      }
+    }
+  ]
+}

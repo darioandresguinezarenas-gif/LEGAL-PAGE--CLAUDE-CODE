@@ -161,32 +161,40 @@ const ui = UI[lang];
 </section>
 
 <script>
-  (function () {
+  function initReviews() {
     var track = document.getElementById('rv-track');
     var prev  = document.getElementById('rv-prev');
     var next  = document.getElementById('rv-next');
     if (!track || !prev || !next) return;
+    if (track.dataset.rvInit === '1') return;   // idempotente
+    track.dataset.rvInit = '1';
 
-    var cards = Array.from(track.querySelectorAll('.rv-card')) as HTMLElement[];
+    var t  = track as HTMLElement;
+    var pv = prev as HTMLElement;
+    var nx = next as HTMLElement;
+    var cards = Array.from(t.querySelectorAll('.rv-card')) as HTMLElement[];
     var dots  = Array.from(document.querySelectorAll('.rv-dot')) as HTMLButtonElement[];
     var idx = 0;
     var animating = false;
+    var animTimer = 0;
 
-    // scrollTo/scrollIntoView con behavior:smooth son cancelados por scroll-snap-type.
-    // rAF propio sobre scrollLeft evita el conflicto. scroll-snap-type se eliminó del CSS.
-    function smoothTo(target: number, ms = 380) {
-      var from = track!.scrollLeft;
+    // Animación con setInterval (no requestAnimationFrame): rAF se pausa en
+    // pestañas de fondo / contextos sin pintado, lo que dejaba el carrusel
+    // inmóvil. setInterval es fiable en todos los entornos.
+    function smoothTo(target: number, ms?: number) {
+      var dur  = ms || 380;
+      var from = t.scrollLeft;
       var dist = target - from;
-      if (Math.abs(dist) < 1) return;
+      if (Math.abs(dist) < 1) { t.scrollLeft = target; return; }
       var t0 = performance.now();
       animating = true;
-      (function step(now: number) {
-        var p    = Math.min((now - t0) / ms, 1);
+      clearInterval(animTimer);
+      animTimer = window.setInterval(function () {
+        var p    = Math.min((performance.now() - t0) / dur, 1);
         var ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
-        track!.scrollLeft = from + dist * ease;
-        if (p < 1) requestAnimationFrame(step);
-        else        animating = false;
-      })(performance.now());
+        t.scrollLeft = from + dist * ease;
+        if (p >= 1) { clearInterval(animTimer); animating = false; }
+      }, 16);
     }
 
     function cardW() {
@@ -201,48 +209,50 @@ const ui = UI[lang];
 
     function sync() {
       dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === idx));
-      (prev as HTMLElement).style.opacity = idx <= 0              ? '0.3' : '1';
-      (next as HTMLElement).style.opacity = idx >= cards.length - 1 ? '0.3' : '1';
+      pv.style.opacity = idx <= 0               ? '0.3' : '1';
+      nx.style.opacity = idx >= cards.length - 1 ? '0.3' : '1';
     }
 
     prev.addEventListener('click', () => goTo(idx - 1));
     next.addEventListener('click', () => goTo(idx + 1));
     dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
 
-    // Snap manual tras swipe táctil (scroll-snap-type eliminado → lo hacemos aquí)
-    var snapTimer: ReturnType<typeof setTimeout>;
-    track.addEventListener('scroll', () => {
+    // Snap manual tras swipe táctil (scroll-snap-type eliminado del CSS)
+    var snapTimer = 0;
+    t.addEventListener('scroll', () => {
       if (animating) return;
       clearTimeout(snapTimer);
-      snapTimer = setTimeout(() => {
-        var w    = cardW();
+      snapTimer = window.setTimeout(() => {
+        var w = cardW();
         if (!w) return;
-        var i    = Math.round(track!.scrollLeft / w);
-        var ni   = Math.max(0, Math.min(cards.length - 1, i));
+        var ni = Math.max(0, Math.min(cards.length - 1, Math.round(t.scrollLeft / w)));
         idx = ni;
         sync();
-        var tgt = ni * w;
-        if (Math.abs(track!.scrollLeft - tgt) > 2) smoothTo(tgt, 200);
-      }, 100);
+        if (Math.abs(t.scrollLeft - ni * w) > 2) smoothTo(ni * w, 200);
+      }, 120);
     }, { passive: true });
 
-    // "Leer más" — sólo si el párrafo está truncado
-    cards.forEach(card => {
-      var p = card.querySelector('.rv-text--clamp') as HTMLElement | null;
-      if (!p) return;
-      requestAnimationFrame(() => {
-        if (p!.scrollHeight > p!.clientHeight + 4) {
-          var btn = document.createElement('button');
-          btn.className   = 'rv-leer-mas';
-          btn.textContent = (p as HTMLElement).dataset.leerMas || 'Leer más';
-          p!.after(btn);
-          btn.addEventListener('click', () => { p!.classList.remove('rv-text--clamp'); btn.remove(); });
-        }
+    // "Leer más" — sólo si el párrafo está truncado (mide tras el layout)
+    window.setTimeout(() => {
+      cards.forEach(card => {
+        var p = card.querySelector('.rv-text--clamp') as HTMLElement | null;
+        if (!p || p.scrollHeight <= p.clientHeight + 4) return;
+        var btn = document.createElement('button');
+        btn.className   = 'rv-leer-mas';
+        btn.textContent = p.dataset.leerMas || 'Leer más';
+        p.after(btn);
+        btn.addEventListener('click', () => { p!.classList.remove('rv-text--clamp'); btn.remove(); });
       });
-    });
+    }, 50);
 
     sync();
-  }());
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReviews);
+  } else {
+    initReviews();
+  }
 </script>
 
 <style>
@@ -456,6 +466,8 @@ const ui = UI[lang];
     z-index: 1;
   }
   .rv-nav:hover { box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+  /* El icono no intercepta el clic — el botón es siempre el target del evento */
+  .rv-nav svg { pointer-events: none; }
 
   /* ── Dots ───────────────────────────────────────────────────────────── */
   .rv-dots {
