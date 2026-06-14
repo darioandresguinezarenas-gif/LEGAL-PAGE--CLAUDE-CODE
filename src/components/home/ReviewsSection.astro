@@ -162,26 +162,46 @@ const ui = UI[lang];
 
 <script>
   (function () {
-    const track = document.getElementById('rv-track');
-    const prev  = document.getElementById('rv-prev');
-    const next  = document.getElementById('rv-next');
+    var track = document.getElementById('rv-track');
+    var prev  = document.getElementById('rv-prev');
+    var next  = document.getElementById('rv-next');
     if (!track || !prev || !next) return;
 
-    const cards = Array.from(track.querySelectorAll<HTMLElement>('.rv-card'));
-    const dots  = Array.from(document.querySelectorAll<HTMLButtonElement>('.rv-dot'));
-    let idx = 0;
+    var cards = Array.from(track.querySelectorAll('.rv-card')) as HTMLElement[];
+    var dots  = Array.from(document.querySelectorAll('.rv-dot')) as HTMLButtonElement[];
+    var idx = 0;
+    var animating = false;
 
-    // Navega a la tarjeta n usando scrollIntoView (respeta scroll-snap y evita
-    // problemas de cálculo de ancho que hacían fallar scrollBy)
+    // scrollTo/scrollIntoView con behavior:smooth son cancelados por scroll-snap-type.
+    // rAF propio sobre scrollLeft evita el conflicto. scroll-snap-type se eliminó del CSS.
+    function smoothTo(target: number, ms = 380) {
+      var from = track!.scrollLeft;
+      var dist = target - from;
+      if (Math.abs(dist) < 1) return;
+      var t0 = performance.now();
+      animating = true;
+      (function step(now: number) {
+        var p    = Math.min((now - t0) / ms, 1);
+        var ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
+        track!.scrollLeft = from + dist * ease;
+        if (p < 1) requestAnimationFrame(step);
+        else        animating = false;
+      })(performance.now());
+    }
+
+    function cardW() {
+      return cards[0] ? cards[0].getBoundingClientRect().width + 16 : 0;
+    }
+
     function goTo(n: number) {
       idx = Math.max(0, Math.min(cards.length - 1, n));
-      cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      smoothTo(idx * cardW());
       sync();
     }
 
     function sync() {
       dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === idx));
-      (prev as HTMLElement).style.opacity = idx <= 0 ? '0.3' : '1';
+      (prev as HTMLElement).style.opacity = idx <= 0              ? '0.3' : '1';
       (next as HTMLElement).style.opacity = idx >= cards.length - 1 ? '0.3' : '1';
     }
 
@@ -189,34 +209,39 @@ const ui = UI[lang];
     next.addEventListener('click', () => goTo(idx + 1));
     dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
 
-    // Sincronizar idx desde scroll nativo (swipe táctil)
-    let timer: ReturnType<typeof setTimeout>;
+    // Snap manual tras swipe táctil (scroll-snap-type eliminado → lo hacemos aquí)
+    var snapTimer: ReturnType<typeof setTimeout>;
     track.addEventListener('scroll', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        if (!cards[0]) return;
-        const w = cards[0].getBoundingClientRect().width + 16;
-        const i = Math.round(track.scrollLeft / w);
-        if (i !== idx) { idx = i; sync(); }
-      }, 80);
+      if (animating) return;
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(() => {
+        var w    = cardW();
+        if (!w) return;
+        var i    = Math.round(track!.scrollLeft / w);
+        var ni   = Math.max(0, Math.min(cards.length - 1, i));
+        idx = ni;
+        sync();
+        var tgt = ni * w;
+        if (Math.abs(track!.scrollLeft - tgt) > 2) smoothTo(tgt, 200);
+      }, 100);
     }, { passive: true });
 
-    // "Leer más" — sólo aparece si el texto realmente está truncado
+    // "Leer más" — sólo si el párrafo está truncado
     cards.forEach(card => {
-      const p = card.querySelector<HTMLElement>('.rv-text--clamp');
+      var p = card.querySelector('.rv-text--clamp') as HTMLElement | null;
       if (!p) return;
       requestAnimationFrame(() => {
-        if (p.scrollHeight > p.clientHeight + 4) {
-          const btn = document.createElement('button');
-          btn.className = 'rv-leer-mas';
-          btn.textContent = p.dataset.leerMas || 'Leer más';
-          p.after(btn);
-          btn.addEventListener('click', () => { p.classList.remove('rv-text--clamp'); btn.remove(); });
+        if (p!.scrollHeight > p!.clientHeight + 4) {
+          var btn = document.createElement('button');
+          btn.className   = 'rv-leer-mas';
+          btn.textContent = (p as HTMLElement).dataset.leerMas || 'Leer más';
+          p!.after(btn);
+          btn.addEventListener('click', () => { p!.classList.remove('rv-text--clamp'); btn.remove(); });
         }
       });
     });
 
-    sync(); // estado inicial de flechas y dots
+    sync();
   }());
 </script>
 
@@ -296,8 +321,6 @@ const ui = UI[lang];
     display: flex;
     gap: 1rem;
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
     flex: 1;
