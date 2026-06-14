@@ -5,46 +5,41 @@ interface Props { lang: Lang; }
 const { lang } = Astro.props;
 
 // Reseñas reales de Google (5 estrellas, verificadas)
+// Colores de avatar aplicados via CSS (.rv-av-0…5) — no inline styles (CSP)
 const REVIEWS = [
   {
     name: 'surgestioninmobiliaria',
     initial: 'S',
-    color: '#673ab7',
     time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
     text: 'Excelente servicio. Muy profesionales, comprometidos y una calidad humana que se debe recomendar, trabajamos a distancia, ya que nosotros somos una empresa de Valdivia, Región de Los Ríos y siempre se cumplieron los plazos de entrega y nos asesoraron de forma excepcional.',
   },
   {
     name: 'Joshua Calderon',
     initial: 'J',
-    color: '#1a73e8',
     time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
     text: 'Muy profesional y bien hecho su trabajo, Darío asesoro a mi mamá con un trámite de herencia y subdivisión de terreno en la comuna de Graneros, ayudó en todo lo que el pudo y se logró hacer el trámite sin inconvenientes. Aparte me a ayudado a mi, en muchas ocasiones, con tramites pequeños y que no entiendo como hacerlos y todo a salido perfecto. Muy recomendable de mi parte',
   },
   {
     name: 'Alexander Acevedo',
     initial: 'A',
-    color: '#34a853',
     time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
     text: 'Muy buen abogado, con mucha disponibilidad y conocimiento, en lo personal Darío me ayudó a ver un caso inmobiliaria que estaba judicializado y salió todo perfecto. Recomendado.',
   },
   {
     name: 'David Sanhueza',
     initial: 'D',
-    color: '#ea4335',
     time: { es: 'hace 2 semanas', en: '2 weeks ago', zh: '2周前' },
     text: 'Quiero recomendar a Dario Guíñez por su compromiso, responsabilidad y excelente disposición en cada asesoría prestada. Nos ha apoyado en materias relacionadas con la nueva Ley de Seguridad Privada y también en temas laborales, siempre demostrando dedicación, claridad y profesionalismo. Destaco especialmente su buena disposición para orientar y explicar cada proceso de manera cercana y responsable. Totalmente recomendable.',
   },
   {
     name: 'Brian Morales Silva',
     initial: 'B',
-    color: '#ff6d00',
     time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
     text: 'Darío nos prestó asesoría en la empresa en materias societarias y tributarias, pese a ser de región y nosotros en Santiago, el servicio fue 10/10. Recomendado 100%',
   },
   {
     name: 'Evelyn Berríos Videla',
     initial: 'E',
-    color: '#00897b',
     time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
     text: 'Don Darío me brindó una asesoría clara, oportuna y muy profesional. Resolvió mis dudas con eficiencia, siempre manteniéndome informada y buscando las mejores soluciones ante la situación laboral que me aquejaba en aquel entonces. Sin duda, recomiendo ampliamente sus servicios; no tan solo por la honestidad que lo caracteriza, sino también por su compromiso y lealtad. Además de la calidad humana; lo cual cuesta mucho encontrar hoy en día en ciertos profesionales.',
   },
@@ -101,7 +96,7 @@ const ui = UI[lang];
           <article class="rv-card" role="listitem" data-index={i}>
             <!-- Cabecera de tarjeta estilo Google -->
             <div class="rv-card-top">
-              <div class="rv-avatar" style={`background:${r.color}`} aria-hidden="true">
+              <div class={`rv-avatar rv-av-${i}`} aria-hidden="true">
                 {r.initial}
               </div>
               <div class="rv-meta">
@@ -149,14 +144,14 @@ const ui = UI[lang];
     <!-- CTA -->
     <div class="rv-cta">
       <a href={GOOGLE_URL} target="_blank" rel="noopener noreferrer" class="rv-btn-todas">
-        <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0">
+        <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="rv-cta-icon">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
         {ui.verTodas}
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;opacity:.5">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="rv-cta-ext">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
         </svg>
       </a>
@@ -166,74 +161,63 @@ const ui = UI[lang];
 </section>
 
 <script>
-  const track   = document.getElementById('rv-track')!;
-  const btnPrev = document.getElementById('rv-prev')!;
-  const btnNext = document.getElementById('rv-next')!;
-  const dots    = document.querySelectorAll<HTMLButtonElement>('.rv-dot');
-  const cards   = track.querySelectorAll<HTMLElement>('.rv-card');
+  (function () {
+    const track = document.getElementById('rv-track');
+    const prev  = document.getElementById('rv-prev');
+    const next  = document.getElementById('rv-next');
+    if (!track || !prev || !next) return;
 
-  // ── "Leer más" ──────────────────────────────────────────────────────────
-  cards.forEach(card => {
-    const p = card.querySelector<HTMLElement>('.rv-text--clamp')!;
-    if (!p) return;
-    // Comprobar si el texto está truncado (scrollHeight > clientHeight)
-    requestAnimationFrame(() => {
-      if (p.scrollHeight > p.clientHeight + 4) {
-        const lbl = p.dataset.leerMas ?? 'Leer más';
-        const btn = document.createElement('button');
-        btn.className = 'rv-leer-mas';
-        btn.textContent = lbl;
-        p.after(btn);
-        btn.addEventListener('click', () => {
-          p.classList.remove('rv-text--clamp');
-          btn.remove();
-        });
-      }
+    const cards = Array.from(track.querySelectorAll<HTMLElement>('.rv-card'));
+    const dots  = Array.from(document.querySelectorAll<HTMLButtonElement>('.rv-dot'));
+    let idx = 0;
+
+    // Navega a la tarjeta n usando scrollIntoView (respeta scroll-snap y evita
+    // problemas de cálculo de ancho que hacían fallar scrollBy)
+    function goTo(n: number) {
+      idx = Math.max(0, Math.min(cards.length - 1, n));
+      cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+      sync();
+    }
+
+    function sync() {
+      dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === idx));
+      (prev as HTMLElement).style.opacity = idx <= 0 ? '0.3' : '1';
+      (next as HTMLElement).style.opacity = idx >= cards.length - 1 ? '0.3' : '1';
+    }
+
+    prev.addEventListener('click', () => goTo(idx - 1));
+    next.addEventListener('click', () => goTo(idx + 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+    // Sincronizar idx desde scroll nativo (swipe táctil)
+    let timer: ReturnType<typeof setTimeout>;
+    track.addEventListener('scroll', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (!cards[0]) return;
+        const w = cards[0].getBoundingClientRect().width + 16;
+        const i = Math.round(track.scrollLeft / w);
+        if (i !== idx) { idx = i; sync(); }
+      }, 80);
+    }, { passive: true });
+
+    // "Leer más" — sólo aparece si el texto realmente está truncado
+    cards.forEach(card => {
+      const p = card.querySelector<HTMLElement>('.rv-text--clamp');
+      if (!p) return;
+      requestAnimationFrame(() => {
+        if (p.scrollHeight > p.clientHeight + 4) {
+          const btn = document.createElement('button');
+          btn.className = 'rv-leer-mas';
+          btn.textContent = p.dataset.leerMas || 'Leer más';
+          p.after(btn);
+          btn.addEventListener('click', () => { p.classList.remove('rv-text--clamp'); btn.remove(); });
+        }
+      });
     });
-  });
 
-  // ── Dots / scroll sync ──────────────────────────────────────────────────
-  function getCardWidth() {
-    return (cards[0]?.offsetWidth ?? 0) + 16; // card + gap
-  }
-
-  function getActiveIndex(): number {
-    if (!cards[0]) return 0;
-    return Math.round(track.scrollLeft / getCardWidth());
-  }
-
-  function updateDots(active: number) {
-    dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === active));
-  }
-
-  track.addEventListener('scroll', () => updateDots(getActiveIndex()), { passive: true });
-
-  // ── Navigation buttons ──────────────────────────────────────────────────
-  btnPrev.addEventListener('click', () => {
-    track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
-  });
-
-  btnNext.addEventListener('click', () => {
-    track.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
-  });
-
-  // ── Dot click ──────────────────────────────────────────────────────────
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const idx = Number(dot.dataset.dot);
-      track.scrollTo({ left: idx * getCardWidth(), behavior: 'smooth' });
-    });
-  });
-
-  // ── Hide nav arrows when at edges ──────────────────────────────────────
-  function updateNav() {
-    const atStart = track.scrollLeft <= 4;
-    const atEnd   = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
-    (btnPrev as HTMLButtonElement).style.opacity = atStart ? '0.3' : '1';
-    (btnNext as HTMLButtonElement).style.opacity = atEnd   ? '0.3' : '1';
-  }
-  track.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
+    sync(); // estado inicial de flechas y dots
+  }());
 </script>
 
 <style>
@@ -358,6 +342,13 @@ const ui = UI[lang];
     flex-shrink: 0;
     user-select: none;
   }
+  /* Colores de avatar — definidos en CSS para respetar CSP (sin inline styles) */
+  .rv-av-0 { background: #673ab7; } /* S — surgestioninmobiliaria */
+  .rv-av-1 { background: #1a73e8; } /* J — Joshua Calderon */
+  .rv-av-2 { background: #34a853; } /* A — Alexander Acevedo */
+  .rv-av-3 { background: #ea4335; } /* D — David Sanhueza */
+  .rv-av-4 { background: #ff6d00; } /* B — Brian Morales Silva */
+  .rv-av-5 { background: #00897b; } /* E — Evelyn Berríos Videla */
 
   .rv-meta {
     flex: 1;
@@ -492,6 +483,8 @@ const ui = UI[lang];
     box-shadow: 0 2px 8px rgba(26,115,232,.15);
     border-color: #1a73e8;
   }
+  .rv-cta-icon { flex-shrink: 0; }
+  .rv-cta-ext  { flex-shrink: 0; opacity: 0.5; }
 
   /* ── Responsive ─────────────────────────────────────────────────────── */
   @media (max-width: 960px) {
