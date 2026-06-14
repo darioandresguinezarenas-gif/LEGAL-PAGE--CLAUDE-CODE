@@ -1,184 +1,162 @@
 ---
-import { t } from '../../i18n/utils';
 import type { Lang } from '../../i18n/utils';
-import es from '../../i18n/es.json';
-import en from '../../i18n/en.json';
-import zh from '../../i18n/zh.json';
 
 interface Props { lang: Lang; }
 const { lang } = Astro.props;
 
-const placeId = import.meta.env.PUBLIC_GOOGLE_PLACE_ID;
-const apiKey  = import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY;
+// Reseñas reales de Google (5 estrellas, verificadas)
+const REVIEWS = [
+  {
+    name: 'surgestioninmobiliaria',
+    initial: 'S',
+    color: '#673ab7',
+    time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
+    text: 'Excelente servicio. Muy profesionales, comprometidos y una calidad humana que se debe recomendar, trabajamos a distancia, ya que nosotros somos una empresa de Valdivia, Región de Los Ríos y siempre se cumplieron los plazos de entrega y nos asesoraron de forma excepcional.',
+  },
+  {
+    name: 'Joshua Calderon',
+    initial: 'J',
+    color: '#1a73e8',
+    time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
+    text: 'Muy profesional y bien hecho su trabajo, Darío asesoro a mi mamá con un trámite de herencia y subdivisión de terreno en la comuna de Graneros, ayudó en todo lo que el pudo y se logró hacer el trámite sin inconvenientes. Aparte me a ayudado a mi, en muchas ocasiones, con tramites pequeños y que no entiendo como hacerlos y todo a salido perfecto. Muy recomendable de mi parte',
+  },
+  {
+    name: 'Alexander Acevedo',
+    initial: 'A',
+    color: '#34a853',
+    time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
+    text: 'Muy buen abogado, con mucha disponibilidad y conocimiento, en lo personal Darío me ayudó a ver un caso inmobiliaria que estaba judicializado y salió todo perfecto. Recomendado.',
+  },
+  {
+    name: 'David Sanhueza',
+    initial: 'D',
+    color: '#ea4335',
+    time: { es: 'hace 2 semanas', en: '2 weeks ago', zh: '2周前' },
+    text: 'Quiero recomendar a Dario Guíñez por su compromiso, responsabilidad y excelente disposición en cada asesoría prestada. Nos ha apoyado en materias relacionadas con la nueva Ley de Seguridad Privada y también en temas laborales, siempre demostrando dedicación, claridad y profesionalismo. Destaco especialmente su buena disposición para orientar y explicar cada proceso de manera cercana y responsable. Totalmente recomendable.',
+  },
+  {
+    name: 'Brian Morales Silva',
+    initial: 'B',
+    color: '#ff6d00',
+    time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
+    text: 'Darío nos prestó asesoría en la empresa en materias societarias y tributarias, pese a ser de región y nosotros en Santiago, el servicio fue 10/10. Recomendado 100%',
+  },
+  {
+    name: 'Evelyn Berríos Videla',
+    initial: 'E',
+    color: '#00897b',
+    time: { es: 'hace 1 semana', en: '1 week ago', zh: '1周前' },
+    text: 'Don Darío me brindó una asesoría clara, oportuna y muy profesional. Resolvió mis dudas con eficiencia, siempre manteniéndome informada y buscando las mejores soluciones ante la situación laboral que me aquejaba en aquel entonces. Sin duda, recomiendo ampliamente sus servicios; no tan solo por la honestidad que lo caracteriza, sino también por su compromiso y lealtad. Además de la calidad humana; lo cual cuesta mucho encontrar hoy en día en ciertos profesionales.',
+  },
+] as const;
 
-// URL de perfil Google Business (se usa en el botón "Ver todas")
-const GOOGLE_PROFILE_URL = placeId
-  ? `https://www.google.com/maps/place/?q=place_id:${placeId}`
-  : 'https://share.google/0XEGREarhLsXownxw';
+const GOOGLE_URL = 'https://share.google/0XEGREarhLsXownxw';
 
-type GoogleReview = {
-  author_name: string;
-  profile_photo_url: string;
-  rating: number;
-  relative_time_description: string;
-  text: string;
-};
+const UI = {
+  es: { heading: 'Lo que dicen nuestros clientes', verTodas: 'Ver las 30 reseñas en Google', leerMas: 'Leer más', prev: 'Anterior', next: 'Siguiente' },
+  en: { heading: 'What our clients say', verTodas: 'See all 30 reviews on Google', leerMas: 'Read more', prev: 'Previous', next: 'Next' },
+  zh: { heading: '客户评价', verTodas: '在 Google 上查看全部 30 条评价', leerMas: '阅读更多', prev: '上一个', next: '下一个' },
+} as const;
 
-let liveReviews: GoogleReview[] = [];
-let aggregateRating = 5.0;
-let totalReviews    = 30;   // valor real de las 30 reseñas, sobreescrito por API
-let isLive = false;
-
-if (placeId && apiKey) {
-  try {
-    const apiLang = lang === 'zh' ? 'zh-TW' : lang;
-    const url =
-      `https://maps.googleapis.com/maps/api/place/details/json` +
-      `?place_id=${encodeURIComponent(placeId)}` +
-      `&fields=reviews,rating,user_ratings_total` +
-      `&language=${apiLang}` +
-      `&reviews_sort=newest` +
-      `&key=${encodeURIComponent(apiKey)}`;
-    const res = await fetch(url);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.result?.reviews?.length) {
-        liveReviews     = data.result.reviews.slice(0, 3);
-        aggregateRating = data.result.rating            ?? 5.0;
-        totalReviews    = data.result.user_ratings_total ?? 30;
-        isLive = true;
-      }
-    }
-  } catch (_) { /* fallback silencioso */ }
-}
-
-const translations = { es, en, zh } as const;
-const placeholderItems = (translations[lang] as typeof es).reviews.items;
-const avatarColors = ['#C9A84C', '#0D1F2D', '#6B7B8A'];
-const stars = Array.from({ length: 5 });
-
-const labelVerTodas =
-  lang === 'en' ? `See all ${totalReviews} reviews on Google`
-  : lang === 'zh' ? `在 Google 上查看全部 ${totalReviews} 条评价`
-  : `Ver las ${totalReviews} reseñas en Google`;
+const ui = UI[lang];
 ---
 
-<section class="reviews-section">
-  <div class="reviews-container">
+<section class="rv-section">
+  <div class="rv-container">
 
     <!-- Header -->
-    <div class="reviews-header">
-      <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Google" role="img">
-        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-      </svg>
-
-      <h2 class="reviews-title">{t(lang, 'reviews.sectionTitle')}</h2>
-
-      <div class="aggregate-row" aria-label={`${aggregateRating.toFixed(1)} sobre 5 — ${totalReviews} reseñas`}>
-        <div class="aggregate-stars">
-          {stars.map((_, i) => (
-            <svg class="star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-              style={`fill:${i < Math.round(aggregateRating) ? '#C9A84C' : '#E0E0E0'}`}>
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-            </svg>
-          ))}
-        </div>
-        <span class="aggregate-score">{aggregateRating.toFixed(1)}</span>
-        <span class="aggregate-count">
-          ({totalReviews} {lang === 'en' ? 'reviews' : lang === 'zh' ? '条评价' : 'reseñas'})
-        </span>
-        {isLive && <span class="live-badge">Google</span>}
-      </div>
-    </div>
-
-    {isLive ? (
-      <div class="reviews-grid">
-        {liveReviews.map((review) => (
-          <article class="review-card">
-            <div class="card-stars" aria-label={`${review.rating} estrellas`}>
-              {stars.map((_, i) => (
-                <svg class="star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"
-                  style={`fill:${i < review.rating ? '#C9A84C' : '#E0E0E0'}`}>
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              ))}
-            </div>
-            <blockquote class="review-text">
-              <p>"{review.text.length > 220 ? review.text.slice(0, 220) + '…' : review.text}"</p>
-            </blockquote>
-            <footer class="review-author">
-              <img
-                src={review.profile_photo_url}
-                alt={review.author_name}
-                class="review-photo"
-                width="40" height="40"
-                loading="lazy"
-                referrerpolicy="no-referrer"
-              />
-              <div class="review-info">
-                <span class="review-name">{review.author_name}</span>
-                <span class="review-date">{review.relative_time_description}</span>
-              </div>
-            </footer>
-          </article>
-        ))}
-      </div>
-    ) : placeId ? (
-      <div class="reviews-pending">
-        <p class="pending-text">{t(lang, 'reviews.pendingDesc')}</p>
-      </div>
-    ) : (
-      <div class="reviews-grid">
-        {placeholderItems.map((review, i) => (
-          <article class="review-card">
-            <div class="card-stars" aria-label="5 estrellas">
-              {stars.map(() => (
-                <svg class="star" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="fill:#C9A84C">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-              ))}
-            </div>
-            <blockquote class="review-text">
-              <p>"{review.text}"</p>
-            </blockquote>
-            <footer class="review-author">
-              <div
-                class="review-avatar"
-                style={`background:${avatarColors[i] ?? '#0D1F2D'}`}
-                aria-hidden="true"
-              >
-                {review.name.charAt(0).toUpperCase()}
-              </div>
-              <div class="review-info">
-                <span class="review-name">{review.name}</span>
-                <span class="review-date">{review.date}</span>
-              </div>
-            </footer>
-          </article>
-        ))}
-      </div>
-    )}
-
-    <!-- CTA: Ver todas las reseñas -->
-    <div class="reviews-cta">
-      <a
-        href={GOOGLE_PROFILE_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-ver-todas"
-        aria-label={labelVerTodas}
-      >
-        <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0">
+    <div class="rv-header">
+      <div class="rv-g-row">
+        <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
-        {labelVerTodas}
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0">
+        <span class="rv-score-line">
+          <strong>5.0</strong>
+          <span class="rv-stars" aria-label="5 estrellas">
+            {[1,2,3,4,5].map(() => (
+              <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="#FBBC04">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            ))}
+          </span>
+          <span class="rv-count">(30 {lang === 'en' ? 'reviews' : lang === 'zh' ? '条评价' : 'reseñas'})</span>
+        </span>
+      </div>
+      <h2 class="rv-heading">{ui.heading}</h2>
+    </div>
+
+    <!-- Carousel -->
+    <div class="rv-carousel-wrap">
+      <button class="rv-nav rv-prev" id="rv-prev" aria-label={ui.prev}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+
+      <div class="rv-track" id="rv-track" role="list">
+        {REVIEWS.map((r, i) => (
+          <article class="rv-card" role="listitem" data-index={i}>
+            <!-- Cabecera de tarjeta estilo Google -->
+            <div class="rv-card-top">
+              <div class="rv-avatar" style={`background:${r.color}`} aria-hidden="true">
+                {r.initial}
+              </div>
+              <div class="rv-meta">
+                <span class="rv-name">{r.name}</span>
+                <div class="rv-meta-row">
+                  <span class="rv-card-stars" aria-label="5 estrellas">
+                    {[1,2,3,4,5].map(() => (
+                      <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="#FBBC04">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    ))}
+                  </span>
+                  <span class="rv-time">{r.time[lang]}</span>
+                </div>
+              </div>
+              <!-- Google G badge en la esquina -->
+              <svg class="rv-g-badge" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Google" role="img">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+            </div>
+
+            <!-- Texto de la reseña -->
+            <p class="rv-text rv-text--clamp" data-leer-mas={ui.leerMas}>{r.text}</p>
+          </article>
+        ))}
+      </div>
+
+      <button class="rv-nav rv-next" id="rv-next" aria-label={ui.next}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Dots -->
+    <div class="rv-dots" id="rv-dots" aria-hidden="true">
+      {REVIEWS.map((_, i) => (
+        <button class={`rv-dot${i === 0 ? ' rv-dot--active' : ''}`} data-dot={i} aria-label={`Reseña ${i + 1}`}></button>
+      ))}
+    </div>
+
+    <!-- CTA -->
+    <div class="rv-cta">
+      <a href={GOOGLE_URL} target="_blank" rel="noopener noreferrer" class="rv-btn-todas">
+        <svg width="16" height="16" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        {ui.verTodas}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;opacity:.5">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
         </svg>
       </a>
@@ -187,197 +165,342 @@ const labelVerTodas =
   </div>
 </section>
 
+<script>
+  const track   = document.getElementById('rv-track')!;
+  const btnPrev = document.getElementById('rv-prev')!;
+  const btnNext = document.getElementById('rv-next')!;
+  const dots    = document.querySelectorAll<HTMLButtonElement>('.rv-dot');
+  const cards   = track.querySelectorAll<HTMLElement>('.rv-card');
+
+  // ── "Leer más" ──────────────────────────────────────────────────────────
+  cards.forEach(card => {
+    const p = card.querySelector<HTMLElement>('.rv-text--clamp')!;
+    if (!p) return;
+    // Comprobar si el texto está truncado (scrollHeight > clientHeight)
+    requestAnimationFrame(() => {
+      if (p.scrollHeight > p.clientHeight + 4) {
+        const lbl = p.dataset.leerMas ?? 'Leer más';
+        const btn = document.createElement('button');
+        btn.className = 'rv-leer-mas';
+        btn.textContent = lbl;
+        p.after(btn);
+        btn.addEventListener('click', () => {
+          p.classList.remove('rv-text--clamp');
+          btn.remove();
+        });
+      }
+    });
+  });
+
+  // ── Dots / scroll sync ──────────────────────────────────────────────────
+  function getCardWidth() {
+    return (cards[0]?.offsetWidth ?? 0) + 16; // card + gap
+  }
+
+  function getActiveIndex(): number {
+    if (!cards[0]) return 0;
+    return Math.round(track.scrollLeft / getCardWidth());
+  }
+
+  function updateDots(active: number) {
+    dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === active));
+  }
+
+  track.addEventListener('scroll', () => updateDots(getActiveIndex()), { passive: true });
+
+  // ── Navigation buttons ──────────────────────────────────────────────────
+  btnPrev.addEventListener('click', () => {
+    track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+  });
+
+  btnNext.addEventListener('click', () => {
+    track.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+  });
+
+  // ── Dot click ──────────────────────────────────────────────────────────
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = Number(dot.dataset.dot);
+      track.scrollTo({ left: idx * getCardWidth(), behavior: 'smooth' });
+    });
+  });
+
+  // ── Hide nav arrows when at edges ──────────────────────────────────────
+  function updateNav() {
+    const atStart = track.scrollLeft <= 4;
+    const atEnd   = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    (btnPrev as HTMLButtonElement).style.opacity = atStart ? '0.3' : '1';
+    (btnNext as HTMLButtonElement).style.opacity = atEnd   ? '0.3' : '1';
+  }
+  track.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+</script>
+
 <style>
-  .reviews-section {
-    background: #ffffff;
-    padding: 6rem 0;
+  /* ── Section ─────────────────────────────────────────────────────────── */
+  .rv-section {
+    background: #f8f9fa;
+    padding: 5rem 0 4.5rem;
     border-top: 1px solid #E8E8E0;
   }
 
-  .reviews-container {
+  .rv-container {
     max-width: 1200px;
     margin-inline: auto;
     padding-inline: 1.5rem;
   }
 
-  .reviews-header {
+  /* ── Header ─────────────────────────────────────────────────────────── */
+  .rv-header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.625rem;
   }
 
-  .google-icon { width: 32px; height: 32px; }
-
-  .reviews-title {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    font-weight: 700;
-    color: #0D1F2D;
-    line-height: 1.15;
-    max-width: 560px;
-  }
-
-  .aggregate-row {
+  .rv-g-row {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex-wrap: wrap;
-    justify-content: center;
   }
 
-  .aggregate-stars, .card-stars {
+  .rv-score-line {
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 0.375rem;
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
   }
 
-  .star { width: 16px; height: 16px; flex-shrink: 0; }
-
-  .aggregate-score {
-    font-family: 'DM Sans', system-ui, sans-serif;
+  .rv-score-line strong {
     font-size: 1.125rem;
     font-weight: 700;
-    color: #0D1F2D;
+    color: #202124;
   }
 
-  .aggregate-count {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.9rem;
-    color: #6B6B6B;
+  .rv-stars, .rv-card-stars {
+    display: flex;
+    align-items: center;
+    gap: 1px;
   }
 
-  .live-badge {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: #E8F5E9;
-    color: #2E7D32;
-    padding: 3px 8px;
-    border-radius: 999px;
+  .rv-count {
+    font-size: 0.875rem;
+    color: #70757a;
   }
 
-  .reviews-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
+  .rv-heading {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(1.625rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: #202124;
+    line-height: 1.2;
+    margin: 0;
   }
 
-  .review-card {
-    border: 1px solid #E8E8E0;
-    border-radius: 4px;
-    padding: 1.75rem;
+  /* ── Carousel wrapper ───────────────────────────────────────────────── */
+  .rv-carousel-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* ── Track ──────────────────────────────────────────────────────────── */
+  .rv-track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    padding: 0.25rem 0 0.75rem; /* room for card shadow */
+  }
+  .rv-track::-webkit-scrollbar { display: none; }
+
+  /* ── Card ───────────────────────────────────────────────────────────── */
+  .rv-card {
+    flex: 0 0 calc(33.333% - 0.667rem);
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.25rem 1.25rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    transition: box-shadow 0.25s ease, transform 0.2s ease;
-  }
-
-  .review-card:hover {
-    box-shadow: 0 6px 20px rgba(0,0,0,.08);
-    transform: translateY(-2px);
-  }
-
-  .review-text { flex: 1; }
-
-  .review-text p {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1rem;
-    font-style: italic;
-    line-height: 1.7;
-    color: rgba(26,26,26,.80);
-  }
-
-  .review-author {
-    display: flex;
-    align-items: center;
     gap: 0.875rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    transition: box-shadow 0.2s;
+  }
+  .rv-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+
+  /* ── Card header ────────────────────────────────────────────────────── */
+  .rv-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 
-  .review-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .review-avatar {
-    width: 40px;
-    height: 40px;
+  .rv-avatar {
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 1.125rem;
-    font-weight: 700;
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
     color: #fff;
     flex-shrink: 0;
+    user-select: none;
   }
 
-  .review-info { display: flex; flex-direction: column; gap: 2px; }
+  .rv-meta {
+    flex: 1;
+    min-width: 0;
+  }
 
-  .review-name {
-    font-family: 'DM Sans', system-ui, sans-serif;
+  .rv-name {
+    display: block;
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
     font-size: 0.875rem;
-    font-weight: 600;
-    color: #0D1F2D;
+    font-weight: 500;
+    color: #202124;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .review-date {
-    font-family: 'DM Sans', system-ui, sans-serif;
+  .rv-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin-top: 2px;
+  }
+
+  .rv-time {
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
     font-size: 0.75rem;
-    color: rgba(26,26,26,.50);
+    color: #70757a;
   }
 
-  .reviews-pending {
-    text-align: center;
-    padding: 3rem;
-    border: 1px dashed #E8E8E0;
-    border-radius: 4px;
+  .rv-g-badge {
+    flex-shrink: 0;
+    opacity: 0.9;
+    margin-top: 2px;
   }
 
-  .pending-text {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.9375rem;
-    color: rgba(26,26,26,.55);
+  /* ── Review text ────────────────────────────────────────────────────── */
+  .rv-text {
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #3c4043;
+    margin: 0;
   }
 
-  .reviews-cta {
-    margin-top: 2.5rem;
+  .rv-text--clamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .rv-leer-mas {
+    display: inline;
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: 0.25rem;
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    color: #1a73e8;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .rv-leer-mas:hover { text-decoration: underline; }
+
+  /* ── Nav buttons ────────────────────────────────────────────────────── */
+  .rv-nav {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    color: #3c4043;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.1);
+    transition: box-shadow 0.15s, opacity 0.2s;
+    z-index: 1;
+  }
+  .rv-nav:hover { box-shadow: 0 2px 8px rgba(0,0,0,.15); }
+
+  /* ── Dots ───────────────────────────────────────────────────────────── */
+  .rv-dots {
     display: flex;
     justify-content: center;
+    gap: 6px;
+    margin-top: 1.25rem;
   }
 
-  .btn-ver-todas {
+  .rv-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: #dadce0;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    padding: 0;
+  }
+  .rv-dot--active {
+    background: #1a73e8;
+    transform: scale(1.25);
+  }
+
+  /* ── CTA ────────────────────────────────────────────────────────────── */
+  .rv-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .rv-btn-todas {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.75rem;
-    border: 1.5px solid #E8E8E0;
-    border-radius: 8px;
+    padding: 0.625rem 1.5rem;
+    border: 1.5px solid #dadce0;
+    border-radius: 24px;
     background: #fff;
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #1A1A1A;
+    font-family: 'Google Sans', 'DM Sans', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1a73e8;
     text-decoration: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .rv-btn-todas:hover {
+    box-shadow: 0 2px 8px rgba(26,115,232,.15);
+    border-color: #1a73e8;
   }
 
-  .btn-ver-todas:hover {
-    border-color: #C9A84C;
-    box-shadow: 0 2px 12px rgba(201,168,76,.15);
+  /* ── Responsive ─────────────────────────────────────────────────────── */
+  @media (max-width: 960px) {
+    .rv-card { flex: 0 0 calc(50% - 0.5rem); }
   }
-
-  @media (max-width: 900px) { .reviews-grid { grid-template-columns: repeat(2,1fr); } }
   @media (max-width: 580px) {
-    .reviews-section { padding: 4rem 0; }
-    .reviews-grid { grid-template-columns: 1fr; }
+    .rv-section { padding: 3.5rem 0 3rem; }
+    .rv-card { flex: 0 0 100%; }
+    .rv-nav { display: none; }
+    .rv-carousel-wrap { gap: 0; }
   }
 </style>
