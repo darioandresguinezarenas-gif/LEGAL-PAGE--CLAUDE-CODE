@@ -20,6 +20,7 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "astro": "^6.3.7",
-    "dompurify": "^3.2.4"
+    "dompurify": "^3.2.4",
+    "embla-carousel": "^8.6.0"
   }
 }

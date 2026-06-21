@@ -83,63 +83,61 @@ const ui = UI[lang];
       <h2 class="rv-heading">{ui.heading}</h2>
     </div>
 
-    <!-- Carousel -->
+    <!-- Carousel (Embla) -->
     <div class="rv-carousel-wrap">
-      <button class="rv-nav rv-prev" id="rv-prev" aria-label={ui.prev}>
+      <button class="rv-nav rv-prev" id="rv-prev" type="button" aria-label={ui.prev}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
       </button>
 
-      <div class="rv-track" id="rv-track" role="list">
-        {REVIEWS.map((r, i) => (
-          <article class="rv-card" role="listitem" data-index={i}>
-            <!-- Cabecera de tarjeta estilo Google -->
-            <div class="rv-card-top">
-              <div class={`rv-avatar rv-av-${i}`} aria-hidden="true">
-                {r.initial}
-              </div>
-              <div class="rv-meta">
-                <span class="rv-name">{r.name}</span>
-                <div class="rv-meta-row">
-                  <span class="rv-card-stars" aria-label="5 estrellas">
-                    {[1,2,3,4,5].map(() => (
-                      <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="#FBBC04">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                    ))}
-                  </span>
-                  <span class="rv-time">{r.time[lang]}</span>
+      <div class="rv-viewport" id="rv-viewport">
+        <div class="rv-slides">
+          {REVIEWS.map((r, i) => (
+            <article class="rv-card" role="listitem" data-index={i}>
+              <!-- Cabecera de tarjeta estilo Google -->
+              <div class="rv-card-top">
+                <div class={`rv-avatar rv-av-${i}`} aria-hidden="true">
+                  {r.initial}
                 </div>
+                <div class="rv-meta">
+                  <span class="rv-name">{r.name}</span>
+                  <div class="rv-meta-row">
+                    <span class="rv-card-stars" aria-label="5 estrellas">
+                      {[1,2,3,4,5].map(() => (
+                        <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" fill="#FBBC04">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      ))}
+                    </span>
+                    <span class="rv-time">{r.time[lang]}</span>
+                  </div>
+                </div>
+                <!-- Google G badge en la esquina -->
+                <svg class="rv-g-badge" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Google" role="img">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
               </div>
-              <!-- Google G badge en la esquina -->
-              <svg class="rv-g-badge" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Google" role="img">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-            </div>
 
-            <!-- Texto de la reseña -->
-            <p class="rv-text rv-text--clamp" data-leer-mas={ui.leerMas}>{r.text}</p>
-          </article>
-        ))}
+              <!-- Texto de la reseña -->
+              <p class="rv-text rv-text--clamp" data-leer-mas={ui.leerMas}>{r.text}</p>
+            </article>
+          ))}
+        </div>
       </div>
 
-      <button class="rv-nav rv-next" id="rv-next" aria-label={ui.next}>
+      <button class="rv-nav rv-next" id="rv-next" type="button" aria-label={ui.next}>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="9 18 15 12 9 6"/>
         </svg>
       </button>
     </div>
 
-    <!-- Dots -->
-    <div class="rv-dots" id="rv-dots" aria-hidden="true">
-      {REVIEWS.map((_, i) => (
-        <button class={`rv-dot${i === 0 ? ' rv-dot--active' : ''}`} data-dot={i} aria-label={`Reseña ${i + 1}`}></button>
-      ))}
-    </div>
+    <!-- Dots (generados por JS, uno por snap de Embla) -->
+    <div class="rv-dots" id="rv-dots"></div>
 
     <!-- CTA -->
     <div class="rv-cta">
@@ -161,91 +159,71 @@ const ui = UI[lang];
 </section>
 
 <script>
+  import EmblaCarousel from 'embla-carousel';
+
   function initReviews() {
-    var track = document.getElementById('rv-track');
-    var prev  = document.getElementById('rv-prev');
-    var next  = document.getElementById('rv-next');
-    if (!track || !prev || !next) return;
-    if (track.dataset.rvInit === '1') return;   // idempotente
-    track.dataset.rvInit = '1';
+    var viewport = document.getElementById('rv-viewport');
+    var prevBtn  = document.getElementById('rv-prev');
+    var nextBtn  = document.getElementById('rv-next');
+    var dotsBox  = document.getElementById('rv-dots');
+    if (!viewport || !prevBtn || !nextBtn || !dotsBox) return;
+    if (viewport.dataset.rvInit === '1') return;   // idempotente
+    viewport.dataset.rvInit = '1';
 
-    var t  = track as HTMLElement;
-    var pv = prev as HTMLElement;
-    var nx = next as HTMLElement;
-    var cards = Array.from(t.querySelectorAll('.rv-card')) as HTMLElement[];
-    var dots  = Array.from(document.querySelectorAll('.rv-dot')) as HTMLButtonElement[];
-    var idx = 0;
-    var animating = false;
-    var animTimer = 0;
+    var embla = EmblaCarousel(viewport, {
+      align: 'start',
+      loop: false,
+      containScroll: 'trimSnaps',
+      slidesToScroll: 1,
+      duration: 22,            // velocidad de la animación de Embla
+    });
 
-    // Animación con setInterval (no requestAnimationFrame): rAF se pausa en
-    // pestañas de fondo / contextos sin pintado, lo que dejaba el carrusel
-    // inmóvil. setInterval es fiable en todos los entornos.
-    function smoothTo(target: number, ms?: number) {
-      var dur  = ms || 380;
-      var from = t.scrollLeft;
-      var dist = target - from;
-      if (Math.abs(dist) < 1) { t.scrollLeft = target; return; }
-      var t0 = performance.now();
-      animating = true;
-      clearInterval(animTimer);
-      animTimer = window.setInterval(function () {
-        var p    = Math.min((performance.now() - t0) / dur, 1);
-        var ease = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
-        t.scrollLeft = from + dist * ease;
-        if (p >= 1) { clearInterval(animTimer); animating = false; }
-      }, 16);
+    // Dots: uno por snap (con containScroll pueden ser menos que las tarjetas)
+    var dotNodes: HTMLButtonElement[] = [];
+    function buildDots() {
+      dotsBox!.innerHTML = '';
+      dotNodes = embla.scrollSnapList().map(function (_, i) {
+        var b = document.createElement('button');
+        b.className = 'rv-dot';
+        b.type = 'button';
+        b.setAttribute('aria-label', 'Ir a la reseña ' + (i + 1));
+        b.addEventListener('click', function () { embla.scrollTo(i); });
+        dotsBox!.appendChild(b);
+        return b;
+      });
+    }
+    function onSelect() {
+      var i = embla.selectedScrollSnap();
+      dotNodes.forEach(function (d, n) { d.classList.toggle('rv-dot--active', n === i); });
+      (prevBtn as HTMLElement).style.opacity = embla.canScrollPrev() ? '1' : '0.3';
+      (nextBtn as HTMLElement).style.opacity = embla.canScrollNext() ? '1' : '0.3';
     }
 
-    function cardW() {
-      return cards[0] ? cards[0].getBoundingClientRect().width + 16 : 0;
-    }
+    prevBtn.addEventListener('click', function () { embla.scrollPrev(); });
+    nextBtn.addEventListener('click', function () { embla.scrollNext(); });
+    embla.on('select', onSelect);
+    embla.on('reInit', function () { buildDots(); onSelect(); });
 
-    function goTo(n: number) {
-      idx = Math.max(0, Math.min(cards.length - 1, n));
-      smoothTo(idx * cardW());
-      sync();
-    }
-
-    function sync() {
-      dots.forEach((d, i) => d.classList.toggle('rv-dot--active', i === idx));
-      pv.style.opacity = idx <= 0               ? '0.3' : '1';
-      nx.style.opacity = idx >= cards.length - 1 ? '0.3' : '1';
-    }
-
-    prev.addEventListener('click', () => goTo(idx - 1));
-    next.addEventListener('click', () => goTo(idx + 1));
-    dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
-
-    // Snap manual tras swipe táctil (scroll-snap-type eliminado del CSS)
-    var snapTimer = 0;
-    t.addEventListener('scroll', () => {
-      if (animating) return;
-      clearTimeout(snapTimer);
-      snapTimer = window.setTimeout(() => {
-        var w = cardW();
-        if (!w) return;
-        var ni = Math.max(0, Math.min(cards.length - 1, Math.round(t.scrollLeft / w)));
-        idx = ni;
-        sync();
-        if (Math.abs(t.scrollLeft - ni * w) > 2) smoothTo(ni * w, 200);
-      }, 120);
-    }, { passive: true });
+    buildDots();
+    onSelect();
 
     // "Leer más" — sólo si el párrafo está truncado (mide tras el layout)
-    window.setTimeout(() => {
-      cards.forEach(card => {
-        var p = card.querySelector('.rv-text--clamp') as HTMLElement | null;
-        if (!p || p.scrollHeight <= p.clientHeight + 4) return;
+    window.setTimeout(function () {
+      viewport!.querySelectorAll('.rv-text--clamp').forEach(function (el) {
+        var p = el as HTMLElement;
+        if (p.scrollHeight <= p.clientHeight + 4) return;
         var btn = document.createElement('button');
         btn.className   = 'rv-leer-mas';
+        btn.type        = 'button';
         btn.textContent = p.dataset.leerMas || 'Leer más';
         p.after(btn);
-        btn.addEventListener('click', () => { p!.classList.remove('rv-text--clamp'); btn.remove(); });
+        btn.addEventListener('click', function () {
+          p.classList.remove('rv-text--clamp');
+          btn.remove();
+          embla.reInit();   // la tarjeta cambió de alto → recalcular
+        });
       });
-    }, 50);
-
-    sync();
+    }, 60);
   }
 
   if (document.readyState === 'loading') {
@@ -326,22 +304,22 @@ const ui = UI[lang];
     gap: 0.75rem;
   }
 
-  /* ── Track ──────────────────────────────────────────────────────────── */
-  .rv-track {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+  /* ── Embla viewport + container ─────────────────────────────────────── */
+  .rv-viewport {
+    overflow: hidden;
     flex: 1;
     padding: 0.25rem 0 0.75rem; /* room for card shadow */
   }
-  .rv-track::-webkit-scrollbar { display: none; }
+  .rv-slides {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+  }
 
-  /* ── Card ───────────────────────────────────────────────────────────── */
+  /* ── Card (slide de Embla) ──────────────────────────────────────────── */
   .rv-card {
     flex: 0 0 calc(33.333% - 0.667rem);
-    scroll-snap-align: start;
+    min-width: 0;
     background: #fff;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
