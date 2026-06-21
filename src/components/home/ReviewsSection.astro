@@ -48,9 +48,9 @@ const REVIEWS = [
 const GOOGLE_URL = 'https://share.google/0XEGREarhLsXownxw';
 
 const UI = {
-  es: { heading: 'Lo que dicen nuestros clientes', verTodas: 'Ver las 30 reseñas en Google', leerMas: 'Leer más', prev: 'Anterior', next: 'Siguiente' },
-  en: { heading: 'What our clients say', verTodas: 'See all 30 reviews on Google', leerMas: 'Read more', prev: 'Previous', next: 'Next' },
-  zh: { heading: '客户评价', verTodas: '在 Google 上查看全部 30 条评价', leerMas: '阅读更多', prev: '上一个', next: '下一个' },
+  es: { heading: 'Lo que dicen nuestros clientes', verTodas: 'Ver las 34 reseñas en Google', leerMas: 'Leer más', prev: 'Anterior', next: 'Siguiente' },
+  en: { heading: 'What our clients say', verTodas: 'See all 34 reviews on Google', leerMas: 'Read more', prev: 'Previous', next: 'Next' },
+  zh: { heading: '客户评价', verTodas: '在 Google 上查看全部 34 条评价', leerMas: '阅读更多', prev: '上一个', next: '下一个' },
 } as const;
 
 const ui = UI[lang];
@@ -77,7 +77,7 @@ const ui = UI[lang];
               </svg>
             ))}
           </span>
-          <span class="rv-count">(30 {lang === 'en' ? 'reviews' : lang === 'zh' ? '条评价' : 'reseñas'})</span>
+          <span class="rv-count">(34 {lang === 'en' ? 'reviews' : lang === 'zh' ? '条评价' : 'reseñas'})</span>
         </span>
       </div>
       <h2 class="rv-heading">{ui.heading}</h2>
