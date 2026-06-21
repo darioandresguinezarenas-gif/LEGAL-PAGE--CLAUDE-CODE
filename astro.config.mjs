@@ -8,6 +8,14 @@ export default defineConfig({
   build: {
     inlineStylesheets: 'never',
   },
+  vite: {
+    build: {
+      // No inlinear scripts en el HTML: la CSP (script-src 'self', sin
+      // unsafe-inline) bloquea cualquier <script> inline. Forzamos que
+      // todos los scripts de componentes se emitan como /_astro/*.js.
+      assetsInlineLimit: 0,
+    },
+  },
   integrations: [
     sitemap({
       filter: (page) =>
